@@ -1,0 +1,2 @@
+../Core/Src/File_Handling.c:38:9:AUDIO_StorageParse	352	static
+../Core/Src/File_Handling.c:84:10:AUDIO_GetWavObjectNumber	8	static

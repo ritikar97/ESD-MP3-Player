@@ -9,8 +9,6 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _write_io_port
-	.globl _printf
-	.globl _printf_small
 	.globl _P5_7
 	.globl _P5_6
 	.globl _P5_5
@@ -220,7 +218,6 @@
 	.globl _DPH
 	.globl _B
 	.globl _ACC
-	.globl _i2c_hex_dump_PARM_2
 	.globl _i2c_write_byte_PARM_2
 	.globl _i2c_init
 	.globl _i2c_start
@@ -229,8 +226,6 @@
 	.globl _i2c_write_byte
 	.globl _i2c_read_byte
 	.globl _i2c_stop
-	.globl _i2c_hex_dump
-	.globl _reset_eeprom
 	.globl _delay_us
 	.globl _i2c_send_nack
 	.globl _EXT0_IRQHandler
@@ -476,10 +471,6 @@ bits:
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
-_i2c_hex_dump_start_address_65536_72:
-	.ds 2
-_i2c_hex_dump_sloc0_1_0:
-	.ds 2
 ;--------------------------------------------------------
 ; overlayable items in internal ram 
 ;--------------------------------------------------------
@@ -507,19 +498,17 @@ _delay_us_sloc0_1_0:
 ; external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
-_send_byte_send_byte_65536_57:
+_send_byte_send_byte_65536_56:
 	.ds 1
-_read_byte_rx_data_65536_63:
+_read_byte_rx_data_65536_62:
 	.ds 1
 _i2c_write_byte_PARM_2:
 	.ds 1
-_i2c_write_byte_addr_65536_66:
+_i2c_write_byte_addr_65536_65:
 	.ds 2
-_i2c_read_byte_addr_65536_68:
+_i2c_read_byte_addr_65536_67:
 	.ds 2
-_i2c_hex_dump_PARM_2:
-	.ds 2
-_delay_us_delay_65536_88:
+_delay_us_delay_65536_71:
 	.ds 4
 ;--------------------------------------------------------
 ; absolute external ram data
@@ -610,8 +599,8 @@ _i2c_start:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'send_byte'
 ;------------------------------------------------------------
-;send_byte                 Allocated with name '_send_byte_send_byte_65536_57'
-;i                         Allocated with name '_send_byte_i_131072_59'
+;send_byte                 Allocated with name '_send_byte_send_byte_65536_56'
+;i                         Allocated with name '_send_byte_i_131072_58'
 ;------------------------------------------------------------
 ;	i2c.c:48: __sbit send_byte(uint8_t send_byte)
 ;	-----------------------------------------
@@ -619,7 +608,7 @@ _i2c_start:
 ;	-----------------------------------------
 _send_byte:
 	mov	a,dpl
-	mov	dptr,#_send_byte_send_byte_65536_57
+	mov	dptr,#_send_byte_send_byte_65536_56
 	movx	@dptr,a
 ;	i2c.c:50: for(uint8_t i = 0; i < BYTE_SIZE; i++)
 	movx	a,@dptr
@@ -725,9 +714,9 @@ _send_byte:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'read_byte'
 ;------------------------------------------------------------
-;rx_bit                    Allocated with name '_read_byte_rx_bit_65536_63'
-;rx_data                   Allocated with name '_read_byte_rx_data_65536_63'
-;i                         Allocated with name '_read_byte_i_131072_64'
+;rx_bit                    Allocated with name '_read_byte_rx_bit_65536_62'
+;rx_data                   Allocated with name '_read_byte_rx_data_65536_62'
+;i                         Allocated with name '_read_byte_i_131072_63'
 ;------------------------------------------------------------
 ;	i2c.c:88: uint8_t read_byte()
 ;	-----------------------------------------
@@ -735,7 +724,7 @@ _send_byte:
 ;	-----------------------------------------
 _read_byte:
 ;	i2c.c:90: uint8_t rx_bit, rx_data = 0;
-	mov	dptr,#_read_byte_rx_data_65536_63
+	mov	dptr,#_read_byte_rx_data_65536_62
 	clr	a
 	movx	@dptr,a
 ;	i2c.c:91: for(uint8_t i = 0; i < BYTE_SIZE; i++)
@@ -780,7 +769,7 @@ _read_byte:
 00120$:
 	djnz	b,00118$
 	mov	r5,a
-	mov	dptr,#_read_byte_rx_data_65536_63
+	mov	dptr,#_read_byte_rx_data_65536_62
 	movx	a,@dptr
 	orl	a,r5
 	movx	@dptr,a
@@ -804,7 +793,7 @@ _read_byte:
 	sjmp	00103$
 00101$:
 ;	i2c.c:107: return rx_data;
-	mov	dptr,#_read_byte_rx_data_65536_63
+	mov	dptr,#_read_byte_rx_data_65536_62
 	movx	a,@dptr
 ;	i2c.c:109: }
 	mov	dpl,a
@@ -813,7 +802,7 @@ _read_byte:
 ;Allocation info for local variables in function 'i2c_write_byte'
 ;------------------------------------------------------------
 ;data_byte                 Allocated with name '_i2c_write_byte_PARM_2'
-;addr                      Allocated with name '_i2c_write_byte_addr_65536_66'
+;addr                      Allocated with name '_i2c_write_byte_addr_65536_65'
 ;------------------------------------------------------------
 ;	i2c.c:113: void i2c_write_byte(uint16_t addr, uint8_t data_byte)
 ;	-----------------------------------------
@@ -822,7 +811,7 @@ _read_byte:
 _i2c_write_byte:
 	mov	r7,dph
 	mov	a,dpl
-	mov	dptr,#_i2c_write_byte_addr_65536_66
+	mov	dptr,#_i2c_write_byte_addr_65536_65
 	movx	@dptr,a
 	mov	a,r7
 	inc	dptr
@@ -830,7 +819,7 @@ _i2c_write_byte:
 ;	i2c.c:115: i2c_start(); /* Sending start bit */
 	lcall	_i2c_start
 ;	i2c.c:116: send_byte(WR_CMD | (((addr >> 8) & 0x7) << 1)); /* Sending control byte with page block */
-	mov	dptr,#_i2c_write_byte_addr_65536_66
+	mov	dptr,#_i2c_write_byte_addr_65536_65
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
@@ -860,8 +849,8 @@ _i2c_write_byte:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'i2c_read_byte'
 ;------------------------------------------------------------
-;addr                      Allocated with name '_i2c_read_byte_addr_65536_68'
-;rx_data                   Allocated with name '_i2c_read_byte_rx_data_65536_69'
+;addr                      Allocated with name '_i2c_read_byte_addr_65536_67'
+;rx_data                   Allocated with name '_i2c_read_byte_rx_data_65536_68'
 ;------------------------------------------------------------
 ;	i2c.c:123: unsigned char i2c_read_byte(uint16_t addr)
 ;	-----------------------------------------
@@ -870,7 +859,7 @@ _i2c_write_byte:
 _i2c_read_byte:
 	mov	r7,dph
 	mov	a,dpl
-	mov	dptr,#_i2c_read_byte_addr_65536_68
+	mov	dptr,#_i2c_read_byte_addr_65536_67
 	movx	@dptr,a
 	mov	a,r7
 	inc	dptr
@@ -878,7 +867,7 @@ _i2c_read_byte:
 ;	i2c.c:126: i2c_start();
 	lcall	_i2c_start
 ;	i2c.c:130: send_byte(WR_CMD | (((addr >> 8) & PAGE_BLOCK)<< 1));
-	mov	dptr,#_i2c_read_byte_addr_65536_68
+	mov	dptr,#_i2c_read_byte_addr_65536_67
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
@@ -963,420 +952,13 @@ _i2c_stop:
 ;	i2c.c:157: }
 	ljmp	_delay_us
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'i2c_hex_dump'
-;------------------------------------------------------------
-;start_address             Allocated with name '_i2c_hex_dump_start_address_65536_72'
-;i                         Allocated to registers r5 
-;sloc0                     Allocated with name '_i2c_hex_dump_sloc0_1_0'
-;end_address               Allocated with name '_i2c_hex_dump_PARM_2'
-;num_elements              Allocated with name '_i2c_hex_dump_num_elements_65537_74'
-;loop_count                Allocated with name '_i2c_hex_dump_loop_count_65537_74'
-;last_line_num             Allocated with name '_i2c_hex_dump_last_line_num_65537_74'
-;data_byte                 Allocated with name '_i2c_hex_dump_data_byte_65537_74'
-;j                         Allocated with name '_i2c_hex_dump_j_262145_77'
-;i                         Allocated with name '_i2c_hex_dump_i_131073_80'
-;------------------------------------------------------------
-;	i2c.c:161: void i2c_hex_dump(__data uint16_t start_address, uint16_t end_address)
-;	-----------------------------------------
-;	 function i2c_hex_dump
-;	-----------------------------------------
-_i2c_hex_dump:
-	mov	_i2c_hex_dump_start_address_65536_72,dpl
-	mov	(_i2c_hex_dump_start_address_65536_72 + 1),dph
-;	i2c.c:163: printf("Printing hexdump from start address [%x] to end address [%x]\r\n", start_address, end_address);
-	mov	dptr,#_i2c_hex_dump_PARM_2
-	movx	a,@dptr
-	mov	r4,a
-	inc	dptr
-	movx	a,@dptr
-	mov	r5,a
-	push	ar5
-	push	ar4
-	push	ar4
-	push	ar5
-	push	_i2c_hex_dump_start_address_65536_72
-	push	(_i2c_hex_dump_start_address_65536_72 + 1)
-	mov	a,#___str_0
-	push	acc
-	mov	a,#(___str_0 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf
-	mov	a,sp
-	add	a,#0xf9
-	mov	sp,a
-	pop	ar4
-	pop	ar5
-;	i2c.c:165: uint16_t num_elements = end_address - start_address + 1; /* Number of elements */
-	mov	a,r4
-	clr	c
-	subb	a,_i2c_hex_dump_start_address_65536_72
-	mov	r4,a
-	mov	a,r5
-	subb	a,(_i2c_hex_dump_start_address_65536_72 + 1)
-	mov	r5,a
-	inc	r4
-	cjne	r4,#0x00,00148$
-	inc	r5
-00148$:
-;	i2c.c:166: uint8_t loop_count = num_elements / 16; /* Number of lines with 16 elements */
-	mov	ar2,r4
-	mov	a,r5
-	swap	a
-	xch	a,r2
-	swap	a
-	anl	a,#0x0f
-	xrl	a,r2
-	xch	a,r2
-	anl	a,#0x0f
-	xch	a,r2
-	xrl	a,r2
-	xch	a,r2
-	mov	r3,a
-;	i2c.c:167: uint8_t last_line_num = num_elements % 16; /* Number of elements on the last line */
-	anl	ar4,#0x0f
-;	i2c.c:171: for(__data uint8_t i = 0; i < loop_count; i++)
-	mov	r5,#0x00
-00110$:
-	clr	c
-	mov	a,r5
-	subb	a,r2
-	jc	00149$
-	ljmp	00102$
-00149$:
-;	i2c.c:173: printf("0x%03X\t", start_address + (i << 4));
-	mov	ar1,r5
-	clr	a
-	xch	a,r1
-	swap	a
-	xch	a,r1
-	xrl	a,r1
-	xch	a,r1
-	anl	a,#0xf0
-	xch	a,r1
-	xrl	a,r1
-	mov	r3,a
-	mov	_i2c_hex_dump_sloc0_1_0,_i2c_hex_dump_start_address_65536_72
-	mov	(_i2c_hex_dump_sloc0_1_0 + 1),(_i2c_hex_dump_start_address_65536_72 + 1)
-	mov	a,r1
-	add	a,_i2c_hex_dump_sloc0_1_0
-	mov	r1,a
-	mov	a,r3
-	addc	a,(_i2c_hex_dump_sloc0_1_0 + 1)
-	mov	r3,a
-	push	ar5
-	push	ar4
-	push	ar2
-	push	ar1
-	push	ar3
-	mov	a,#___str_1
-	push	acc
-	mov	a,#(___str_1 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf
-	mov	a,sp
-	add	a,#0xfb
-	mov	sp,a
-	pop	ar2
-	pop	ar4
-	pop	ar5
-;	i2c.c:174: for(uint8_t j = 0; j < 16; j++)
-	mov	r3,#0x00
-00107$:
-	cjne	r3,#0x10,00150$
-00150$:
-	jnc	00101$
-;	i2c.c:176: data_byte = i2c_read_byte(start_address + (i << 4) + j); /* Address of data to be read */
-	mov	ar0,r5
-	clr	a
-	xch	a,r0
-	swap	a
-	xch	a,r0
-	xrl	a,r0
-	xch	a,r0
-	anl	a,#0xf0
-	xch	a,r0
-	xrl	a,r0
-	mov	r1,a
-	mov	a,r0
-	add	a,_i2c_hex_dump_sloc0_1_0
-	mov	r0,a
-	mov	a,r1
-	addc	a,(_i2c_hex_dump_sloc0_1_0 + 1)
-	mov	r1,a
-	mov	ar6,r3
-	mov	r7,#0x00
-	mov	a,r6
-	add	a,r0
-	mov	r0,a
-	mov	a,r7
-	addc	a,r1
-	mov	r1,a
-	mov	dpl,r0
-	mov	dph,r1
-	push	ar5
-	push	ar4
-	push	ar3
-	push	ar2
-	lcall	_i2c_read_byte
-	mov	r7,dpl
-;	i2c.c:177: printf("%02X ", data_byte);
-	mov	r6,#0x00
-	push	ar7
-	push	ar6
-	mov	a,#___str_2
-	push	acc
-	mov	a,#(___str_2 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf
-	mov	a,sp
-	add	a,#0xfb
-	mov	sp,a
-	pop	ar2
-	pop	ar3
-	pop	ar4
-	pop	ar5
-;	i2c.c:174: for(uint8_t j = 0; j < 16; j++)
-	inc	r3
-	sjmp	00107$
-00101$:
-;	i2c.c:179: printf_small("\r\n");
-	push	ar5
-	push	ar4
-	push	ar2
-	mov	a,#___str_3
-	push	acc
-	mov	a,#(___str_3 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf_small
-	dec	sp
-	dec	sp
-	dec	sp
-	pop	ar2
-	pop	ar4
-	pop	ar5
-;	i2c.c:171: for(__data uint8_t i = 0; i < loop_count; i++)
-	inc	r5
-	ljmp	00110$
-00102$:
-;	i2c.c:181: if(last_line_num)
-	mov	a,r4
-	jz	00123$
-;	i2c.c:183: printf("0x%03X\t", start_address + (loop_count << 4));
-	mov	ar6,r2
-	clr	a
-	xch	a,r6
-	swap	a
-	xch	a,r6
-	xrl	a,r6
-	xch	a,r6
-	anl	a,#0xf0
-	xch	a,r6
-	xrl	a,r6
-	mov	r7,a
-	mov	r3,_i2c_hex_dump_start_address_65536_72
-	mov	r5,(_i2c_hex_dump_start_address_65536_72 + 1)
-	mov	a,r6
-	add	a,r3
-	mov	r3,a
-	mov	a,r7
-	addc	a,r5
-	mov	r5,a
-	push	ar4
-	push	ar2
-	push	ar3
-	push	ar5
-	mov	a,#___str_1
-	push	acc
-	mov	a,#(___str_1 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf
-	mov	a,sp
-	add	a,#0xfb
-	mov	sp,a
-	pop	ar2
-	pop	ar4
-;	i2c.c:185: for(uint8_t i = 0; i < last_line_num; i++)
-00123$:
-	mov	r7,#0x00
-00113$:
-	clr	c
-	mov	a,r7
-	subb	a,r4
-	jnc	00105$
-;	i2c.c:187: data_byte = i2c_read_byte(start_address + (loop_count << 4) + i);
-	mov	ar5,r2
-	clr	a
-	xch	a,r5
-	swap	a
-	xch	a,r5
-	xrl	a,r5
-	xch	a,r5
-	anl	a,#0xf0
-	xch	a,r5
-	xrl	a,r5
-	mov	r6,a
-	mov	r1,_i2c_hex_dump_start_address_65536_72
-	mov	r3,(_i2c_hex_dump_start_address_65536_72 + 1)
-	mov	a,r5
-	add	a,r1
-	mov	r1,a
-	mov	a,r6
-	addc	a,r3
-	mov	r3,a
-	mov	ar5,r7
-	mov	r6,#0x00
-	mov	a,r5
-	add	a,r1
-	mov	r1,a
-	mov	a,r6
-	addc	a,r3
-	mov	r3,a
-	mov	dpl,r1
-	mov	dph,r3
-	push	ar7
-	push	ar4
-	push	ar2
-	lcall	_i2c_read_byte
-	mov	r6,dpl
-;	i2c.c:188: printf("%02X ", data_byte);
-	mov	r5,#0x00
-	push	ar6
-	push	ar5
-	mov	a,#___str_2
-	push	acc
-	mov	a,#(___str_2 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf
-	mov	a,sp
-	add	a,#0xfb
-	mov	sp,a
-	pop	ar2
-	pop	ar4
-	pop	ar7
-;	i2c.c:185: for(uint8_t i = 0; i < last_line_num; i++)
-	inc	r7
-	sjmp	00113$
-00105$:
-;	i2c.c:190: printf_small("\r\n");
-	mov	a,#___str_3
-	push	acc
-	mov	a,#(___str_3 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf_small
-	dec	sp
-	dec	sp
-	dec	sp
-;	i2c.c:191: }
-	ret
-;------------------------------------------------------------
-;Allocation info for local variables in function 'reset_eeprom'
-;------------------------------------------------------------
-;send_byte                 Allocated with name '_reset_eeprom_send_byte_65537_83'
-;i                         Allocated with name '_reset_eeprom_i_131073_84'
-;------------------------------------------------------------
-;	i2c.c:194: void reset_eeprom()
-;	-----------------------------------------
-;	 function reset_eeprom
-;	-----------------------------------------
-_reset_eeprom:
-;	i2c.c:196: i2c_start();
-	lcall	_i2c_start
-;	i2c.c:201: for(uint8_t i = 0; i < BYTE_SIZE + 1; i++)
-	mov	r7,#0x00
-00106$:
-	cjne	r7,#0x09,00123$
-00123$:
-	jnc	00104$
-;	i2c.c:203: SCL_Low;
-;	assignBit
-	clr	_P1_5
-;	i2c.c:204: delay_us(bitDelay/4);
-	mov	dptr,#(0x00&0x00ff)
-	clr	a
-	mov	b,a
-	push	ar7
-	lcall	_delay_us
-	pop	ar7
-;	i2c.c:206: if((send_byte << i) & 0x100)
-	mov	b,r7
-	inc	b
-	mov	r5,#0xff
-	mov	r6,#0x01
-	sjmp	00126$
-00125$:
-	mov	a,r5
-	add	a,r5
-	mov	r5,a
-	mov	a,r6
-	rlc	a
-	mov	r6,a
-00126$:
-	djnz	b,00125$
-	mov	a,r6
-	jnb	acc.0,00102$
-;	i2c.c:208: SDA_High;
-;	assignBit
-	setb	_P1_6
-	sjmp	00103$
-00102$:
-;	i2c.c:212: SDA_Low;
-;	assignBit
-	clr	_P1_6
-00103$:
-;	i2c.c:216: delay_us(bitDelay/4);
-	mov	dptr,#(0x00&0x00ff)
-	clr	a
-	mov	b,a
-	push	ar7
-	lcall	_delay_us
-;	i2c.c:217: SCL_High;
-;	assignBit
-	setb	_P1_5
-;	i2c.c:218: delay_us(bitDelay);
-	mov	dptr,#(0x00&0x00ff)
-	clr	a
-	mov	b,a
-	lcall	_delay_us
-	pop	ar7
-;	i2c.c:201: for(uint8_t i = 0; i < BYTE_SIZE + 1; i++)
-	inc	r7
-	sjmp	00106$
-00104$:
-;	i2c.c:222: SCL_Low;
-;	assignBit
-	clr	_P1_5
-;	i2c.c:223: delay_us(bitDelay/4);
-	mov	dptr,#(0x00&0x00ff)
-	clr	a
-	mov	b,a
-	lcall	_delay_us
-;	i2c.c:225: i2c_start();
-	lcall	_i2c_start
-;	i2c.c:226: i2c_stop();
-;	i2c.c:229: }
-	ljmp	_i2c_stop
-;------------------------------------------------------------
 ;Allocation info for local variables in function 'delay_us'
 ;------------------------------------------------------------
-;delay                     Allocated with name '_delay_us_delay_65536_88'
-;i                         Allocated with name '_delay_us_i_131072_90'
+;delay                     Allocated with name '_delay_us_delay_65536_71'
+;i                         Allocated with name '_delay_us_i_131072_73'
 ;sloc0                     Allocated with name '_delay_us_sloc0_1_0'
 ;------------------------------------------------------------
-;	i2c.c:232: void delay_us(uint32_t delay)
+;	i2c.c:161: void delay_us(uint32_t delay)
 ;	-----------------------------------------
 ;	 function delay_us
 ;	-----------------------------------------
@@ -1385,7 +967,7 @@ _delay_us:
 	mov	r6,dph
 	mov	r5,b
 	mov	r4,a
-	mov	dptr,#_delay_us_delay_65536_88
+	mov	dptr,#_delay_us_delay_65536_71
 	mov	a,r7
 	movx	@dptr,a
 	mov	a,r6
@@ -1397,8 +979,8 @@ _delay_us:
 	mov	a,r4
 	inc	dptr
 	movx	@dptr,a
-;	i2c.c:235: for(uint8_t i = 0; i< delay; i++);
-	mov	dptr,#_delay_us_delay_65536_88
+;	i2c.c:164: for(uint8_t i = 0; i< delay; i++);
+	mov	dptr,#_delay_us_delay_65536_71
 	movx	a,@dptr
 	mov	_delay_us_sloc0_1_0,a
 	inc	dptr
@@ -1429,86 +1011,86 @@ _delay_us:
 	inc	r3
 	sjmp	00103$
 00105$:
-;	i2c.c:236: }
+;	i2c.c:165: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'i2c_send_nack'
 ;------------------------------------------------------------
-;	i2c.c:240: void i2c_send_nack(void)
+;	i2c.c:169: void i2c_send_nack(void)
 ;	-----------------------------------------
 ;	 function i2c_send_nack
 ;	-----------------------------------------
 _i2c_send_nack:
-;	i2c.c:243: SCL_Low;
+;	i2c.c:172: SCL_Low;
 ;	assignBit
 	clr	_P1_5
-;	i2c.c:244: delay_us(bitDelay/4);
+;	i2c.c:173: delay_us(bitDelay/4);
 	mov	dptr,#(0x00&0x00ff)
 	clr	a
 	mov	b,a
 	lcall	_delay_us
-;	i2c.c:247: SDA_High;
+;	i2c.c:176: SDA_High;
 ;	assignBit
 	setb	_P1_6
-;	i2c.c:248: delay_us(bitDelay/4);
+;	i2c.c:177: delay_us(bitDelay/4);
 	mov	dptr,#(0x00&0x00ff)
 	clr	a
 	mov	b,a
 	lcall	_delay_us
-;	i2c.c:250: SCL_High;
+;	i2c.c:179: SCL_High;
 ;	assignBit
 	setb	_P1_5
-;	i2c.c:251: delay_us(bitDelay/2);
+;	i2c.c:180: delay_us(bitDelay/2);
 	mov	dptr,#(0x00&0x00ff)
 	clr	a
 	mov	b,a
-;	i2c.c:252: }
+;	i2c.c:181: }
 	ljmp	_delay_us
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'write_io_port'
 ;------------------------------------------------------------
-;rx_data                   Allocated with name '_write_io_port_rx_data_65536_93'
+;rx_data                   Allocated with name '_write_io_port_rx_data_65536_76'
 ;------------------------------------------------------------
-;	i2c.c:255: void write_io_port()
+;	i2c.c:184: void write_io_port()
 ;	-----------------------------------------
 ;	 function write_io_port
 ;	-----------------------------------------
 _write_io_port:
-;	i2c.c:260: i2c_start();
+;	i2c.c:189: i2c_start();
 	lcall	_i2c_start
-;	i2c.c:261: send_byte(RD_IO_EXP);
+;	i2c.c:190: send_byte(RD_IO_EXP);
 	mov	dpl,#0x71
 	lcall	_send_byte
-;	i2c.c:262: rx_data = read_byte();
+;	i2c.c:191: rx_data = read_byte();
 	lcall	_read_byte
 	mov	r7,dpl
-;	i2c.c:263: i2c_send_nack();
+;	i2c.c:192: i2c_send_nack();
 	push	ar7
 	lcall	_i2c_send_nack
-;	i2c.c:264: i2c_stop();
+;	i2c.c:193: i2c_stop();
 	lcall	_i2c_stop
-;	i2c.c:267: i2c_start();
+;	i2c.c:196: i2c_start();
 	lcall	_i2c_start
-;	i2c.c:268: send_byte(WR_IO_EXP);
+;	i2c.c:197: send_byte(WR_IO_EXP);
 	mov	dpl,#0x70
 	lcall	_send_byte
 	pop	ar7
-;	i2c.c:269: send_byte(~rx_data);
+;	i2c.c:198: send_byte(~rx_data);
 	mov	a,r7
 	cpl	a
 	mov	dpl,a
 	lcall	_send_byte
-;	i2c.c:270: i2c_stop();
+;	i2c.c:199: i2c_stop();
 	lcall	_i2c_stop
-;	i2c.c:272: EX0 = 1;
+;	i2c.c:201: EX0 = 1;
 ;	assignBit
 	setb	_EX0
-;	i2c.c:273: }
+;	i2c.c:202: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'EXT0_IRQHandler'
 ;------------------------------------------------------------
-;	i2c.c:277: void EXT0_IRQHandler(void) __interrupt(IE0_VECTOR)
+;	i2c.c:206: void EXT0_IRQHandler(void) __interrupt(IE0_VECTOR)
 ;	-----------------------------------------
 ;	 function EXT0_IRQHandler
 ;	-----------------------------------------
@@ -1528,14 +1110,14 @@ _EXT0_IRQHandler:
 	push	(0+0)
 	push	psw
 	mov	psw,#0x00
-;	i2c.c:281: EX0 = 0;
+;	i2c.c:210: EX0 = 0;
 ;	assignBit
 	clr	_EX0
-;	i2c.c:282: P1_0 = !P1_0;
+;	i2c.c:211: P1_0 = !P1_0;
 	cpl	_P1_0
-;	i2c.c:283: write_io_port();
+;	i2c.c:212: write_io_port();
 	lcall	_write_io_port
-;	i2c.c:284: }
+;	i2c.c:213: }
 	pop	psw
 	pop	(0+0)
 	pop	(0+1)
@@ -1553,29 +1135,5 @@ _EXT0_IRQHandler:
 	reti
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
-	.area CONST   (CODE)
-___str_0:
-	.ascii "Printing hexdump from start address [%x] to end address [%x]"
-	.db 0x0d
-	.db 0x0a
-	.db 0x00
-	.area CSEG    (CODE)
-	.area CONST   (CODE)
-___str_1:
-	.ascii "0x%03X"
-	.db 0x09
-	.db 0x00
-	.area CSEG    (CODE)
-	.area CONST   (CODE)
-___str_2:
-	.ascii "%02X "
-	.db 0x00
-	.area CSEG    (CODE)
-	.area CONST   (CODE)
-___str_3:
-	.db 0x0d
-	.db 0x0a
-	.db 0x00
-	.area CSEG    (CODE)
 	.area XINIT   (CODE)
 	.area CABS    (ABS,CODE)

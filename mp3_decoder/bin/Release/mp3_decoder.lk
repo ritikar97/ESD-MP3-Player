@@ -2,8 +2,8 @@
 -i bin\Release\mp3_decoder.ihx
 -M
 -I 0x0100
--X 0x1000
--C 0xf0000
+-X 0x6000
+-C 0x8000
 -b HOME = 0x0000
 -b XSEG = 0x0400
 -b PSEG = 0x0400

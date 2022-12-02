@@ -47,8 +47,8 @@ C:   0000000C  s_GSINIT1
 C:   0000000C  s_GSINIT2                       
 C:   00000010  s_REG_BANK_2                    
 C:   00000016  s_GSINIT3                       
+C:   00000018  s_OSEG                          
 C:   00000018  s_REG_BANK_3                    
-C:   0000001C  s_OSEG                          
 C:   00000020  s_BSEG_BYTES                    
 C:   00000020  s__CODE                         
 C:   00000021  s_BIT_BANK                      
@@ -70,19 +70,19 @@ C:   00000062  s_GSINIT
 C:   00000062  s_GSINIT5                       
 C:   00000068  s_GSFINAL                       
 C:   0000006B  s_CSEG                          
-C:   00000080  l_DSEG                          
-C:   0000009C  l_XSEG                          
+C:   0000007C  l_DSEG                          
+C:   0000009E  l_XSEG                          
 C:   000000C8  l_SSEG                          
 C:   00000100  l_IRAM                          
-C:   0000039B  l_CONST                         
+C:   0000031F  l_CONST                         
 C:   00000400  s_PSEG                          
 C:   00000400  s_XSEG                          
-C:   0000049C  s_XISEG                         
+C:   0000049E  s_XISEG                         
 C:   00000FC8  l_XINIT                         
 C:   00000FC8  l_XISEG                         
-C:   00001C75  l_CSEG                          
-C:   00001CE0  s_CONST                         
-C:   0000207B  s_XINIT                         
+C:   00001A5F  l_CSEG                          
+C:   00001ACA  s_CONST                         
+C:   00001DE9  s_XINIT                         
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
@@ -376,18 +376,18 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-DSEG                                00000000    00000080 =         128. bytes (REL,CON)
+DSEG                                00000000    0000007C =         124. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     0000001B  _bp                                _bp
+     00000017  _bp                                _bp
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 12.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-OSEG                                0000001C    00000004 =           4. bytes (REL,OVR)
+OSEG                                00000018    00000004 =           4. bytes (REL,OVR)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -416,39 +416,38 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-XSEG                                00000400    0000009C =         156. bytes (REL,CON,XDATA)
+XSEG                                00000400    0000009E =         158. bytes (REL,CON,XDATA)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
 D:   00000402  _i2c_write_byte_PARM_2             i2c
-D:   00000407  _i2c_hex_dump_PARM_2               i2c
-D:   0000040D  _input_char                        main
-D:   0000040E  _err                               main
-D:   00000413  _i2c_decoder_write_PARM_2          mp3_decoder
-D:   0000041B  ___ultoa_PARM_2                    __ltoa
-D:   0000041E  ___ultoa_PARM_3                    __ltoa
-D:   00000444  ___ltoa_PARM_2                     __ltoa
-D:   00000447  ___ltoa_PARM_3                     __ltoa
-D:   0000044C  _vprintf_PARM_2                    vprintf
-D:   00000461  __print_format_PARM_2              printf_large
-D:   00000464  __print_format_PARM_3              printf_large
-D:   00000467  __print_format_PARM_4              printf_large
-D:   00000483  __mulint_PARM_2                    _mulint
-D:   00000485  __modulong_PARM_2                  _modulong
-D:   0000048E  __divulong_PARM_2                  _divulong
-D:   0000049B  __gptrput_PARM_2                   _gptrput
+D:   0000040B  _input_char                        main
+D:   0000040C  _err                               main
+D:   00000411  _i2c_decoder_write_PARM_2          mp3_decoder
+D:   0000041D  ___ultoa_PARM_2                    __ltoa
+D:   00000420  ___ultoa_PARM_3                    __ltoa
+D:   00000446  ___ltoa_PARM_2                     __ltoa
+D:   00000449  ___ltoa_PARM_3                     __ltoa
+D:   0000044E  _vprintf_PARM_2                    vprintf
+D:   00000463  __print_format_PARM_2              printf_large
+D:   00000466  __print_format_PARM_3              printf_large
+D:   00000469  __print_format_PARM_4              printf_large
+D:   00000485  __mulint_PARM_2                    _mulint
+D:   00000487  __modulong_PARM_2                  _modulong
+D:   00000490  __divulong_PARM_2                  _divulong
+D:   0000049D  __gptrput_PARM_2                   _gptrput
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 16.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-XISEG                               0000049C    00000FC8 =        4040. bytes (REL,CON,XDATA)
+XISEG                               0000049E    00000FC8 =        4040. bytes (REL,CON,XDATA)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-D:   0000049C  _STA013_configData                 mp3_decoder
-D:   0000144A  _PLL_init                          mp3_decoder
+D:   0000049E  _STA013_configData                 mp3_decoder
+D:   0000144C  _PLL_init                          mp3_decoder
 
 ASxxxx Linker V03.00 + NoICE + sdld,  page 17.
 Hexadecimal  [32-Bits]
@@ -527,7 +526,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CSEG                                0000006B    00001C75 =        7285. bytes (REL,CON,CODE)
+CSEG                                0000006B    00001A5F =        6751. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -538,44 +537,44 @@ C:   0000010F  _read_byte                         i2c
 C:   0000016F  _i2c_write_byte                    i2c
 C:   000001AB  _i2c_read_byte                     i2c
 C:   00000200  _i2c_stop                          i2c
-C:   0000022C  _i2c_hex_dump                      i2c
-C:   000003F8  _reset_eeprom                      i2c
-C:   0000045A  _delay_us                          i2c
-C:   0000049E  _i2c_send_nack                     i2c
-C:   000004BF  _write_io_port                     i2c
-C:   000004ED  _EXT0_IRQHandler                   i2c
-C:   00000530  __sdcc_external_startup            main
-C:   0000076F  _i2c_loop                          main
-C:   0000089F  _main                              main
-C:   000008AF  _i2c_decoder_read                  mp3_decoder
-C:   0000090C  _i2c_decoder_write                 mp3_decoder
-C:   00000930  _i2c_decoder_start                 mp3_decoder
-C:   0000093C  _i2c_decoder_play                  mp3_decoder
-C:   00000948  _decoder_init                      mp3_decoder
-C:   00000A3A  _serial_init                       serial
-C:   00000A48  _putchar                           serial
-C:   00000A67  _putstr                            serial
-C:   00000AC1  _getchar                           serial
-C:   00000ACF  _print_prompt                      serial
-C:   00000B57  _printf_tiny                       printf_tiny
-C:   00000C60  _printf_small                      printfl
-C:   00000E38  ___ultoa                           __ltoa
-C:   00000F4B  ___ltoa                            __ltoa
-C:   00000FF7  _vprintf                           vprintf
-C:   00001036  _printf                            vprintf
-C:   0000113C  __print_format                     printf_large
-C:   00001A3D  _strlen                            _strlen
-C:   00001A55  __mulint                           _mulint
-C:   00001A75  __gptrget                          _gptrget
-C:   00001A91  __modulong                         _modulong
-C:   00001BD1  __divulong                         _divulong
-C:   00001CC5  __gptrput                          _gptrput
+C:   0000022C  _delay_us                          i2c
+C:   00000270  _i2c_send_nack                     i2c
+C:   00000291  _write_io_port                     i2c
+C:   000002BF  _EXT0_IRQHandler                   i2c
+C:   00000302  __sdcc_external_startup            main
+C:   00000541  _i2c_loop                          main
+C:   00000610  _main                              main
+C:   00000620  _i2c_decoder_read                  mp3_decoder
+C:   0000067D  _i2c_decoder_write                 mp3_decoder
+C:   000006A1  _i2c_decoder_start                 mp3_decoder
+C:   000006AD  _i2c_decoder_play                  mp3_decoder
+C:   000006B9  _send_decoder_init                 mp3_decoder
+C:   00000732  _decoder_init                      mp3_decoder
+C:   00000824  _serial_init                       serial
+C:   00000832  _putchar                           serial
+C:   00000851  _putstr                            serial
+C:   000008AB  _getchar                           serial
+C:   000008B9  _print_prompt                      serial
+C:   00000941  _printf_tiny                       printf_tiny
+C:   00000A4A  _printf_small                      printfl
+C:   00000C22  ___ultoa                           __ltoa
+C:   00000D35  ___ltoa                            __ltoa
+C:   00000DE1  _vprintf                           vprintf
+C:   00000E20  _printf                            vprintf
+C:   00000F26  __print_format                     printf_large
+C:   00001827  _strlen                            _strlen
+C:   0000183F  __mulint                           _mulint
+C:   0000185F  __gptrget                          _gptrget
+C:   0000187B  __modulong                         _modulong
+C:   000019BB  __divulong                         _divulong
+C:   00001AAF  __gptrput                          _gptrput
+
 ASxxxx Linker V03.00 + NoICE + sdld,  page 25.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CONST                               00001CE0    0000039B =         923. bytes (REL,CON,CODE)
+CONST                               00001ACA    0000031F =         799. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -584,7 +583,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-XINIT                               0000207B    00000FC8 =        4040. bytes (REL,CON,CODE)
+XINIT                               00001DE9    00000FC8 =        4040. bytes (REL,CON,CODE)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------

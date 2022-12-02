@@ -9,6 +9,7 @@
 #include "common_defines.h"
 #include "i2c.h"
 #include "serial.h"
+#include "mp3_decoder.h"
 
 #define ENTER (0X0D)
 #define XRAM_EN (0x0C)
@@ -128,7 +129,7 @@ static uint16_t get_addr(void)
 void i2c_loop()
 {
     uint8_t data_byte;
-    uint16_t address, end_address;
+    uint16_t address;
 
     while(1)
     {
@@ -161,33 +162,6 @@ void i2c_loop()
             data_byte = i2c_read_byte(address);
             printf("Byte read from EEPROM address 0x%3X is 0x%2X\r\n",address, data_byte);
         }
-        /* HEX dump */
-        else if (input_char == 'H')
-        {
-            address = get_addr();
-            if(err)
-            {
-                break;
-            }
-            end_address = get_addr();
-            if(err)
-            {
-                break;
-            }
-            /* If start address < end address, the range for hexdump is invalid */
-            if(end_address < address)
-            {
-                printf("ERROR: Please enter a valid address range\r\n");
-            }
-            else
-            {
-                i2c_hex_dump(address, end_address);
-            }
-        }
-        else if(input_char == 'E')
-        {
-            reset_eeprom();
-        }
         else if(input_char == 'O')
         {
             printf("Printing Options:\r\n");
@@ -213,7 +187,8 @@ int main(void)
 
     /* I2C loop to accept character commands and
     perform appropriate actions */
-    i2c_loop();
+    //i2c_loop();
+    decoder_init();
 
     return 0;
 }

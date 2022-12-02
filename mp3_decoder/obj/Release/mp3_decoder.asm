@@ -8,6 +8,7 @@
 ;--------------------------------------------------------
 ; Public variables in this module
 ;--------------------------------------------------------
+	.globl _send_decoder_init
 	.globl _delay_us
 	.globl _i2c_stop
 	.globl _i2c_start
@@ -487,13 +488,17 @@ _decoder_init_sloc1_1_0:
 ; external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
-_i2c_decoder_read_addr_65536_55:
+_i2c_decoder_read_addr_65536_54:
 	.ds 1
 _i2c_decoder_write_PARM_2:
 	.ds 1
-_i2c_decoder_write_addr_65536_57:
+_i2c_decoder_write_addr_65536_56:
 	.ds 1
-_decoder_init_i_131072_64:
+_send_decoder_init_init_data_65536_60:
+	.ds 3
+_send_decoder_init_i_131072_62:
+	.ds 1
+_decoder_init_i_131072_67:
 	.ds 1
 ;--------------------------------------------------------
 ; absolute external ram data
@@ -536,8 +541,8 @@ _PLL_init::
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'i2c_decoder_read'
 ;------------------------------------------------------------
-;addr                      Allocated with name '_i2c_decoder_read_addr_65536_55'
-;rx_data                   Allocated with name '_i2c_decoder_read_rx_data_65536_56'
+;addr                      Allocated with name '_i2c_decoder_read_addr_65536_54'
+;rx_data                   Allocated with name '_i2c_decoder_read_rx_data_65536_55'
 ;------------------------------------------------------------
 ;	mp3_decoder.c:222: unsigned char i2c_decoder_read(uint8_t addr)
 ;	-----------------------------------------
@@ -553,7 +558,7 @@ _i2c_decoder_read:
 	ar1 = 0x01
 	ar0 = 0x00
 	mov	a,dpl
-	mov	dptr,#_i2c_decoder_read_addr_65536_55
+	mov	dptr,#_i2c_decoder_read_addr_65536_54
 	movx	@dptr,a
 ;	mp3_decoder.c:225: i2c_start();
 	lcall	_i2c_start
@@ -561,7 +566,7 @@ _i2c_decoder_read:
 	mov	dpl,#0x86
 	lcall	_send_byte
 ;	mp3_decoder.c:227: send_byte(addr);
-	mov	dptr,#_i2c_decoder_read_addr_65536_55
+	mov	dptr,#_i2c_decoder_read_addr_65536_54
 	movx	a,@dptr
 	mov	dpl,a
 	lcall	_send_byte
@@ -619,7 +624,7 @@ _i2c_decoder_read:
 ;Allocation info for local variables in function 'i2c_decoder_write'
 ;------------------------------------------------------------
 ;wr_byte                   Allocated with name '_i2c_decoder_write_PARM_2'
-;addr                      Allocated with name '_i2c_decoder_write_addr_65536_57'
+;addr                      Allocated with name '_i2c_decoder_write_addr_65536_56'
 ;------------------------------------------------------------
 ;	mp3_decoder.c:254: void i2c_decoder_write(uint8_t addr, uint8_t wr_byte)
 ;	-----------------------------------------
@@ -627,7 +632,7 @@ _i2c_decoder_read:
 ;	-----------------------------------------
 _i2c_decoder_write:
 	mov	a,dpl
-	mov	dptr,#_i2c_decoder_write_addr_65536_57
+	mov	dptr,#_i2c_decoder_write_addr_65536_56
 	movx	@dptr,a
 ;	mp3_decoder.c:256: i2c_start();
 	lcall	_i2c_start
@@ -635,7 +640,7 @@ _i2c_decoder_write:
 	mov	dpl,#0x86
 	lcall	_send_byte
 ;	mp3_decoder.c:258: send_byte(addr);
-	mov	dptr,#_i2c_decoder_write_addr_65536_57
+	mov	dptr,#_i2c_decoder_write_addr_65536_56
 	movx	a,@dptr
 	mov	dpl,a
 	lcall	_send_byte
@@ -678,28 +683,121 @@ _i2c_decoder_play:
 ;	mp3_decoder.c:273: }
 	ljmp	_i2c_decoder_write
 ;------------------------------------------------------------
+;Allocation info for local variables in function 'send_decoder_init'
+;------------------------------------------------------------
+;init_data                 Allocated with name '_send_decoder_init_init_data_65536_60'
+;i                         Allocated with name '_send_decoder_init_i_131072_62'
+;------------------------------------------------------------
+;	mp3_decoder.c:277: void send_decoder_init(uint8_t* init_data)
+;	-----------------------------------------
+;	 function send_decoder_init
+;	-----------------------------------------
+_send_decoder_init:
+	mov	r7,b
+	mov	r6,dph
+	mov	a,dpl
+	mov	dptr,#_send_decoder_init_init_data_65536_60
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+;	mp3_decoder.c:279: for(uint8_t i = 0; i < 32; i+=2)
+	mov	dptr,#_send_decoder_init_i_131072_62
+	clr	a
+	movx	@dptr,a
+	mov	dptr,#_send_decoder_init_init_data_65536_60
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+00103$:
+	mov	dptr,#_send_decoder_init_i_131072_62
+	movx	a,@dptr
+	mov	r4,a
+	cjne	r4,#0x20,00115$
+00115$:
+	jnc	00105$
+;	mp3_decoder.c:281: i2c_decoder_write(init_data[i], init_data[i+1]);
+	mov	a,r4
+	add	a,r5
+	mov	r1,a
+	clr	a
+	addc	a,r6
+	mov	r2,a
+	mov	ar3,r7
+	mov	dpl,r1
+	mov	dph,r2
+	mov	b,r3
+	lcall	__gptrget
+	mov	r1,a
+	mov	ar2,r4
+	mov	r3,#0x00
+	inc	r2
+	cjne	r2,#0x00,00117$
+	inc	r3
+00117$:
+	mov	a,r2
+	add	a,r5
+	mov	r2,a
+	mov	a,r3
+	addc	a,r6
+	mov	r0,a
+	mov	ar3,r7
+	mov	dpl,r2
+	mov	dph,r0
+	mov	b,r3
+	lcall	__gptrget
+	mov	dptr,#_i2c_decoder_write_PARM_2
+	movx	@dptr,a
+	mov	dpl,r1
+	push	ar7
+	push	ar6
+	push	ar5
+	push	ar4
+	lcall	_i2c_decoder_write
+	pop	ar4
+	pop	ar5
+	pop	ar6
+	pop	ar7
+;	mp3_decoder.c:279: for(uint8_t i = 0; i < 32; i+=2)
+	mov	dptr,#_send_decoder_init_i_131072_62
+	mov	a,#0x02
+	add	a,r4
+	movx	@dptr,a
+	sjmp	00103$
+00105$:
+;	mp3_decoder.c:283: }
+	ret
+;------------------------------------------------------------
 ;Allocation info for local variables in function 'decoder_init'
 ;------------------------------------------------------------
 ;sloc0                     Allocated with name '_decoder_init_sloc0_1_0'
 ;sloc1                     Allocated with name '_decoder_init_sloc1_1_0'
-;init_read                 Allocated with name '_decoder_init_init_read_65536_61'
-;i                         Allocated with name '_decoder_init_i_131072_62'
-;i                         Allocated with name '_decoder_init_i_131072_64'
+;init_read                 Allocated with name '_decoder_init_init_read_65536_64'
+;i                         Allocated with name '_decoder_init_i_131072_65'
+;i                         Allocated with name '_decoder_init_i_131072_67'
 ;------------------------------------------------------------
-;	mp3_decoder.c:276: void decoder_init()
+;	mp3_decoder.c:285: void decoder_init()
 ;	-----------------------------------------
 ;	 function decoder_init
 ;	-----------------------------------------
 _decoder_init:
-;	mp3_decoder.c:281: init_read = i2c_decoder_read(INIT_ADDR);
+;	mp3_decoder.c:290: init_read = i2c_decoder_read(INIT_ADDR);
 	mov	dpl,#0x01
 	lcall	_i2c_decoder_read
 	mov	r7,dpl
-;	mp3_decoder.c:283: if(init_read != 0xAC) /*Indicate error */
+;	mp3_decoder.c:292: if(init_read != 0xAC) /*Indicate error */
 	cjne	r7,#0xac,00140$
 	sjmp	00118$
 00140$:
-;	mp3_decoder.c:284: printf_tiny("ERROR: STA013 not initialized\n\r");
+;	mp3_decoder.c:293: printf_tiny("ERROR: STA013 not initialized\n\r");
 	mov	a,#___str_0
 	push	acc
 	mov	a,#(___str_0 >> 8)
@@ -707,7 +805,7 @@ _decoder_init:
 	lcall	_printf_tiny
 	dec	sp
 	dec	sp
-;	mp3_decoder.c:287: for(uint32_t i = 0; i < CONFIG_ARR_SIZE; i+=2)
+;	mp3_decoder.c:296: for(uint32_t i = 0; i < CONFIG_ARR_SIZE; i+=2)
 00118$:
 	mov	r4,#0x00
 	mov	r5,#0x00
@@ -726,7 +824,7 @@ _decoder_init:
 	jc	00141$
 	ljmp	00105$
 00141$:
-;	mp3_decoder.c:289: i2c_decoder_write(STA013_configData[i], STA013_configData[i+1]);
+;	mp3_decoder.c:298: i2c_decoder_write(STA013_configData[i], STA013_configData[i+1]);
 	mov	a,r4
 	add	a,#_STA013_configData
 	mov	_decoder_init_sloc1_1_0,a
@@ -766,13 +864,13 @@ _decoder_init:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	mp3_decoder.c:291: if(STA013_configData[i] == SOFT_REBOOT_ADDR)
+;	mp3_decoder.c:300: if(STA013_configData[i] == SOFT_REBOOT_ADDR)
 	mov	dpl,_decoder_init_sloc1_1_0
 	mov	dph,(_decoder_init_sloc1_1_0 + 1)
 	movx	a,@dptr
 	mov	r3,a
 	cjne	r3,#0x10,00109$
-;	mp3_decoder.c:292: delay_us(1000000);
+;	mp3_decoder.c:301: delay_us(1000000);
 	mov	dptr,#0x4240
 	mov	b,#0x0f
 	clr	a
@@ -786,7 +884,7 @@ _decoder_init:
 	pop	ar6
 	pop	ar7
 00109$:
-;	mp3_decoder.c:287: for(uint32_t i = 0; i < CONFIG_ARR_SIZE; i+=2)
+;	mp3_decoder.c:296: for(uint32_t i = 0; i < CONFIG_ARR_SIZE; i+=2)
 	mov	a,#0x02
 	add	a,r4
 	mov	r4,a
@@ -801,18 +899,18 @@ _decoder_init:
 	mov	r7,a
 	ljmp	00108$
 00105$:
-;	mp3_decoder.c:295: for(uint8_t i = 0; i < PLL_ARR_SIZE; i+=2)
-	mov	dptr,#_decoder_init_i_131072_64
+;	mp3_decoder.c:304: for(uint8_t i = 0; i < PLL_ARR_SIZE; i+=2)
+	mov	dptr,#_decoder_init_i_131072_67
 	clr	a
 	movx	@dptr,a
 00111$:
-	mov	dptr,#_decoder_init_i_131072_64
+	mov	dptr,#_decoder_init_i_131072_67
 	movx	a,@dptr
 	mov	r7,a
 	cjne	r7,#0x1a,00144$
 00144$:
 	jnc	00113$
-;	mp3_decoder.c:297: i2c_decoder_write(PLL_init[i], PLL_init[i+1]);
+;	mp3_decoder.c:306: i2c_decoder_write(PLL_init[i], PLL_init[i+1]);
 	mov	a,r7
 	add	a,#_PLL_init
 	mov	dpl,a
@@ -840,14 +938,14 @@ _decoder_init:
 	push	ar7
 	lcall	_i2c_decoder_write
 	pop	ar7
-;	mp3_decoder.c:295: for(uint8_t i = 0; i < PLL_ARR_SIZE; i+=2)
-	mov	dptr,#_decoder_init_i_131072_64
+;	mp3_decoder.c:304: for(uint8_t i = 0; i < PLL_ARR_SIZE; i+=2)
+	mov	dptr,#_decoder_init_i_131072_67
 	mov	a,#0x02
 	add	a,r7
 	movx	@dptr,a
 	sjmp	00111$
 00113$:
-;	mp3_decoder.c:299: }
+;	mp3_decoder.c:308: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

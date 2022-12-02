@@ -436,8 +436,7 @@ Symbol Table
  18 ___str_5                                                       0000A0 R
  18 ___str_6                                                       0000BB R
  18 ___str_7                                                       0000EA R
- 18 ___str_8                                                       000116 R
- 18 ___str_9                                                       00012A R
+ 18 ___str_8                                                       0000FE R
   E __interrupt_vect                                               000000 R
     __mcs51_genRAMCLEAR                                            ****** GX
     __mcs51_genXINIT                                               ****** GX
@@ -446,28 +445,26 @@ Symbol Table
     __sdcc_gsinit_startup                                          ****** GX
   E __sdcc_program_startup                                         000006 GR
   6 __start__stack                                                 000000 GR
+    _decoder_init                                                  ****** GX
  17 _enable_8051_irq                                               000007 R
   B _err                                                           000001 GR
  17 _get_addr                                                      0000C0 R
-  B _get_addr_address_65536_66                                     000003 R
+  B _get_addr_address_65536_67                                     000003 R
  17 _get_data_byte                                                 00000C R
-  B _get_data_byte_data_byte_65536_59                              000002 R
+  B _get_data_byte_data_byte_65536_60                              000002 R
     _getchar                                                       ****** GX
-    _i2c_hex_dump                                                  ****** GX
-    _i2c_hex_dump_PARM_2                                           ****** GX
     _i2c_init                                                      ****** GX
  17 _i2c_loop                                                      00023F GR
     _i2c_read_byte                                                 ****** GX
     _i2c_write_byte                                                ****** GX
     _i2c_write_byte_PARM_2                                         ****** GX
   B _input_char                                                    000000 GR
- 17 _main                                                          00036F GR
+ 17 _main                                                          00030E GR
     _print_prompt                                                  ****** GX
     _printf                                                        ****** GX
     _printf_small                                                  ****** GX
     _putchar                                                       ****** GX
     _putstr                                                        ****** GX
-    _reset_eeprom                                                  ****** GX
     _serial_init                                                   ****** GX
     a                                                           =  0000E0 L
     a.0                                                         =  0000E0 L
@@ -478,14 +475,14 @@ Symbol Table
     a.5                                                         =  0000E5 L
     a.6                                                         =  0000E6 L
     a.7                                                         =  0000E7 L
+    ac                                                          =  0000D6 L
+    acc                                                         =  0000E0 L
+    acc.0                                                       =  0000E0 L
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 9.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    ac                                                          =  0000D6 L
-    acc                                                         =  0000E0 L
-    acc.0                                                       =  0000E0 L
     acc.1                                                       =  0000E1 L
     acc.2                                                       =  0000E2 L
     acc.3                                                       =  0000E3 L
@@ -538,14 +535,14 @@ Symbol Table
     int0                                                        =  0000B2 L
     int1                                                        =  0000B3 L
     ip                                                          =  0000B8 L
+    ip.0                                                        =  0000B8 L
+    ip.1                                                        =  0000B9 L
+    ip.2                                                        =  0000BA L
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 10.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    ip.0                                                        =  0000B8 L
-    ip.1                                                        =  0000B9 L
-    ip.2                                                        =  0000BA L
     ip.3                                                        =  0000BB L
     ip.4                                                        =  0000BC L
     ip.5                                                        =  0000BD L
@@ -598,14 +595,14 @@ Symbol Table
     psw.3                                                       =  0000D3 L
     psw.4                                                       =  0000D4 L
     psw.5                                                       =  0000D5 L
+    psw.6                                                       =  0000D6 L
+    psw.7                                                       =  0000D7 L
+    pt0                                                         =  0000B9 L
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 11.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    psw.6                                                       =  0000D6 L
-    psw.7                                                       =  0000D7 L
-    pt0                                                         =  0000B9 L
     pt1                                                         =  0000BB L
     pt2                                                         =  0000BD L
     px0                                                         =  0000B8 L
@@ -658,14 +655,14 @@ Symbol Table
     tf2                                                         =  0000CF L
     th0                                                         =  00008C L
     th1                                                         =  00008D L
+    th2                                                         =  0000CD L
+    ti                                                          =  000099 L
+    tl0                                                         =  00008A L
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (Intel 8051), page 12.
 Hexadecimal [24-Bits]
 
 Symbol Table
 
-    th2                                                         =  0000CD L
-    ti                                                          =  000099 L
-    tl0                                                         =  00008A L
     tl1                                                         =  00008B L
     tl2                                                         =  0000CC L
     tmod                                                        =  000089 L
@@ -702,8 +699,8 @@ Area Table
   14 GSINIT5                                    size      0   flags   20
   15 GSINIT                                     size      0   flags   20
   16 GSFINAL                                    size      3   flags   20
-  17 CSEG                                       size    37F   flags   20
-  18 CONST                                      size    14C   flags   20
+  17 CSEG                                       size    31E   flags   20
+  18 CONST                                      size    120   flags   20
   19 XINIT                                      size      0   flags   20
   1A CABS                                       size      0   flags   28
 

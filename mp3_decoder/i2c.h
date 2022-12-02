@@ -116,28 +116,6 @@ unsigned char i2c_read_byte(uint16_t addr);
 void i2c_stop(void);
 
 
-/*
- * i2c_hex_dump() - Print I2C addresses between given addresses
- *
- * Parameters -
- * start_address: Address to begin printing hexdump from
- * end_address: Address to end printing hexdump at
- *
- * Returns - void
- */
-void i2c_hex_dump(__data uint16_t start_address, uint16_t end_address);
-
-
-/*
- * reset-eeprom() - Sending the I2C start bit, followed by
- * 9 high bits, followed I2C stop bit
- *
- * Parameters - none
- *
- * Returns - void
- */
-void reset_eeprom();
-
 
 /*
  * delay_us() - Create a microsecond delay

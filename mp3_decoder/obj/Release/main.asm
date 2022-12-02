@@ -11,13 +11,12 @@
 	.globl _main
 	.globl _i2c_loop
 	.globl __sdcc_external_startup
+	.globl _decoder_init
 	.globl _print_prompt
 	.globl _getchar
 	.globl _putstr
 	.globl _putchar
 	.globl _serial_init
-	.globl _reset_eeprom
-	.globl _i2c_hex_dump
 	.globl _i2c_read_byte
 	.globl _i2c_write_byte
 	.globl _i2c_init
@@ -497,9 +496,9 @@ _input_char::
 	.ds 1
 _err::
 	.ds 1
-_get_data_byte_data_byte_65536_59:
+_get_data_byte_data_byte_65536_60:
 	.ds 1
-_get_addr_address_65536_66:
+_get_addr_address_65536_67:
 	.ds 2
 ;--------------------------------------------------------
 ; absolute external ram data
@@ -556,7 +555,7 @@ __sdcc_program_startup:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function '_sdcc_external_startup'
 ;------------------------------------------------------------
-;	main.c:21: _sdcc_external_startup()
+;	main.c:22: _sdcc_external_startup()
 ;	-----------------------------------------
 ;	 function _sdcc_external_startup
 ;	-----------------------------------------
@@ -569,44 +568,44 @@ __sdcc_external_startup:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	main.c:24: AUXR |= XRAM_EN;
+;	main.c:25: AUXR |= XRAM_EN;
 	orl	_AUXR,#0x0c
-;	main.c:25: return 0;
+;	main.c:26: return 0;
 	mov	dptr,#0x0000
-;	main.c:26: }
+;	main.c:27: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'enable_8051_irq'
 ;------------------------------------------------------------
-;	main.c:28: static void enable_8051_irq()
+;	main.c:29: static void enable_8051_irq()
 ;	-----------------------------------------
 ;	 function enable_8051_irq
 ;	-----------------------------------------
 _enable_8051_irq:
-;	main.c:30: EA = 1;
+;	main.c:31: EA = 1;
 ;	assignBit
 	setb	_EA
-;	main.c:32: EX0 = 1;
+;	main.c:33: EX0 = 1;
 ;	assignBit
 	setb	_EX0
-;	main.c:33: }
+;	main.c:34: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'get_data_byte'
 ;------------------------------------------------------------
-;data_byte                 Allocated with name '_get_data_byte_data_byte_65536_59'
-;digit                     Allocated with name '_get_data_byte_digit_65536_59'
+;data_byte                 Allocated with name '_get_data_byte_data_byte_65536_60'
+;digit                     Allocated with name '_get_data_byte_digit_65536_60'
 ;------------------------------------------------------------
-;	main.c:36: static uint8_t get_data_byte(void)
+;	main.c:37: static uint8_t get_data_byte(void)
 ;	-----------------------------------------
 ;	 function get_data_byte
 ;	-----------------------------------------
 _get_data_byte:
-;	main.c:38: uint8_t data_byte = 0;
-	mov	dptr,#_get_data_byte_data_byte_65536_59
+;	main.c:39: uint8_t data_byte = 0;
+	mov	dptr,#_get_data_byte_data_byte_65536_60
 	clr	a
 	movx	@dptr,a
-;	main.c:40: printf_small("Please enter the byte to be written\r\n");
+;	main.c:41: printf_small("Please enter the byte to be written\r\n");
 	mov	a,#___str_0
 	push	acc
 	mov	a,#(___str_0 >> 8)
@@ -617,12 +616,12 @@ _get_data_byte:
 	dec	sp
 	dec	sp
 	dec	sp
-;	main.c:42: while(1)
+;	main.c:43: while(1)
 00116$:
-;	main.c:44: digit = getchar();
+;	main.c:45: digit = getchar();
 	lcall	_getchar
 	mov	r6,dpl
-;	main.c:45: putchar(digit);
+;	main.c:46: putchar(digit);
 	mov	ar5,r6
 	mov	r7,#0x00
 	mov	dpl,r5
@@ -630,24 +629,24 @@ _get_data_byte:
 	push	ar6
 	lcall	_putchar
 	pop	ar6
-;	main.c:48: if(digit == ENTER)
+;	main.c:49: if(digit == ENTER)
 	cjne	r6,#0x0d,00152$
 	sjmp	00117$
 00152$:
-;	main.c:52: else if(digit >= '0' && digit <= '9')
+;	main.c:53: else if(digit >= '0' && digit <= '9')
 	cjne	r6,#0x30,00153$
 00153$:
 	jc	00109$
 	mov	a,r6
 	add	a,#0xff - 0x39
 	jc	00109$
-;	main.c:54: data_byte *= 16; /* Values are entered in hex */
-	mov	dptr,#_get_data_byte_data_byte_65536_59
+;	main.c:55: data_byte *= 16; /* Values are entered in hex */
+	mov	dptr,#_get_data_byte_data_byte_65536_60
 	movx	a,@dptr
 	swap	a
 	anl	a,#0xf0
 	movx	@dptr,a
-;	main.c:55: data_byte += digit - '0';
+;	main.c:56: data_byte += digit - '0';
 	mov	ar7,r6
 	mov	a,r7
 	add	a,#0xd0
@@ -658,20 +657,20 @@ _get_data_byte:
 	movx	@dptr,a
 	sjmp	00116$
 00109$:
-;	main.c:57: else if(digit >= 'A' && digit <= 'F')
+;	main.c:58: else if(digit >= 'A' && digit <= 'F')
 	cjne	r6,#0x41,00156$
 00156$:
 	jc	00105$
 	mov	a,r6
 	add	a,#0xff - 0x46
 	jc	00105$
-;	main.c:59: data_byte *= 16; /* Values are entered in hex */
-	mov	dptr,#_get_data_byte_data_byte_65536_59
+;	main.c:60: data_byte *= 16; /* Values are entered in hex */
+	mov	dptr,#_get_data_byte_data_byte_65536_60
 	movx	a,@dptr
 	swap	a
 	anl	a,#0xf0
 	movx	@dptr,a
-;	main.c:60: data_byte += digit - 'A' + 10;
+;	main.c:61: data_byte += digit - 'A' + 10;
 	mov	ar7,r6
 	mov	a,#0xc9
 	add	a,r7
@@ -682,20 +681,20 @@ _get_data_byte:
 	movx	@dptr,a
 	sjmp	00116$
 00105$:
-;	main.c:62: else if(digit >= 'a' && digit <= 'f')
+;	main.c:63: else if(digit >= 'a' && digit <= 'f')
 	cjne	r6,#0x61,00159$
 00159$:
 	jc	00116$
 	mov	a,r6
 	add	a,#0xff - 0x66
 	jc	00116$
-;	main.c:64: data_byte *= 16; /* Values are entered in hex */
-	mov	dptr,#_get_data_byte_data_byte_65536_59
+;	main.c:65: data_byte *= 16; /* Values are entered in hex */
+	mov	dptr,#_get_data_byte_data_byte_65536_60
 	movx	a,@dptr
 	swap	a
 	anl	a,#0xf0
 	movx	@dptr,a
-;	main.c:65: data_byte += digit - 'a' + 10;
+;	main.c:66: data_byte += digit - 'a' + 10;
 	mov	a,#0xa9
 	add	a,r6
 	mov	r6,a
@@ -705,8 +704,8 @@ _get_data_byte:
 	movx	@dptr,a
 	ljmp	00116$
 00117$:
-;	main.c:68: printf("Entered data byte is 0x%2X\r\n", data_byte);
-	mov	dptr,#_get_data_byte_data_byte_65536_59
+;	main.c:69: printf("Entered data byte is 0x%2X\r\n", data_byte);
+	mov	dptr,#_get_data_byte_data_byte_65536_60
 	movx	a,@dptr
 	mov	r7,a
 	mov	r5,a
@@ -725,28 +724,28 @@ _get_data_byte:
 	add	a,#0xfb
 	mov	sp,a
 	pop	ar7
-;	main.c:69: return data_byte;
+;	main.c:70: return data_byte;
 	mov	dpl,r7
-;	main.c:70: }
+;	main.c:71: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'get_addr'
 ;------------------------------------------------------------
-;address                   Allocated with name '_get_addr_address_65536_66'
-;digit                     Allocated with name '_get_addr_digit_65536_66'
+;address                   Allocated with name '_get_addr_address_65536_67'
+;digit                     Allocated with name '_get_addr_digit_65536_67'
 ;------------------------------------------------------------
-;	main.c:73: static uint16_t get_addr(void)
+;	main.c:74: static uint16_t get_addr(void)
 ;	-----------------------------------------
 ;	 function get_addr
 ;	-----------------------------------------
 _get_addr:
-;	main.c:75: uint16_t address = 0;
-	mov	dptr,#_get_addr_address_65536_66
+;	main.c:76: uint16_t address = 0;
+	mov	dptr,#_get_addr_address_65536_67
 	clr	a
 	movx	@dptr,a
 	inc	dptr
 	movx	@dptr,a
-;	main.c:78: printf_small("Please enter an EEPROM address between 0x000 and 0x7FF:\r\n");
+;	main.c:79: printf_small("Please enter an EEPROM address between 0x000 and 0x7FF:\r\n");
 	mov	a,#___str_2
 	push	acc
 	mov	a,#(___str_2 >> 8)
@@ -757,12 +756,12 @@ _get_addr:
 	dec	sp
 	dec	sp
 	dec	sp
-;	main.c:79: while(1)
+;	main.c:80: while(1)
 00116$:
-;	main.c:81: digit = getchar();
+;	main.c:82: digit = getchar();
 	lcall	_getchar
 	mov	r6,dpl
-;	main.c:82: putchar(digit);
+;	main.c:83: putchar(digit);
 	mov	ar5,r6
 	mov	r7,#0x00
 	mov	dpl,r5
@@ -774,24 +773,24 @@ _get_addr:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	main.c:83: if(digit == ENTER)
+;	main.c:84: if(digit == ENTER)
 	cjne	r6,#0x0d,00113$
-;	main.c:85: putstr("\r\n");
+;	main.c:86: putstr("\r\n");
 	mov	dptr,#___str_3
 	mov	b,#0x80
 	lcall	_putstr
-;	main.c:86: break;
+;	main.c:87: break;
 	ljmp	00117$
 00113$:
-;	main.c:88: else if(digit >= '0' && digit <= '9')
+;	main.c:89: else if(digit >= '0' && digit <= '9')
 	cjne	r6,#0x30,00161$
 00161$:
 	jc	00109$
 	mov	a,r6
 	add	a,#0xff - 0x39
 	jc	00109$
-;	main.c:90: address *= 16; /* Values are entered in hex */
-	mov	dptr,#_get_addr_address_65536_66
+;	main.c:91: address *= 16; /* Values are entered in hex */
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -807,20 +806,20 @@ _get_addr:
 	xch	a,r3
 	xrl	a,r3
 	mov	r4,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	mov	a,r3
 	movx	@dptr,a
 	mov	a,r4
 	inc	dptr
 	movx	@dptr,a
-;	main.c:91: address += digit - '0';
+;	main.c:92: address += digit - '0';
 	mov	a,r5
 	add	a,#0xd0
 	mov	r3,a
 	mov	a,r7
 	addc	a,#0xff
 	mov	r4,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r1,a
 	inc	dptr
@@ -832,7 +831,7 @@ _get_addr:
 	mov	a,r4
 	addc	a,r2
 	mov	r2,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	mov	a,r1
 	movx	@dptr,a
 	mov	a,r2
@@ -840,15 +839,15 @@ _get_addr:
 	movx	@dptr,a
 	ljmp	00116$
 00109$:
-;	main.c:93: else if(digit >= 'A' && digit <= 'F')
+;	main.c:94: else if(digit >= 'A' && digit <= 'F')
 	cjne	r6,#0x41,00164$
 00164$:
 	jc	00105$
 	mov	a,r6
 	add	a,#0xff - 0x46
 	jc	00105$
-;	main.c:95: address *= 16; /* Values are entered in hex */
-	mov	dptr,#_get_addr_address_65536_66
+;	main.c:96: address *= 16; /* Values are entered in hex */
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r3,a
 	inc	dptr
@@ -864,20 +863,20 @@ _get_addr:
 	xch	a,r3
 	xrl	a,r3
 	mov	r4,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	mov	a,r3
 	movx	@dptr,a
 	mov	a,r4
 	inc	dptr
 	movx	@dptr,a
-;	main.c:96: address += digit - 'A' + 10;
+;	main.c:97: address += digit - 'A' + 10;
 	mov	a,#0xc9
 	add	a,r5
 	mov	r3,a
 	mov	a,#0xff
 	addc	a,r7
 	mov	r4,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r1,a
 	inc	dptr
@@ -889,7 +888,7 @@ _get_addr:
 	mov	a,r4
 	addc	a,r2
 	mov	r2,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	mov	a,r1
 	movx	@dptr,a
 	mov	a,r2
@@ -897,7 +896,7 @@ _get_addr:
 	movx	@dptr,a
 	ljmp	00116$
 00105$:
-;	main.c:98: else if(digit >= 'a' && digit <= 'f')
+;	main.c:99: else if(digit >= 'a' && digit <= 'f')
 	cjne	r6,#0x61,00167$
 00167$:
 	jnc	00168$
@@ -908,8 +907,8 @@ _get_addr:
 	jnc	00169$
 	ljmp	00116$
 00169$:
-;	main.c:100: address *= 16; /* Values are entered in hex */
-	mov	dptr,#_get_addr_address_65536_66
+;	main.c:101: address *= 16; /* Values are entered in hex */
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r4,a
 	inc	dptr
@@ -925,20 +924,20 @@ _get_addr:
 	xch	a,r4
 	xrl	a,r4
 	mov	r6,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	mov	a,r4
 	movx	@dptr,a
 	mov	a,r6
 	inc	dptr
 	movx	@dptr,a
-;	main.c:101: address += digit - 'a' + 10;
+;	main.c:102: address += digit - 'a' + 10;
 	mov	a,#0xa9
 	add	a,r5
 	mov	r5,a
 	mov	a,#0xff
 	addc	a,r7
 	mov	r7,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r4,a
 	inc	dptr
@@ -950,7 +949,7 @@ _get_addr:
 	mov	a,r7
 	addc	a,r6
 	mov	r6,a
-	mov	dptr,#_get_addr_address_65536_66
+	mov	dptr,#_get_addr_address_65536_67
 	mov	a,r4
 	movx	@dptr,a
 	mov	a,r6
@@ -958,8 +957,8 @@ _get_addr:
 	movx	@dptr,a
 	ljmp	00116$
 00117$:
-;	main.c:104: if(address >= 0x800) /* Invalid address check */
-	mov	dptr,#_get_addr_address_65536_66
+;	main.c:105: if(address >= 0x800) /* Invalid address check */
+	mov	dptr,#_get_addr_address_65536_67
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
@@ -969,7 +968,7 @@ _get_addr:
 	mov	a,#0x100 - 0x08
 	add	a,r5
 	jnc	00119$
-;	main.c:106: printf("Invalid address, please retry\r\n");
+;	main.c:107: printf("Invalid address, please retry\r\n");
 	push	ar7
 	push	ar6
 	mov	a,#___str_4
@@ -984,16 +983,16 @@ _get_addr:
 	dec	sp
 	pop	ar6
 	pop	ar7
-;	main.c:107: err = 1;
+;	main.c:108: err = 1;
 	mov	dptr,#_err
 	mov	a,#0x01
 	movx	@dptr,a
-;	main.c:108: return address;
+;	main.c:109: return address;
 	mov	dpl,r6
 	mov	dph,r7
 	ret
 00119$:
-;	main.c:112: printf("Entered address is 0x%3X\r\n", address);
+;	main.c:113: printf("Entered address is 0x%3X\r\n", address);
 	push	ar7
 	push	ar6
 	push	ar6
@@ -1010,38 +1009,37 @@ _get_addr:
 	mov	sp,a
 	pop	ar6
 	pop	ar7
-;	main.c:116: return address;
+;	main.c:117: return address;
 	mov	dpl,r6
 	mov	dph,r7
-;	main.c:117: }
+;	main.c:118: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'i2c_loop'
 ;------------------------------------------------------------
-;data_byte                 Allocated with name '_i2c_loop_data_byte_65536_74'
-;address                   Allocated with name '_i2c_loop_address_65536_74'
-;end_address               Allocated with name '_i2c_loop_end_address_65536_74'
+;data_byte                 Allocated with name '_i2c_loop_data_byte_65536_75'
+;address                   Allocated with name '_i2c_loop_address_65536_75'
 ;------------------------------------------------------------
-;	main.c:128: void i2c_loop()
+;	main.c:129: void i2c_loop()
 ;	-----------------------------------------
 ;	 function i2c_loop
 ;	-----------------------------------------
 _i2c_loop:
-;	main.c:133: while(1)
-00128$:
-;	main.c:135: err = 0;
+;	main.c:134: while(1)
+00115$:
+;	main.c:136: err = 0;
 	mov	dptr,#_err
 	clr	a
 	movx	@dptr,a
-;	main.c:136: print_prompt();
+;	main.c:137: print_prompt();
 	lcall	_print_prompt
-;	main.c:137: input_char = getchar();
+;	main.c:138: input_char = getchar();
 	lcall	_getchar
 	mov	r6,dpl
 	mov	dptr,#_input_char
 	mov	a,r6
 	movx	@dptr,a
-;	main.c:138: putchar(input_char);
+;	main.c:139: putchar(input_char);
 	mov	a,r6
 	rlc	a
 	subb	a,acc
@@ -1049,54 +1047,52 @@ _i2c_loop:
 	mov	dpl,r6
 	mov	dph,r7
 	lcall	_putchar
-;	main.c:139: putstr("\r\n");
+;	main.c:140: putstr("\r\n");
 	mov	dptr,#___str_3
 	mov	b,#0x80
 	lcall	_putstr
-;	main.c:142: if(input_char == 'W')
+;	main.c:143: if(input_char == 'W')
 	mov	dptr,#_input_char
 	movx	a,@dptr
 	mov	r7,a
-	cjne	r7,#0x57,00125$
-;	main.c:144: address = get_addr();
+	cjne	r7,#0x57,00112$
+;	main.c:145: address = get_addr();
 	lcall	_get_addr
 	mov	r5,dpl
 	mov	r6,dph
-;	main.c:145: if(err)
+;	main.c:146: if(err)
 	mov	dptr,#_err
 	movx	a,@dptr
-	jz	00178$
+	jz	00145$
 	ret
-00178$:
-;	main.c:149: data_byte = get_data_byte();
+00145$:
+;	main.c:150: data_byte = get_data_byte();
 	push	ar6
 	push	ar5
 	lcall	_get_data_byte
 	mov	r4,dpl
 	pop	ar5
 	pop	ar6
-;	main.c:150: i2c_write_byte(address, data_byte);
+;	main.c:151: i2c_write_byte(address, data_byte);
 	mov	dptr,#_i2c_write_byte_PARM_2
 	mov	a,r4
 	movx	@dptr,a
 	mov	dpl,r5
 	mov	dph,r6
 	lcall	_i2c_write_byte
-	sjmp	00128$
-00125$:
-;	main.c:153: else if(input_char == 'R')
-	cjne	r7,#0x52,00122$
-;	main.c:155: address = get_addr();
+	sjmp	00115$
+00112$:
+;	main.c:154: else if(input_char == 'R')
+	cjne	r7,#0x52,00109$
+;	main.c:156: address = get_addr();
 	lcall	_get_addr
 	mov	r5,dpl
 	mov	r6,dph
-;	main.c:157: if(err)
+;	main.c:158: if(err)
 	mov	dptr,#_err
 	movx	a,@dptr
-	jz	00181$
-	ret
-00181$:
-;	main.c:161: data_byte = i2c_read_byte(address);
+	jnz	00117$
+;	main.c:162: data_byte = i2c_read_byte(address);
 	mov	dpl,r5
 	mov	dph,r6
 	push	ar6
@@ -1105,7 +1101,7 @@ _i2c_loop:
 	mov	r4,dpl
 	pop	ar5
 	pop	ar6
-;	main.c:162: printf("Byte read from EEPROM address 0x%3X is 0x%2X\r\n",address, data_byte);
+;	main.c:163: printf("Byte read from EEPROM address 0x%3X is 0x%2X\r\n",address, data_byte);
 	mov	r3,#0x00
 	push	ar4
 	push	ar3
@@ -1121,40 +1117,11 @@ _i2c_loop:
 	mov	a,sp
 	add	a,#0xf9
 	mov	sp,a
-	ljmp	00128$
-00122$:
-;	main.c:165: else if (input_char == 'H')
-	cjne	r7,#0x48,00119$
-;	main.c:167: address = get_addr();
-	lcall	_get_addr
-	mov	r5,dpl
-	mov	r6,dph
-;	main.c:168: if(err)
-	mov	dptr,#_err
-	movx	a,@dptr
-	jz	00184$
-	ret
-00184$:
-;	main.c:172: end_address = get_addr();
-	push	ar6
-	push	ar5
-	lcall	_get_addr
-	mov	r3,dpl
-	mov	r4,dph
-	pop	ar5
-	pop	ar6
-;	main.c:173: if(err)
-	mov	dptr,#_err
-	movx	a,@dptr
-	jnz	00130$
-;	main.c:178: if(end_address < address)
-	clr	c
-	mov	a,r3
-	subb	a,r5
-	mov	a,r4
-	subb	a,r6
-	jnc	00110$
-;	main.c:180: printf("ERROR: Please enter a valid address range\r\n");
+	ljmp	00115$
+00109$:
+;	main.c:165: else if(input_char == 'O')
+	cjne	r7,#0x4f,00106$
+;	main.c:167: printf("Printing Options:\r\n");
 	mov	a,#___str_7
 	push	acc
 	mov	a,#(___str_7 >> 8)
@@ -1165,29 +1132,9 @@ _i2c_loop:
 	dec	sp
 	dec	sp
 	dec	sp
-	ljmp	00128$
-00110$:
-;	main.c:184: i2c_hex_dump(address, end_address);
-	mov	dptr,#_i2c_hex_dump_PARM_2
-	mov	a,r3
-	movx	@dptr,a
-	mov	a,r4
-	inc	dptr
-	movx	@dptr,a
-	mov	dpl,r5
-	mov	dph,r6
-	lcall	_i2c_hex_dump
-	ljmp	00128$
-00119$:
-;	main.c:187: else if(input_char == 'E')
-	cjne	r7,#0x45,00116$
-;	main.c:189: reset_eeprom();
-	lcall	_reset_eeprom
-	ljmp	00128$
-00116$:
-;	main.c:191: else if(input_char == 'O')
-	cjne	r7,#0x4f,00113$
-;	main.c:193: printf("Printing Options:\r\n");
+	ljmp	00115$
+00106$:
+;	main.c:171: printf("Invalid character. Please retry\r\n");
 	mov	a,#___str_8
 	push	acc
 	mov	a,#(___str_8 >> 8)
@@ -1198,42 +1145,29 @@ _i2c_loop:
 	dec	sp
 	dec	sp
 	dec	sp
-	ljmp	00128$
-00113$:
-;	main.c:197: printf("Invalid character. Please retry\r\n");
-	mov	a,#___str_9
-	push	acc
-	mov	a,#(___str_9 >> 8)
-	push	acc
-	mov	a,#0x80
-	push	acc
-	lcall	_printf
-	dec	sp
-	dec	sp
-	dec	sp
-	ljmp	00128$
-00130$:
-;	main.c:201: }
+	ljmp	00115$
+00117$:
+;	main.c:175: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;	main.c:203: int main(void)
+;	main.c:177: int main(void)
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c:206: serial_init();
+;	main.c:180: serial_init();
 	lcall	_serial_init
-;	main.c:209: i2c_init();
+;	main.c:183: i2c_init();
 	lcall	_i2c_init
-;	main.c:212: enable_8051_irq();
+;	main.c:186: enable_8051_irq();
 	lcall	_enable_8051_irq
-;	main.c:216: i2c_loop();
-	lcall	_i2c_loop
-;	main.c:218: return 0;
+;	main.c:191: decoder_init();
+	lcall	_decoder_init
+;	main.c:193: return 0;
 	mov	dptr,#0x0000
-;	main.c:219: }
+;	main.c:194: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
@@ -1287,20 +1221,13 @@ ___str_6:
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 ___str_7:
-	.ascii "ERROR: Please enter a valid address range"
-	.db 0x0d
-	.db 0x0a
-	.db 0x00
-	.area CSEG    (CODE)
-	.area CONST   (CODE)
-___str_8:
 	.ascii "Printing Options:"
 	.db 0x0d
 	.db 0x0a
 	.db 0x00
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
-___str_9:
+___str_8:
 	.ascii "Invalid character. Please retry"
 	.db 0x0d
 	.db 0x0a

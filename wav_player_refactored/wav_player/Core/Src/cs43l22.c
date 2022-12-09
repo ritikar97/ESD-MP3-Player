@@ -1,12 +1,13 @@
 /*
  * cs43l22.c
- * @description: A device driver library for the CS43L22 Audio Codec,
- * using STM HAL libraries.
+ * @description: The driver library implementation file
+ * for the CS43L22 Audio Codec using STM HAL libraries.
  * @reference:
  * 1.Cirrus Logic CS43L22 datasheet:
  * https://www.mouser.com/ds/2/76/CS43L22_F2-1142121.pdf
- * 2.ST opensource CS43L22 Audio Codec DSP drivers
- *
+ * 2.ST open-source CS43L22 Audio Codec DSP drivers
+ * @Author: Shuran Xu
+ * @Revision: 2.0
  */
 
 #include <cs43l22.h>
@@ -55,10 +56,12 @@ extern I2S_HandleTypeDef hi2s3;
  * @brief Write 1-byte data to the designated register
  * @param reg: The register address to be written
  * @param data: The one-byte data to be used
+ * @note This function uses the ST I2C library to transfer
+ * data in the master mode.
  */
 static void CS43_write_register(uint8_t reg, uint8_t data)
 {
-    volatile uint8_t wData[2] = {reg, data};
+    uint8_t wData[2] = {reg, data};
     HAL_I2C_Master_Transmit(&i2cx, DAC_I2C_ADDR, wData,
     		sizeof(wData), TRANSFER_TIMEOUT);
 }
@@ -67,12 +70,16 @@ static void CS43_write_register(uint8_t reg, uint8_t data)
  * @brief read 1-byte data from the designated register
  * @param reg: The register address to be read
  * @return data: The one-byte I2C transfer data
+ * @note This function uses the ST I2C library to transfer
+ * data in the master, full-duplex mode.
  */
 static uint8_t CS43_read_register(uint8_t reg)
 {
-	volatile uint8_t data;
-	HAL_I2C_Master_Transmit(&i2cx, DAC_I2C_ADDR, &reg, 1, TRANSFER_TIMEOUT);
-	HAL_I2C_Master_Receive(&i2cx, DAC_I2C_ADDR, &data, 1, TRANSFER_TIMEOUT);
+	uint8_t data;
+	HAL_I2C_Master_Transmit(&i2cx, DAC_I2C_ADDR, &reg, 1,
+			TRANSFER_TIMEOUT);
+	HAL_I2C_Master_Receive(&i2cx, DAC_I2C_ADDR, &data, 1,
+			TRANSFER_TIMEOUT);
 	return data;
 }
 
@@ -80,7 +87,6 @@ static uint8_t CS43_read_register(uint8_t reg)
 /***************************************
 * Public Function Definition
 ****************************************/
-
 /**
  * @brief Initialize the CS43L22 Audio Codec using STM HAL libraries.
  * @param i2c_handle: The handler of the I2C module to be used
@@ -113,7 +119,7 @@ void CS43_init(I2C_HandleTypeDef i2c_handle)
    // 1.Unlock and enable I2S
 	__HAL_UNLOCK(&hi2s3);     // THIS IS EXTREMELY IMPORTANT FOR I2S3 TO WORK!!
 	__HAL_I2S_ENABLE(&hi2s3); // THIS IS EXTREMELY IMPORTANT FOR I2S3 TO WORK!!
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_SET);
+	//HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_SET);
 
 	// Get the I2C handle
 	i2cx = i2c_handle;
@@ -125,7 +131,7 @@ void CS43_init(I2C_HandleTypeDef i2c_handle)
 	data =  (2 << 6) | // PDN_HPB[0:1]  = 10 (HP-B always onCon)
 			(2 << 4) | // PDN_HPA[0:1]  = 10 (HP-A always on)
 			(3 << 2) | // PDN_SPKB[0:1] = 11 (Speaker B always off)
-			(3 << 0); // PDN_SPKA[0:1] = 11 (Speaker A always off)
+			(3 << 0);  // PDN_SPKA[0:1] = 11 (Speaker A always off)
 	CS43_write_register(POWER_CONTROL2, data);
 
 	//4. Set automatic clock detection

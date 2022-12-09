@@ -1,10 +1,11 @@
 /*
- * wav_player.h
- * @description: The wav player module responsible for playing songs.
+ * wav_player.c
+ * @description: The wav player implementation file. The wav player
+ * is responsible for playing songs as well as controlling playing sequences.
  * @reference:
- * 1.Cirrus Logic CS43L22 datasheet:
- * https://www.mouser.com/ds/2/76/CS43L22_F2-1142121.pdf
- * 2.ST opensource CS43L22 Audio Codec DSP drivers
+ * TODO: Added valid references !
+ * @Author: Ritika Ramchandani
+ * @Revision: 2.0
  *
  */
 
@@ -38,6 +39,8 @@ typedef struct
 #define DMA_MAX_SZE                 0xFFFF
 #define DMA_MAX(_X_)                (((_X_) <= DMA_MAX_SZE)? (_X_):DMA_MAX_SZE)
 #define AUDIODATA_SIZE              2   /* 16-bits audio data size */
+#define PLLI2S_VCO_MUL_FACTOR 		258
+#define PLLI2S_CLK_DIV_FACTOR 	    3
 
 //Audio I2S
 static I2S_HandleTypeDef *i2sptr = NULL;
@@ -57,8 +60,8 @@ static __IO uint32_t audioRemainSize = 0;
 
 //WAV Player
 static uint32_t samplingFreq;
-static UINT playerReadBytes = 0;
-static bool isFinished=0;
+static UINT player_bytes_read = 0;
+static bool is_song_finished=0;
 
 //WAV Player process states
 typedef enum
@@ -94,6 +97,7 @@ static int get_I2S_freq_index(uint32_t audioFreq)
 
 /**
  * @brief Audio Clock Config
+ * @param audioFreq - The target audio frequency
  */
 static void audio_clock_config(uint32_t audioFreq)
 {
@@ -105,8 +109,8 @@ static void audio_clock_config(uint32_t audioFreq)
   rccclkinit.PeriphClockSelection = RCC_PERIPHCLK_I2S;
 
   // configure the clock source with the default values first
-  rccclkinit.PLLI2S.PLLI2SN = 258;
-  rccclkinit.PLLI2S.PLLI2SR = 3;
+  rccclkinit.PLLI2S.PLLI2SN = PLLI2S_VCO_MUL_FACTOR;
+  rccclkinit.PLLI2S.PLLI2SR = PLLI2S_CLK_DIV_FACTOR;
 
   /* Update the I2S clock config if there is a sampling frequency match*/
   if (freqindex != 0xFF)
@@ -118,10 +122,15 @@ static void audio_clock_config(uint32_t audioFreq)
   HAL_RCCEx_PeriphCLKConfig(&rccclkinit);
 }
 
+/**
+ * @brief Reset the wav player module
+ * @note All internal counters are cleared and the I2S pointer
+ * is set if not.
+ */
 void wavPlayer_reset(void)
 {
   audioRemainSize = 0;
-  playerReadBytes = 0;
+  player_bytes_read = 0;
   //assign the I2S handle
   if(!i2sptr){
 	  i2sptr = &hi2s3;
@@ -129,10 +138,11 @@ void wavPlayer_reset(void)
 }
 
 /**
- * @brief Select WAV file to play
+ * @brief Open the WAV file to play
+ * @param filePath - The file path to be open
  * @retval returns true when file is found in USB Drive
  */
-bool wavPlayer_fileSelect(const char* filePath)
+bool wavPlayer_openFile(const char* filePath)
 {
   WAV_HeaderTypeDef wavHeader;
   UINT readBytes = 0;
@@ -155,17 +165,17 @@ bool wavPlayer_fileSelect(const char* filePath)
  */
 void wavPlayer_play(void)
 {
-  isFinished = false;
+  is_song_finished = false;
   //update I2S peripheral sampling frequency
   i2sptr->Init.AudioFreq = samplingFreq;
   //configure the PLL clock frequency setting
   audio_clock_config(samplingFreq);
   //Read Audio data from USB Disk
   f_lseek(&wavFile, 0);
-  f_read (&wavFile, &audioBuffer[0], AUDIO_BUFFER_SIZE, &playerReadBytes);
-  audioRemainSize = fileLength - playerReadBytes;
+  f_read (&wavFile, &audioBuffer[0], AUDIO_BUFFER_SIZE, &player_bytes_read);
+  audioRemainSize = fileLength - player_bytes_read;
   //Start playing the WAV by starting the Codec and initiating the
-  // DMA transfer
+  //DMA transfer
 
   //Start Codec
   CS43_start();
@@ -177,7 +187,7 @@ void wavPlayer_play(void)
 /**
  * @brief Process WAV
  */
-void wavPlayer_process(void)
+void wavPlayer_proceed(void)
 {
   switch(playerControlSM)
   {
@@ -185,12 +195,12 @@ void wavPlayer_process(void)
     break;
 
   case PLAYER_CONTROL_HalfBuffer:
-    playerReadBytes = 0;
+    player_bytes_read = 0;
     playerControlSM = PLAYER_CONTROL_Idle;
-    f_read (&wavFile, &audioBuffer[0], AUDIO_BUFFER_SIZE/2, &playerReadBytes);
+    f_read (&wavFile, &audioBuffer[0], AUDIO_BUFFER_SIZE/2, &player_bytes_read);
     if(audioRemainSize > (AUDIO_BUFFER_SIZE / 2))
     {
-      audioRemainSize -= playerReadBytes;
+      audioRemainSize -= player_bytes_read;
     }
     else
     {
@@ -200,12 +210,13 @@ void wavPlayer_process(void)
     break;
 
   case PLAYER_CONTROL_FullBuffer:
-    playerReadBytes = 0;
+    player_bytes_read = 0;
     playerControlSM = PLAYER_CONTROL_Idle;
-    f_read (&wavFile, &audioBuffer[AUDIO_BUFFER_SIZE/2], AUDIO_BUFFER_SIZE/2, &playerReadBytes);
+    f_read (&wavFile, &audioBuffer[AUDIO_BUFFER_SIZE/2], AUDIO_BUFFER_SIZE/2,
+    		&player_bytes_read);
     if(audioRemainSize > (AUDIO_BUFFER_SIZE / 2))
     {
-      audioRemainSize -= playerReadBytes;
+      audioRemainSize -= player_bytes_read;
     }
     else
     {
@@ -217,7 +228,7 @@ void wavPlayer_process(void)
   case PLAYER_CONTROL_EndOfFile:
     f_close(&wavFile);
     wavPlayer_reset();
-    isFinished = true;
+    is_song_finished = true;
     playerControlSM = PLAYER_CONTROL_Idle;
     break;
   }
@@ -231,7 +242,7 @@ void wavPlayer_stop(void)
   CS43_stop();
   HAL_I2S_DMAStop(i2sptr);
   f_close(&wavFile);
-  isFinished = true;
+  is_song_finished = true;
 }
 
 /**
@@ -256,9 +267,9 @@ void wavPlayer_setVolume(uint8_t volume)
 /**
  * @brief isEndofFile reached
  */
-bool wavPlayer_isFinished(void)
+bool is_wavPlayer_finishedPlaying(void)
 {
-  return isFinished;
+  return is_song_finished;
 }
 
 /**

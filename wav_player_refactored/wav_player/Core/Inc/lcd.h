@@ -1,8 +1,22 @@
 /*
- * lcd.h
- *
-*  Created on: 03-Dec-2022
- * Author: Shuran Xu
+ *  lcd.h
+ *  @description: The LCD driver header file for the
+ *  HD44780 LCD controller. The driver transfers data/command
+ *  in the 4-bit mode.
+ *  @Pin Map:
+ *  - RS: E1
+ *  - R/W: GND
+ *  - E: E3
+ *  - DB4: E4
+ *  - DB5: E5
+ *  - DB6: E6
+ *  - DB7: E7
+ *  @Reference:
+ *  1.The HD44780U datasheet:
+ *  https://www.alldatasheet.com/datasheet-pdf/pdf/63673/HITACHI/HD44780.html
+ *  2.ST open-source HAL GPIO drivers
+ *  @Author: Shuran Xu
+ *  @Revision: 2.0
  */
 
 #ifndef INC_LCD_H_
@@ -31,12 +45,12 @@
 * Public function declaration
 ****************************************/
 // initialize lcd
-void lcd_init (void);
+void lcd_init(void);
 // send string to the lcd
-void lcd_send_string (char *str);
+void lcd_write_string(char *str);
 // put cursor at the entered position row (0 or 1), col (0-15);
 void lcd_update_cur(int row, int col);
 // clear the lcd
-void lcd_clear (void);
+void lcd_clear(void);
 
 #endif /* INC_LCD_H_ */

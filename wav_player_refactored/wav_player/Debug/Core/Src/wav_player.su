@@ -1,0 +1,15 @@
+../Core/Src/wav_player.c:82:12:get_I2S_freq_index	24	static
+../Core/Src/wav_player.c:102:13:audio_clock_config	40	static
+../Core/Src/wav_player.c:130:6:wavPlayer_reset	4	static
+../Core/Src/wav_player.c:145:6:wavPlayer_openFile	64	static
+../Core/Src/wav_player.c:166:6:wavPlayer_play	8	static
+../Core/Src/wav_player.c:190:6:wavPlayer_proceed	8	static
+../Core/Src/wav_player.c:240:6:wavPlayer_stop	8	static
+../Core/Src/wav_player.c:251:6:wavPlayer_pause	8	static
+../Core/Src/wav_player.c:256:6:wavPlayer_resume	8	static
+../Core/Src/wav_player.c:262:6:wavPlayer_setVolume	16	static
+../Core/Src/wav_player.c:270:6:is_wavPlayer_finishedPlaying	4	static
+../Core/Src/wav_player.c:278:6:audioI2S_halfTransfer_Callback	4	static
+../Core/Src/wav_player.c:282:6:audioI2S_fullTransfer_Callback	4	static
+../Core/Src/wav_player.c:286:6:HAL_I2S_TxCpltCallback	16	static
+../Core/Src/wav_player.c:293:6:HAL_I2S_TxHalfCpltCallback	16	static

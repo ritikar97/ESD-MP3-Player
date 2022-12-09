@@ -1,8 +1,9 @@
 /*
- * lcd.c
- *  @description: The LCD driver for the HD44780 LCD controller. The
- *  driver transfers data/command in the 4-bit mode.
- *  @Connections:
+ *  lcd.c
+ *  @description: The LCD driver implementation file for the
+ *  HD44780 LCD controller. The driver transfers data/command
+ *  in the 4-bit mode.
+ *  @Pin Map:
  *  - RS: E1
  *  - R/W: GND
  *  - E: E3
@@ -10,8 +11,12 @@
  *  - DB5: E5
  *  - DB6: E6
  *  - DB7: E7
- *  @Reference: The HD44780U datasheet:
+ *  @Reference:
+ *  1.The HD44780U datasheet:
  *  https://www.alldatasheet.com/datasheet-pdf/pdf/63673/HITACHI/HD44780.html
+ *  2.ST open-source HAL GPIO drivers
+ *  @Author: Shuran Xu
+ *  @Revision: 2.0
  */
 
 #include <lcd.h>
@@ -36,7 +41,7 @@ static void delay_us(uint16_t us)
  * @param data: raw data to be sent, should be only 4-bit long
  * @param rs: the RS signal for data/cmd.
  */
-static void send_to_lcd (char data, int rs)
+static void lcd_write(char data, int rs)
 {
 	// enable the LCD
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, 1);
@@ -67,9 +72,9 @@ static void send_to_lcd (char data, int rs)
 static void lcd_send_cmd (char cmd)
 {
     /* send upper 4-bit first */
-    send_to_lcd((cmd>>4)&0x0f,0);
+	lcd_write((cmd>>4)&0x0f,0);
     /* send Lower 4-bit */
-   	send_to_lcd((cmd)&0x0f, 0);
+	lcd_write((cmd)&0x0f, 0);
 }
 
 /**
@@ -80,9 +85,9 @@ static void lcd_send_cmd (char cmd)
 static void lcd_send_data (char data)
 {
 	/* send upper 4-bit first */
-	send_to_lcd((data>>4)&0x0f,1);
+	lcd_write((data>>4)&0x0f,1);
 	/* send Lower 4-bit */
-	send_to_lcd((data)&0x0f, 1);
+	lcd_write((data)&0x0f, 1);
 }
 
 /**
@@ -131,14 +136,19 @@ void lcd_update_cur(int row, int col)
 void lcd_init (void)
 {
 	// reset the controller
-	HAL_Delay(150);  // wait for >40ms
+
+	// wait for >40ms
+	HAL_Delay(150);
 	lcd_send_cmd (0x30);
-	HAL_Delay(15);  // wait for >4.1ms
+	// wait for >4.1ms
+	HAL_Delay(15);
 	lcd_send_cmd (0x30);
-	HAL_Delay(5);  // wait for >100us
+	// wait for >100us
+	HAL_Delay(5);
 	lcd_send_cmd (0x30);
 	HAL_Delay(30);
-	lcd_send_cmd (0x20);  // 4bit mode
+	// 4bit mode
+	lcd_send_cmd (0x20);
 	HAL_Delay(30);
 
 	// initialize the LCD controller
@@ -170,7 +180,7 @@ void lcd_init (void)
  * @brief Update the cursor position
  * @param str: the string to be displayed
  */
-void lcd_send_string (char *str)
+void lcd_write_string (char *str)
 {
 	while (*str){
 		lcd_send_data(*str++);

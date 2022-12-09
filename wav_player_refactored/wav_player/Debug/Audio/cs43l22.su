@@ -1,7 +1,0 @@
-../Audio/cs43l22.c:60:13:CS43_write_register	32	static
-../Audio/cs43l22.c:72:16:CS43_read_register	32	static
-../Audio/cs43l22.c:85:13:CS43_set_mute	16	static
-../Audio/cs43l22.c:130:6:CS43_init	16	static
-../Audio/cs43l22.c:207:6:CS43_set_volume	16	static
-../Audio/cs43l22.c:233:6:CS43_start	8	static
-../Audio/cs43l22.c:258:6:CS43_stop	8	static

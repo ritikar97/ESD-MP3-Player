@@ -1,21 +1,20 @@
 /* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.h
-  * @brief          : Header for main.c file.
-  *                   This file contains the common defines of the application.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+/*
+ *  main.h
+ *  @description: The header file for the application entry. Inside
+ *  the application entry header file, only the error handler function
+ *  is allowed to be exposed to public, the main application entry is
+ *  internal.
+ *
+ *  @Reference:
+ *  1.The ST Code Generation Feature via *.ioc file edit.
+ *  https://www.alldatasheet.com/datasheet-pdf/pdf/63673/HITACHI/HD44780.html
+ *  2.ST open-source HAL GPIO drivers
+ *  3. TODO: Need reference for the main loop !
+ *
+ *  @Author: Shuran Xu & Ritika Ramchandani
+ *  @Revision: 2.0
+ */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/

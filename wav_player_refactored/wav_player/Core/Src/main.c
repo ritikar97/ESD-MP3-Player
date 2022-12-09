@@ -1,20 +1,22 @@
 /* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+/*
+ *  main.c
+ *  @description: The implementation file for the application entry. Inside
+ *  the application entry implementation file, system resources initialization
+ *  and the main program logic are implemented based on the design requirements.
+ *  In particular, the peripheral initialization is implemented on top of the
+ *  automated code generation offered by the *.ioc file.
+ *
+ *  @Reference:
+ *  1.The ST Code Generation Feature via *.ioc file edit.
+ *  https://www.alldatasheet.com/datasheet-pdf/pdf/63673/HITACHI/HD44780.html
+ *  2.ST open-source HAL GPIO drivers
+ *  3. TODO: Need reference for the main loop !
+ *
+ *  @Author: Shuran Xu & Ritika Ramchandani
+ *  @Revision: 2.0
+ */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include <cs43l22.h>
@@ -46,12 +48,9 @@ extern ApplicationTypeDef Appli_state;
 
 /* Private variables ---------------------------------------------------------*/
 DAC_HandleTypeDef hdac;
-
 I2C_HandleTypeDef hi2c1;
-
 I2S_HandleTypeDef hi2s3;
 DMA_HandleTypeDef hdma_spi3_tx;
-
 TIM_HandleTypeDef htim1;
 
 /* USER CODE BEGIN PV */
@@ -92,10 +91,10 @@ static void display_song_info(void)
 	lcd_update_cur(0, 0);
 	char str[64];
 	sprintf(str,"Song:%s", songs[song_idx]);
-	lcd_send_string(str);
+	lcd_write_string(str);
 	lcd_update_cur(1, 0);
 	sprintf(str,"Volume(dB):%d", volume);
-	lcd_send_string(str);
+	lcd_write_string(str);
 }
 
 static void update_volume_display(void)
@@ -103,7 +102,7 @@ static void update_volume_display(void)
 	char str[32];
 	lcd_update_cur(1, 0);
 	sprintf(str,"Volume(dB):%d", volume);
-	lcd_send_string(str);
+	lcd_write_string(str);
 }
 
 /* USER CODE END 0 */
@@ -152,13 +151,13 @@ int main(void)
   lcd_clear();
   HAL_Delay(1000);
   lcd_update_cur(0, 0);
-  lcd_send_string("MINI ");
-  lcd_send_string("MP3 Player ");
+  lcd_write_string("MINI ");
+  lcd_write_string("MP3 Player ");
   HAL_Delay(5000);
   lcd_clear();
 
   bool isSdCardMounted = 0;
-  bool pauseResumeToggle = 0;
+  bool pause_resume_toggle = 0;
 
   song_idx = DEFAULT_SONG_IDX;
   /* USER CODE END 2 */
@@ -171,74 +170,79 @@ int main(void)
     MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
-    if(Appli_state == APPLICATION_START)
+    switch(Appli_state)
     {
-    	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
-    }
-    else if(Appli_state == APPLICATION_DISCONNECT)
-    {
-    	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
-    }
+		case APPLICATION_START:
+		{
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+			break;
+		}
+		case APPLICATION_DISCONNECT:
+		{
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+			break;
+		}
+		case APPLICATION_READY:
+		{
 
-    if(Appli_state == APPLICATION_READY)
-    {
-    	if(!isSdCardMounted)
-    	{
-    		isSdCardMounted = 1;
-    		f_mount(&USBHFatFS, (const TCHAR*)USBHPath, 0);
-    	}
+			// mount the USB drive if the drive is not mounted yet
+	    	if(!isSdCardMounted)
+	    	{
+	    		isSdCardMounted = 1;
+	    		f_mount(&USBHFatFS, (const TCHAR*)USBHPath, 0);
+	    	}
 
-    	if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0))
-    	{
-    		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
-    		HAL_Delay(500);
-    		if(wavPlayer_fileSelect(songs[song_idx])){
-    			display_song_info();
-				wavPlayer_play();
-			}
+	    	// check if the user pressed the blue button
+	    	if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0))
+	    	{
+	    		// toggle the orange LED
+	    		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+	    		HAL_Delay(500);
+	    		// play the song if the associated .wav file can be opened
+	    		if(wavPlayer_openFile(songs[song_idx])){
+	    			display_song_info();
+					wavPlayer_play();
+				}
 
-    		while(!wavPlayer_isFinished())
-    		{
-    			if((song_mov == PREV_SONG) || (song_mov == NEXT_SONG)){
-    				// reset song_mov
-    				song_mov = CURR_SONG;
-    				wavPlayer_stop();
-    				if(wavPlayer_fileSelect(songs[song_idx])){
-    					display_song_info();
-    					wavPlayer_play();
-    				}
-    			}
-    			else{
-					wavPlayer_process();
-					if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0))
-					{
-						pauseResumeToggle ^= 1;
-						if(pauseResumeToggle)
+	    		while(!is_wavPlayer_finishedPlaying())
+	    		{
+	    			if((song_mov == PREV_SONG) || (song_mov == NEXT_SONG)){
+	    				// reset song_mov
+	    				song_mov = CURR_SONG;
+	    				wavPlayer_stop();
+	    				if(wavPlayer_openFile(songs[song_idx])){
+	    					display_song_info();
+	    					wavPlayer_play();
+	    				}
+	    			}
+	    			else{
+	    				wavPlayer_proceed();
+						if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0))
 						{
-							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
-							wavPlayer_pause();
-							HAL_Delay(200);
-						}
-						else
-						{
-							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-							HAL_Delay(1000);
-							if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0))
+							pause_resume_toggle ^= 1;
+							if(pause_resume_toggle)
 							{
-								wavPlayer_stop();
+								HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+								wavPlayer_pause();
+								HAL_Delay(200);
 							}
 							else
 							{
+								HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+								HAL_Delay(500);
 								wavPlayer_resume();
 							}
 						}
 					}
-				}
-    		}
-    		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
-    		HAL_Delay(1000);
-    	}
-
+	    		}
+	    		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	    		HAL_Delay(1000);
+	    	}
+	    	break;
+		}
+		case APPLICATION_IDLE:{
+			break;
+		}
     }
   }
   /* USER CODE END 3 */

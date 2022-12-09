@@ -1,4 +1,4 @@
-Core/Src/main.o: ../Core/Src/main.c ../Audio/cs43l22.h \
+Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/cs43l22.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -50,8 +50,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Audio/cs43l22.h \
  ../Middlewares/Third_Party/FatFs/src/ff_gen_drv.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/usbh_diskio.h \
- ../USB_HOST/App/usb_host.h ../Audio/wav_player.h
-../Audio/cs43l22.h:
+ ../USB_HOST/App/usb_host.h ../Core/Inc/wav_player.h
+../Core/Inc/cs43l22.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
@@ -108,4 +108,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Audio/cs43l22.h \
 ../Middlewares/Third_Party/FatFs/src/ff.h:
 ../FATFS/Target/usbh_diskio.h:
 ../USB_HOST/App/usb_host.h:
-../Audio/wav_player.h:
+../Core/Inc/wav_player.h:

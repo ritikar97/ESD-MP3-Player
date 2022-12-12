@@ -4,7 +4,7 @@
  * is responsible for playing songs as well as controlling playing sequences.
  * @reference:
  * TODO: Added valid references !
- * @Author: Ritika Ramchandani
+ * @Author: Shuran Xu & Ritika Ramchandani
  * @Revision: 2.0
  *
  */
@@ -15,7 +15,20 @@
 #include "stm32f4xx_hal.h"
 #include <stddef.h>
 
+/***************************************
+* Local Macro Definition
+****************************************/
 
+#define AUDIO_BUFFER_SIZE  			4096
+#define DMA_MAX_SZE                 0xFFFF
+#define DMA_MAX(_X_)                (((_X_) <= DMA_MAX_SZE)? (_X_):DMA_MAX_SZE)
+#define AUDIO_DATA_SIZE              2   /* 16-bits audio data size */
+#define PLLI2S_VCO_MUL_FACTOR 		258
+#define PLLI2S_CLK_DIV_FACTOR 	    3
+
+/***************************************
+* Local Struct Definition
+****************************************/
 typedef struct
 {
   uint32_t   ChunkID;       /* 0 */
@@ -35,32 +48,22 @@ typedef struct
 
 }WAV_HeaderTypeDef;
 
+/***************************************
+* Local Variable Definition
+****************************************/
 
-//Audio library defines
-#define DMA_MAX_SZE                 0xFFFF
-#define DMA_MAX(_X_)                (((_X_) <= DMA_MAX_SZE)? (_X_):DMA_MAX_SZE)
-#define AUDIODATA_SIZE              2   /* 16-bits audio data size */
-#define PLLI2S_VCO_MUL_FACTOR 		258
-#define PLLI2S_CLK_DIV_FACTOR 	    3
-
-#if 1
 //Audio I2S
 static I2S_HandleTypeDef *i2sptr;
 //I2S PLL parameters for different I2S Sampling Frequency
 static const uint32_t I2SFreq[8] = {8000, 11025, 16000, 22050, 32000, 44100, 48000, 96000};
 static const uint32_t I2SPLLN[8] = {256, 429, 213, 429, 426, 271, 258, 344};
 static const uint32_t I2SPLLR[8] = {5, 4, 4, 4, 4, 6, 3, 1};
-#endif
-
 //WAV File System variables
 static FIL wavFile;
-
 //WAV Audio Buffer
 static uint32_t fileLength;
-#define AUDIO_BUFFER_SIZE  4096*1
 static uint8_t audioBuffer[AUDIO_BUFFER_SIZE];
 static __IO uint32_t audioRemainSize = 0;
-
 //WAV Player
 static uint32_t samplingFreq;
 static UINT player_bytes_read = 0;
@@ -76,12 +79,20 @@ typedef enum
 }PLAYER_CONTROL_e;
 static volatile PLAYER_CONTROL_e playerControlSM = PLAYER_CONTROL_Idle;
 
-// extern variables
+/***************************************
+* External Variable Definition
+****************************************/
 extern I2S_HandleTypeDef hi2s3;
+
+
 /***************************************
 * Local Function Helper Definition
 ****************************************/
 
+/**
+ * @brief Obtain the frequency index based on the given audio frequency
+ * @param audioFreq - The target audio frequency
+ */
 static int get_I2S_freq_index(uint32_t audioFreq)
 {
 	uint8_t freq_index = 0xFF;
@@ -97,7 +108,6 @@ static int get_I2S_freq_index(uint32_t audioFreq)
 
 	return freq_index;
 }
-
 
 /**
  * @brief Audio Clock Config
@@ -126,6 +136,11 @@ static void audio_clock_config(uint32_t audioFreq)
   HAL_RCCEx_PeriphCLKConfig(&rccclkinit);
 }
 
+/**
+ * @brief Adjust the Audio sampling frequency
+ * @param audioFreq - The target audio frequency
+ * @return bool - true if successfully adjusted
+ */
 static bool audio_adjust_freq(uint32_t audioFreq)
 {
 	// disable the I2S block
@@ -141,28 +156,41 @@ static bool audio_adjust_freq(uint32_t audioFreq)
 	}
 }
 
-
+/**
+ * @brief Play the Audio
+ * @param paudioBuff - The pointer to the audio data buffer
+ * @return len - The length of the audio data buffer
+ */
 static void audio_play(uint16_t *paudioBuff, uint32_t len)
 {
 	//Start Codec
 	CS43_start();
 	//Start I2S DMA transfer
 	HAL_I2S_Transmit_DMA(i2sptr,paudioBuff,
-			  DMA_MAX(len/AUDIODATA_SIZE));
+			  DMA_MAX(len/AUDIO_DATA_SIZE));
 }
 
+/**
+ * @brief Stop the Audio
+ */
 static void audio_stop()
 {
 	CS43_stop();
 	HAL_I2S_DMAStop(i2sptr);
 }
 
+/**
+ * @brief Pause the Audio
+ */
 static void audio_pause()
 {
 	CS43_stop();
 	HAL_I2S_DMAPause(i2sptr);
 }
 
+/**
+ * @brief Resume the Audio
+ */
 static void audio_resume()
 {
 	CS43_start();
@@ -173,11 +201,10 @@ static void audio_resume()
 * Public Function Definition
 ****************************************/
 
-
 /**
  * @brief Reset the wav player module
  * @note All internal counters are cleared and the I2S pointer
- * is set if not.
+ * is set.
  */
 void wavPlayer_reset(void)
 {
@@ -225,7 +252,6 @@ void wavPlayer_play(void)
   audioRemainSize = fileLength - player_bytes_read;
   //Start playing the WAV
   audio_play((uint16_t *)&audioBuffer[0], AUDIO_BUFFER_SIZE);
-
 }
 
 /**
@@ -289,18 +315,25 @@ void wavPlayer_stop(void)
 }
 
 /**
- * @brief WAV pause/resume
+ * @brief WAV pause
  */
 void wavPlayer_pause(void)
 {
 	audio_pause();
 }
 
+/**
+ * @brief WAV resume
+ */
 void wavPlayer_resume(void)
 {
 	audio_resume();
 }
 
+/**
+ * @brief Set the volume for the WAV player
+ * @param volume - The target volume to be set
+ */
 void wavPlayer_setVolume(uint8_t volume)
 {
   CS43_set_volume(volume);
@@ -314,7 +347,10 @@ bool is_wavPlayer_finished_Playing(void)
   return is_song_finished;
 }
 
-
+/**
+ * @brief The callback function for the TX completion interrupt
+ * @param hi2s - The pointer to the I2S module whose interrupt is triggered
+ */
 void HAL_I2S_TxCpltCallback(I2S_HandleTypeDef *hi2s)
 {
   if(hi2s->Instance == SPI3)
@@ -322,6 +358,11 @@ void HAL_I2S_TxCpltCallback(I2S_HandleTypeDef *hi2s)
 	  playerControlSM = PLAYER_CONTROL_HalfBuffer;
   }
 }
+
+/**
+ * @brief The callback function for the TX half-completion interrupt
+ * @param hi2s - The pointer to the I2S module whose interrupt is triggered
+ */
 void HAL_I2S_TxHalfCpltCallback(I2S_HandleTypeDef *hi2s)
 {
   if(hi2s->Instance == SPI3)

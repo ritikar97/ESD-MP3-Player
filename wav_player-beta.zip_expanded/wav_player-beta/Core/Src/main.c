@@ -147,23 +147,21 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start(&htim1);
-
   lcd_init ();
   lcd_clear();
   HAL_Delay(1000);
   lcd_update_cur(0, 0);
   lcd_write_string("MINI ");
   lcd_write_string("WAV Player ");
-  HAL_Delay(5000);
+  HAL_Delay(4000);
   lcd_clear();
 
   CS43_init(hi2c1);
- // audio_setHandle(&hi2s3);
   wavPlayer_reset();
 
-  bool isSdCardMounted = 0;
-  bool pauseResumeToggle = 0;
-  bool start_song = 0;
+  volatile bool isSdCardMounted = 0;
+  volatile bool pauseResumeToggle = 0;
+  volatile bool start_song = 0;
 
   song_idx = DEFAULT_SONG_IDX;
   /* USER CODE END 2 */
@@ -234,16 +232,6 @@ int main(void)
 							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
 							HAL_Delay(1000);
 							wavPlayer_resume();
-							/*
-							if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0))
-							{
-								wavPlayer_stop();
-							}
-							else
-							{
-								wavPlayer_resume();
-							}
-							*/
 						}
 					}
 				}

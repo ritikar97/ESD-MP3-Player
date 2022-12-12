@@ -6,7 +6,7 @@
  * 1.Cirrus Logic CS43L22 datasheet:
  * https://www.mouser.com/ds/2/76/CS43L22_F2-1142121.pdf
  * 2.ST open-source CS43L22 Audio Codec DSP drivers
- * @Author: Shuran Xu
+ * @Author: Shuran Xu & Ritika Ramchandani
  * @Revision: 2.0
  */
 

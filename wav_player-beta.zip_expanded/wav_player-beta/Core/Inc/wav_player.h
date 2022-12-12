@@ -6,7 +6,7 @@
  * as well as controlling playing sequences.
  * @reference:
  * TODO: Added valid references !
- * @Author: Ritika Ramchandani
+ * @Author: Shuran Xu & Ritika Ramchandani
  * @Revision: 2.0
  */
 
@@ -53,15 +53,15 @@ bool is_wavPlayer_finished_Playing(void);
  */
 void wavPlayer_setVolume(uint8_t volume);
 
-void audio_setHandle(I2S_HandleTypeDef *pI2Shandle);
-
 /**
- * @brief WAV pause/resume
+ * @brief WAV pause
  */
 void wavPlayer_pause(void);
+
+/**
+ * @brief WAV resume
+ */
 void wavPlayer_resume(void);
 
-void audioI2S_halfTransfer_Callback(void);
-void audioI2S_fullTransfer_Callback(void);
 
 #endif /* _WAV_PLAYER_H_ */

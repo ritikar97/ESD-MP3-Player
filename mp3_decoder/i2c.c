@@ -1,7 +1,13 @@
 /*
  * i2c.c - Functions to communicate using I2C protocol
  *
+ * References: The driver code for I2C was reused from Lab 4
+ *
  * Author: Ritika Ramchandani <rira3427@colorado.edu>
+ *
+ * Date: 12/01/2022
+ *
+ * Rev 1.0
  *
  */
 
@@ -205,8 +211,6 @@ void write_io_port()
 
 void EXT0_IRQHandler(void) __interrupt(IE0_VECTOR)
 {
-    //IE0 = 0;
-    //printf_tiny("Hey\n\r");
     EX0 = 0;
     P1_0 = !P1_0;
     write_io_port();

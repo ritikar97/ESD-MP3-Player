@@ -1,7 +1,23 @@
+/*
+ * mp3_decoder.c - Contains functions to initialize the STA013
+ * decoder chip and write/read to its registers.
+ *
+ * References: https://www.pjrc.com/mp3/sta013.html
+ *
+ * Code leverage: Except the values for the initialization, all
+ * code was developed independently.
+ *
+ * Author: Ritika Ramchandani <rira3427@colorado.edu>
+ *
+ * Date: 12/01/2022
+ *
+ * Rev 1.0
+ *
+ */
 #include "mp3_decoder.h"
 #include "i2c.h"
 
-#define INIT_ADDR (0x01)
+#define INIT_ADDR (0x01) /* Initial address to check for STA013 detection */
 #define MP3_DECODER_ADDR (0x86)
 #define CONFIG_ARR_SIZE (4014)
 #define PLL_ARR_SIZE (26)
@@ -9,6 +25,8 @@
 #define STA013_START_ADDR (0x72)
 #define STA013_PLAY_ADDR (0x13)
 
+
+/* Intial configuration values provided by ST */
 __xdata uint8_t STA013_configData[CONFIG_ARR_SIZE] = {
 0x3a, 0x01, 0x2a, 0x04, 0x28, 0x00, 0x29, 0x00, 0x20, 0x00, 0x21, 0x00, 0x22, 0x00, 0x23, 0x00, 0x24, 0x00, 0x25, 0x00,
 0x26, 0x00, 0x27, 0x00, 0x28, 0x01, 0x28, 0x02, 0x21, 0x8f, 0x28, 0x03, 0x21, 0x00, 0x28, 0x04, 0x28, 0x05, 0x28, 0x06,
@@ -213,12 +231,14 @@ __xdata uint8_t STA013_configData[CONFIG_ARR_SIZE] = {
 0x08, 0x3a, 0x09, 0xbb, 0x50, 0x10, 0x52, 0x67, 0x51, 0x77, 0x05, 0xa1, 0x18, 0x04};
 
 
+/* PLL initialization */
 uint8_t PLL_init[PLL_ARR_SIZE] = {
 0x54, 0x01, 0x55, 0x21, 0x07, 0x00, 0x06, 0x0C, 0x0B, 0x03,
 0x50, 0x10, 0x51, 0x00, 0x52, 0x04, 0x61, 0x0F, 0x64, 0x55,
 0x65, 0x55, 0x05, 0xA1, 0x18, 0x04};
 
 
+/* Register read to STA013 */
 unsigned char i2c_decoder_read(uint8_t addr)
 {
     uint8_t rx_data = 0;
@@ -251,6 +271,7 @@ unsigned char i2c_decoder_read(uint8_t addr)
 }
 
 
+/* Register write to STA013 */
 void i2c_decoder_write(uint8_t addr, uint8_t wr_byte)
 {
     i2c_start();
@@ -261,27 +282,21 @@ void i2c_decoder_write(uint8_t addr, uint8_t wr_byte)
 }
 
 
+/* Writing to internal STA013 Start register */
 void i2c_decoder_start()
 {
     i2c_decoder_write(STA013_START_ADDR, 1);
 }
 
 
+/* Writing to internal STA013 Play register */
 void i2c_decoder_play()
 {
     i2c_decoder_write(STA013_PLAY_ADDR, 1);
 }
 
 
-
-void send_decoder_init(uint8_t* init_data)
-{
-    for(uint8_t i = 0; i < 32; i+=2)
-    {
-        i2c_decoder_write(init_data[i], init_data[i+1]);
-    }
-}
-
+/* Sending all initialization data */
 void decoder_init()
 {
     uint8_t init_read = 0;

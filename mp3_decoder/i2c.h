@@ -1,9 +1,13 @@
 /*
- * i2c.h - Header containing function declarations for
- * I2C protocol
+ * i2c.h - Functions to communicate using I2C protocol
+ *
+ * References: The driver code for I2C was reused from Lab 4
  *
  * Author: Ritika Ramchandani <rira3427@colorado.edu>
  *
+ * Date: 12/01/2022
+ *
+ * Rev 1.0
  */
 #ifndef I2C_H_INCLUDED
 #define I2C_H_INCLUDED

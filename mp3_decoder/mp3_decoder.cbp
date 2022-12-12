@@ -20,7 +20,7 @@
 					<Add option="--verbose" />
 				</Compiler>
 				<Linker>
-					<Add option="--code-loc 0x0000 --code-size 0xF0000 --xram-loc 0x0400" />
+					<Add option="--code-loc 0x0000 --code-size 0x8000 --xram-loc 0x0400 --xram-size 0x6000" />
 				</Linker>
 			</Target>
 		</Build>

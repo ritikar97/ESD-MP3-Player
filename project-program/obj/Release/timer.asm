@@ -229,6 +229,7 @@
 	.globl _RCAP2H
 	.globl _RCAP2L
 	.globl _T2CON
+	.globl _itoa_PARM_2
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -495,6 +496,28 @@ bits:
 ; external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
+_itoa_PARM_2:
+	.ds 3
+_itoa_i_65536_24:
+	.ds 2
+_itoa_digit_65536_25:
+	.ds 11
+_itoa_p_65536_25:
+	.ds 3
+_itoa_shifter_65537_27:
+	.ds 2
+_update_timer_display_min_str_65537_35:
+	.ds 4
+_update_timer_display_sec_str_65537_35:
+	.ds 4
+_update_timer_display_ms_str_65537_35:
+	.ds 4
+_Timer0_IRQHandler_min_str_393216_47:
+	.ds 4
+_Timer0_IRQHandler_sec_str_393216_47:
+	.ds 4
+_Timer0_IRQHandler_ms_str_393216_47:
+	.ds 4
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -624,263 +647,278 @@ _stop_timer0:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'itoa'
 ;------------------------------------------------------------
-;b                         Allocated to stack - _bp -5
-;i                         Allocated to stack - _bp +1
-;digit                     Allocated to stack - _bp +6
-;p                         Allocated to registers r3 r4 r5 
-;shifter                   Allocated to registers r2 r7 
-;sloc0                     Allocated to stack - _bp +3
+;b                         Allocated with name '_itoa_PARM_2'
+;i                         Allocated with name '_itoa_i_65536_24'
+;digit                     Allocated with name '_itoa_digit_65536_25'
+;p                         Allocated with name '_itoa_p_65536_25'
+;shifter                   Allocated with name '_itoa_shifter_65537_27'
 ;------------------------------------------------------------
 ;	timer.c:53: void itoa(int i, char* b){
 ;	-----------------------------------------
 ;	 function itoa
 ;	-----------------------------------------
 _itoa:
-	push	_bp
-	mov	_bp,sp
-	push	dpl
-	push	dph
-	mov	a,sp
-	add	a,#0x0e
-	mov	sp,a
+	mov	r7,dph
+	mov	a,dpl
+	mov	dptr,#_itoa_i_65536_24
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	timer.c:54: char const digit[] = "0123456789";
-	mov	a,_bp
-	add	a,#0x06
-	mov	r1,a
-	mov	@r1,#0x30
-	mov	a,r1
+	mov	dptr,#_itoa_digit_65536_25
+	mov	a,#0x30
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0001)
 	inc	a
-	mov	r0,a
-	mov	@r0,#0x31
-	mov	a,#0x02
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x32
-	mov	a,#0x03
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x33
-	mov	a,#0x04
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x34
-	mov	a,#0x05
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x35
-	mov	a,#0x06
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x36
-	mov	a,#0x07
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x37
-	mov	a,#0x08
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x38
-	mov	a,#0x09
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x39
-	mov	a,#0x0a
-	add	a,r1
-	mov	r0,a
-	mov	@r0,#0x00
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0002)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0003)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0004)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0005)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0006)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0007)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0008)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x0009)
+	inc	a
+	movx	@dptr,a
+	mov	dptr,#(_itoa_digit_65536_25 + 0x000a)
+	clr	a
+	movx	@dptr,a
 ;	timer.c:55: char* p = b;
-	mov	a,_bp
-	add	a,#0xfb
-	mov	r0,a
-	mov	ar3,@r0
-	inc	r0
-	mov	ar4,@r0
-	inc	r0
-	mov	ar5,@r0
+	mov	dptr,#_itoa_PARM_2
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+	mov	dptr,#_itoa_p_65536_25
+	mov	a,r5
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	timer.c:56: if(i<0){
-	mov	r0,_bp
-	inc	r0
-	inc	r0
-	mov	a,@r0
+	mov	dptr,#_itoa_i_65536_24
+	movx	a,@dptr
+	mov	r3,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r4,a
 	jnb	acc.7,00102$
 ;	timer.c:57: *p++ = '-';
-	mov	dpl,r3
-	mov	dph,r4
-	mov	b,r5
+	mov	dpl,r5
+	mov	dph,r6
+	mov	b,r7
 	mov	a,#0x2d
 	lcall	__gptrput
+	mov	dptr,#_itoa_p_65536_25
+	mov	a,#0x01
+	add	a,r5
+	movx	@dptr,a
+	clr	a
+	addc	a,r6
 	inc	dptr
-	mov	r3,dpl
-	mov	r4,dph
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	timer.c:58: i *= -1;
-	mov	r0,_bp
-	inc	r0
+	mov	dptr,#_itoa_i_65536_24
 	clr	c
 	clr	a
-	subb	a,@r0
-	mov	@r0,a
-	inc	r0
+	subb	a,r3
+	movx	@dptr,a
 	clr	a
-	subb	a,@r0
-	mov	@r0,a
+	subb	a,r4
+	inc	dptr
+	movx	@dptr,a
 00102$:
 ;	timer.c:60: int shifter = i;
-	mov	r0,_bp
-	inc	r0
-	mov	ar2,@r0
-	inc	r0
-	mov	ar7,@r0
+	mov	dptr,#_itoa_i_65536_24
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+	mov	dptr,#_itoa_shifter_65537_27
+	mov	a,r6
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	timer.c:61: do{
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	mov	@r0,ar3
-	inc	r0
-	mov	@r0,ar4
-	inc	r0
-	mov	@r0,ar5
+	mov	dptr,#_itoa_p_65536_25
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 00103$:
 ;	timer.c:63: ++p;
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	inc	@r0
-	cjne	@r0,#0x00,00134$
-	inc	r0
-	inc	@r0
+	inc	r5
+	cjne	r5,#0x00,00134$
+	inc	r6
 00134$:
 ;	timer.c:64: shifter = shifter/10;
-	push	ar1
+	mov	dptr,#_itoa_shifter_65537_27
+	movx	a,@dptr
+	mov	r3,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r4,a
+	mov	dptr,#__divsint_PARM_2
 	mov	a,#0x0a
-	push	acc
+	movx	@dptr,a
 	clr	a
-	push	acc
-	mov	dpl,r2
-	mov	dph,r7
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r3
+	mov	dph,r4
+	push	ar7
+	push	ar6
+	push	ar5
 	lcall	__divsint
-	mov	r3,dpl
-	mov	r6,dph
-	dec	sp
-	dec	sp
-	pop	ar1
-	mov	ar2,r3
-	mov	ar7,r6
+	mov	a,dpl
+	mov	b,dph
+	pop	ar5
+	pop	ar6
+	pop	ar7
+	mov	dptr,#_itoa_shifter_65537_27
+	movx	@dptr,a
+	mov	a,b
+	inc	dptr
+	movx	@dptr,a
 ;	timer.c:65: }while(shifter);
-	mov	a,r3
-	orl	a,r6
+	mov	dptr,#_itoa_shifter_65537_27
+	movx	a,@dptr
+	mov	b,a
+	inc	dptr
+	movx	a,@dptr
+	orl	a,b
 	jnz	00103$
 ;	timer.c:66: *p = '\0';
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	mov	dpl,@r0
-	inc	r0
-	mov	dph,@r0
-	inc	r0
-	mov	b,@r0
+	mov	dpl,r5
+	mov	dph,r6
+	mov	b,r7
 	clr	a
 	lcall	__gptrput
 ;	timer.c:67: do{
-	mov	a,_bp
-	add	a,#0x03
-	mov	r0,a
-	mov	ar5,@r0
-	inc	r0
-	mov	ar6,@r0
-	inc	r0
-	mov	ar7,@r0
 00106$:
 ;	timer.c:69: *--p = digit[i%10];
 	dec	r5
 	cjne	r5,#0xff,00136$
 	dec	r6
 00136$:
+	mov	dptr,#_itoa_i_65536_24
+	movx	a,@dptr
+	mov	r3,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r4,a
+	mov	dptr,#__modsint_PARM_2
+	mov	a,#0x0a
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r3
+	mov	dph,r4
 	push	ar7
 	push	ar6
 	push	ar5
-	push	ar1
-	mov	a,#0x0a
-	push	acc
-	clr	a
-	push	acc
-	mov	r0,_bp
-	inc	r0
-	mov	dpl,@r0
-	inc	r0
-	mov	dph,@r0
+	push	ar4
+	push	ar3
 	lcall	__modsint
-	mov	r3,dpl
-	dec	sp
-	dec	sp
-	pop	ar1
+	mov	r1,dpl
+	mov	r2,dph
+	pop	ar3
+	pop	ar4
 	pop	ar5
 	pop	ar6
 	pop	ar7
-	mov	a,r3
-	add	a,r1
-	mov	r0,a
-	mov	ar4,@r0
+	mov	a,r1
+	add	a,#_itoa_digit_65536_25
+	mov	dpl,a
+	mov	a,r2
+	addc	a,#(_itoa_digit_65536_25 >> 8)
+	mov	dph,a
+	movx	a,@dptr
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
-	mov	a,r4
 	lcall	__gptrput
 ;	timer.c:70: i = i/10;
+	mov	dptr,#__divsint_PARM_2
+	mov	a,#0x0a
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r3
+	mov	dph,r4
 	push	ar7
 	push	ar6
 	push	ar5
-	push	ar1
-	mov	a,#0x0a
-	push	acc
-	clr	a
-	push	acc
-	mov	r0,_bp
-	inc	r0
-	mov	dpl,@r0
-	inc	r0
-	mov	dph,@r0
 	lcall	__divsint
-	mov	r0,_bp
-	inc	r0
-	mov	@r0,dpl
-	inc	r0
-	mov	@r0,dph
-	dec	sp
-	dec	sp
-	pop	ar1
+	mov	a,dpl
+	mov	b,dph
 	pop	ar5
 	pop	ar6
 	pop	ar7
+	mov	dptr,#_itoa_i_65536_24
+	movx	@dptr,a
+	mov	a,b
+	inc	dptr
+	movx	@dptr,a
 ;	timer.c:71: }while(i);
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	inc	r0
-	orl	a,@r0
-	jnz	00106$
+	mov	dptr,#_itoa_i_65536_24
+	movx	a,@dptr
+	mov	b,a
+	inc	dptr
+	movx	a,@dptr
+	orl	a,b
+	jz	00137$
+	ljmp	00106$
+00137$:
 ;	timer.c:72: return;
 ;	timer.c:73: }
-	mov	sp,_bp
-	pop	_bp
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'update_timer_display'
 ;------------------------------------------------------------
-;min_str                   Allocated to stack - _bp +8
-;sec_str                   Allocated to stack - _bp +4
-;ms_str                    Allocated to stack - _bp +12
-;sloc0                     Allocated to stack - _bp +1
+;min_str                   Allocated with name '_update_timer_display_min_str_65537_35'
+;sec_str                   Allocated with name '_update_timer_display_sec_str_65537_35'
+;ms_str                    Allocated with name '_update_timer_display_ms_str_65537_35'
 ;------------------------------------------------------------
 ;	timer.c:77: static inline void update_timer_display(void)
 ;	-----------------------------------------
 ;	 function update_timer_display
 ;	-----------------------------------------
 _update_timer_display:
-	push	_bp
-	mov	a,sp
-	mov	_bp,a
-	add	a,#0x0f
-	mov	sp,a
 ;	timer.c:80: ms++;
 	mov	dptr,#_ms
 	movx	a,@dptr
@@ -937,136 +975,81 @@ _update_timer_display:
 	movx	@dptr,a
 00106$:
 ;	timer.c:100: itoa(mins, min_str);
-	mov	a,_bp
-	add	a,#0x08
-	mov	r7,a
-	mov	r4,a
-	mov	r5,#0x00
-	mov	r6,#0x40
 	mov	dptr,#_mins
 	movx	a,@dptr
-	mov	r3,a
-	mov	r2,#0x00
-	push	ar7
-	push	ar4
-	push	ar5
-	push	ar6
-	mov	dpl,r3
-	mov	dph,r2
+	mov	r7,a
+	mov	r6,#0x00
+	mov	dptr,#_itoa_PARM_2
+	mov	a,#_update_timer_display_min_str_65537_35
+	movx	@dptr,a
+	mov	a,#(_update_timer_display_min_str_65537_35 >> 8)
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r7
+	mov	dph,r6
 	lcall	_itoa
-	dec	sp
-	dec	sp
-	dec	sp
 ;	timer.c:101: itoa(seconds, sec_str);
-	mov	a,_bp
-	add	a,#0x04
-	mov	r6,a
-	mov	r0,_bp
-	inc	r0
-	mov	@r0,ar6
-	inc	r0
-	mov	@r0,#0x00
-	inc	r0
-	mov	@r0,#0x40
 	mov	dptr,#_seconds
 	movx	a,@dptr
-	mov	r2,a
-	mov	r5,#0x00
-	push	ar6
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	mov	dpl,r2
-	mov	dph,r5
+	mov	r7,a
+	mov	r6,#0x00
+	mov	dptr,#_itoa_PARM_2
+	mov	a,#_update_timer_display_sec_str_65537_35
+	movx	@dptr,a
+	mov	a,#(_update_timer_display_sec_str_65537_35 >> 8)
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r7
+	mov	dph,r6
 	lcall	_itoa
-	dec	sp
-	dec	sp
-	dec	sp
 ;	timer.c:102: itoa(ms, ms_str);
-	mov	a,_bp
-	add	a,#0x0c
-	mov	r5,a
-	mov	r0,_bp
-	inc	r0
-	mov	@r0,ar5
-	inc	r0
-	mov	@r0,#0x00
-	inc	r0
-	mov	@r0,#0x40
 	mov	dptr,#_ms
 	movx	a,@dptr
-	mov	r4,a
-	mov	r3,#0x00
-	push	ar5
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	mov	dpl,r4
-	mov	dph,r3
+	mov	r7,a
+	mov	r6,#0x00
+	mov	dptr,#_itoa_PARM_2
+	mov	a,#_update_timer_display_ms_str_65537_35
+	movx	@dptr,a
+	mov	a,#(_update_timer_display_ms_str_65537_35 >> 8)
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r7
+	mov	dph,r6
 	lcall	_itoa
-	dec	sp
-	dec	sp
-	dec	sp
 ;	timer.c:105: lcdgotoxy(3,10);
+	mov	dptr,#_lcdgotoxy_PARM_2
 	mov	a,#0x0a
-	push	acc
+	movx	@dptr,a
 	mov	dpl,#0x03
 	lcall	_lcdgotoxy
-	dec	sp
-	pop	ar5
-	pop	ar6
-	pop	ar7
 ;	timer.c:107: lcdputstr(min_str);
-	mov	r4,#0x00
-	mov	r3,#0x40
-	mov	dpl,r7
-	mov	dph,r4
-	mov	b,r3
-	push	ar6
-	push	ar5
+	mov	dptr,#_update_timer_display_min_str_65537_35
+	mov	b,#0x00
 	lcall	_lcdputstr
 ;	timer.c:108: lcdputch(':');
 	mov	dpl,#0x3a
 	lcall	_lcdputch
-	pop	ar5
-	pop	ar6
 ;	timer.c:109: lcdputstr(sec_str);
-	mov	r7,#0x00
-	mov	r4,#0x40
-	mov	dpl,r6
-	mov	dph,r7
-	mov	b,r4
-	push	ar5
+	mov	dptr,#_update_timer_display_sec_str_65537_35
+	mov	b,#0x00
 	lcall	_lcdputstr
 ;	timer.c:110: lcdputch('.');
 	mov	dpl,#0x2e
 	lcall	_lcdputch
-	pop	ar5
 ;	timer.c:111: lcdputstr(ms_str);
-	mov	r7,#0x00
-	mov	r6,#0x40
-	mov	dpl,r5
-	mov	dph,r7
-	mov	b,r6
-	lcall	_lcdputstr
+	mov	dptr,#_update_timer_display_ms_str_65537_35
+	mov	b,#0x00
 ;	timer.c:113: }
-	mov	sp,_bp
-	pop	_bp
-	ret
+	ljmp	_lcdputstr
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'get_fattime'
 ;------------------------------------------------------------
@@ -1191,10 +1174,9 @@ _get_fattime:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'Timer0_IRQHandler'
 ;------------------------------------------------------------
-;min_str                   Allocated to stack - _bp +8
-;sec_str                   Allocated to stack - _bp +4
-;ms_str                    Allocated to stack - _bp +12
-;sloc0                     Allocated to stack - _bp +1
+;min_str                   Allocated with name '_Timer0_IRQHandler_min_str_393216_47'
+;sec_str                   Allocated with name '_Timer0_IRQHandler_sec_str_393216_47'
+;ms_str                    Allocated with name '_Timer0_IRQHandler_ms_str_393216_47'
 ;------------------------------------------------------------
 ;	timer.c:130: void Timer0_IRQHandler(void) __interrupt(1)
 ;	-----------------------------------------
@@ -1216,11 +1198,6 @@ _Timer0_IRQHandler:
 	push	(0+0)
 	push	psw
 	mov	psw,#0x00
-	push	_bp
-	mov	a,sp
-	mov	_bp,a
-	add	a,#0x0f
-	mov	sp,a
 ;	timer.c:132: timer0_int_cnt++;
 	mov	dptr,#_timer0_int_cnt
 	movx	a,@dptr
@@ -1296,131 +1273,79 @@ _Timer0_IRQHandler:
 	movx	@dptr,a
 00108$:
 ;	timer.c:100: itoa(mins, min_str);
-	mov	a,_bp
-	add	a,#0x08
-	mov	r7,a
-	mov	r4,a
-	mov	r5,#0x00
-	mov	r6,#0x40
 	mov	dptr,#_mins
 	movx	a,@dptr
-	mov	r3,a
-	mov	r2,#0x00
-	push	ar7
-	push	ar4
-	push	ar5
-	push	ar6
-	mov	dpl,r3
-	mov	dph,r2
+	mov	r7,a
+	mov	r6,#0x00
+	mov	dptr,#_itoa_PARM_2
+	mov	a,#_Timer0_IRQHandler_min_str_393216_47
+	movx	@dptr,a
+	mov	a,#(_Timer0_IRQHandler_min_str_393216_47 >> 8)
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r7
+	mov	dph,r6
 	lcall	_itoa
-	dec	sp
-	dec	sp
-	dec	sp
 ;	timer.c:101: itoa(seconds, sec_str);
-	mov	a,_bp
-	add	a,#0x04
-	mov	r6,a
-	mov	r0,_bp
-	inc	r0
-	mov	@r0,ar6
-	inc	r0
-	mov	@r0,#0x00
-	inc	r0
-	mov	@r0,#0x40
 	mov	dptr,#_seconds
 	movx	a,@dptr
-	mov	r2,a
-	mov	r5,#0x00
-	push	ar6
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	mov	dpl,r2
-	mov	dph,r5
+	mov	r7,a
+	mov	r6,#0x00
+	mov	dptr,#_itoa_PARM_2
+	mov	a,#_Timer0_IRQHandler_sec_str_393216_47
+	movx	@dptr,a
+	mov	a,#(_Timer0_IRQHandler_sec_str_393216_47 >> 8)
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r7
+	mov	dph,r6
 	lcall	_itoa
-	dec	sp
-	dec	sp
-	dec	sp
 ;	timer.c:102: itoa(ms, ms_str);
-	mov	a,_bp
-	add	a,#0x0c
-	mov	r5,a
-	mov	r0,_bp
-	inc	r0
-	mov	@r0,ar5
-	inc	r0
-	mov	@r0,#0x00
-	inc	r0
-	mov	@r0,#0x40
 	mov	dptr,#_ms
 	movx	a,@dptr
-	mov	r4,a
-	mov	r3,#0x00
-	push	ar5
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	mov	dpl,r4
-	mov	dph,r3
+	mov	r7,a
+	mov	r6,#0x00
+	mov	dptr,#_itoa_PARM_2
+	mov	a,#_Timer0_IRQHandler_ms_str_393216_47
+	movx	@dptr,a
+	mov	a,#(_Timer0_IRQHandler_ms_str_393216_47 >> 8)
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r7
+	mov	dph,r6
 	lcall	_itoa
-	dec	sp
-	dec	sp
-	dec	sp
 ;	timer.c:105: lcdgotoxy(3,10);
+	mov	dptr,#_lcdgotoxy_PARM_2
 	mov	a,#0x0a
-	push	acc
+	movx	@dptr,a
 	mov	dpl,#0x03
 	lcall	_lcdgotoxy
-	dec	sp
-	pop	ar5
-	pop	ar6
-	pop	ar7
 ;	timer.c:107: lcdputstr(min_str);
-	mov	r4,#0x00
-	mov	r3,#0x40
-	mov	dpl,r7
-	mov	dph,r4
-	mov	b,r3
-	push	ar6
-	push	ar5
+	mov	dptr,#_Timer0_IRQHandler_min_str_393216_47
+	mov	b,#0x00
 	lcall	_lcdputstr
 ;	timer.c:108: lcdputch(':');
 	mov	dpl,#0x3a
 	lcall	_lcdputch
-	pop	ar5
-	pop	ar6
 ;	timer.c:109: lcdputstr(sec_str);
-	mov	r7,#0x00
-	mov	r4,#0x40
-	mov	dpl,r6
-	mov	dph,r7
-	mov	b,r4
-	push	ar5
+	mov	dptr,#_Timer0_IRQHandler_sec_str_393216_47
+	mov	b,#0x00
 	lcall	_lcdputstr
 ;	timer.c:110: lcdputch('.');
 	mov	dpl,#0x2e
 	lcall	_lcdputch
-	pop	ar5
 ;	timer.c:111: lcdputstr(ms_str);
-	mov	r7,#0x00
-	mov	r6,#0x40
-	mov	dpl,r5
-	mov	dph,r7
-	mov	b,r6
+	mov	dptr,#_Timer0_IRQHandler_ms_str_393216_47
+	mov	b,#0x00
 	lcall	_lcdputstr
 ;	timer.c:142: lcdgotoaddr(cursor_pos);
 	mov	dptr,#_cursor_pos
@@ -1429,8 +1354,6 @@ _Timer0_IRQHandler:
 	lcall	_lcdgotoaddr
 00110$:
 ;	timer.c:144: }
-	mov	sp,_bp
-	pop	_bp
 	pop	psw
 	pop	(0+0)
 	pop	(0+1)

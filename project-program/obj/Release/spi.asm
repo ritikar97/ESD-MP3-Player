@@ -474,6 +474,8 @@ _TF1	=	0x008f
 ; external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
+_spi_byte_data_65536_55:
+	.ds 1
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -511,7 +513,7 @@ _TF1	=	0x008f
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_enable_cs'
 ;------------------------------------------------------------
-;	spi.c:8: void spi_enable_cs(void)
+;	spi.c:21: void spi_enable_cs(void)
 ;	-----------------------------------------
 ;	 function spi_enable_cs
 ;	-----------------------------------------
@@ -524,92 +526,96 @@ _spi_enable_cs:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	spi.c:10: CS = 0;
+;	spi.c:23: CS = 0;
 ;	assignBit
 	clr	_P3_4
-;	spi.c:11: }
+;	spi.c:24: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_disable_cs'
 ;------------------------------------------------------------
-;	spi.c:13: void spi_disable_cs(void)
+;	spi.c:26: void spi_disable_cs(void)
 ;	-----------------------------------------
 ;	 function spi_disable_cs
 ;	-----------------------------------------
 _spi_disable_cs:
-;	spi.c:15: CS = 1;
+;	spi.c:28: CS = 1;
 ;	assignBit
 	setb	_P3_4
-;	spi.c:16: }
+;	spi.c:29: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'max_spi_clock_freq'
 ;------------------------------------------------------------
-;	spi.c:18: void max_spi_clock_freq(void)
+;	spi.c:31: void max_spi_clock_freq(void)
 ;	-----------------------------------------
 ;	 function max_spi_clock_freq
 ;	-----------------------------------------
 _max_spi_clock_freq:
-;	spi.c:20: SPCON &= ~SPR2;
+;	spi.c:33: SPCON &= ~SPR2;
 	anl	_SPCON,#0x7f
-;	spi.c:21: }
+;	spi.c:34: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_init'
 ;------------------------------------------------------------
-;	spi.c:23: void spi_init(void)
+;	spi.c:36: void spi_init(void)
 ;	-----------------------------------------
 ;	 function spi_init
 ;	-----------------------------------------
 _spi_init:
-;	spi.c:25: SPCON = 0;
+;	spi.c:38: SPCON = 0;
 	mov	_SPCON,#0x00
-;	spi.c:26: spi_disable_cs();
+;	spi.c:39: spi_disable_cs();
 	lcall	_spi_disable_cs
-;	spi.c:27: LDAC = 0;
+;	spi.c:40: LDAC = 0;
 ;	assignBit
 	clr	_P3_5
-;	spi.c:29: SPCON |= SPR2;
+;	spi.c:42: SPCON |= SPR2;
 	orl	_SPCON,#0x80
-;	spi.c:30: SPCON &= ~SPR1;
+;	spi.c:43: SPCON &= ~SPR1;
 	anl	_SPCON,#0xfd
-;	spi.c:31: SPCON &= ~SPR0;
+;	spi.c:44: SPCON &= ~SPR0;
 	anl	_SPCON,#0xfe
-;	spi.c:33: SPCON |= SSDIS;
+;	spi.c:46: SPCON |= SSDIS;
 	orl	_SPCON,#0x20
-;	spi.c:35: SPCON |= MSTR;
+;	spi.c:48: SPCON |= MSTR;
 	orl	_SPCON,#0x10
-;	spi.c:37: SPCON &= ~CPOL;
+;	spi.c:50: SPCON &= ~CPOL;
 	anl	_SPCON,#0xf7
-;	spi.c:39: SPCON &= ~CPHA;
+;	spi.c:52: SPCON &= ~CPHA;
 	anl	_SPCON,#0xfb
-;	spi.c:41: SPCON |= SPEN;
+;	spi.c:54: SPCON |= SPEN;
 	orl	_SPCON,#0x40
-;	spi.c:42: }
+;	spi.c:55: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'spi_byte'
 ;------------------------------------------------------------
-;data                      Allocated to registers r7 
+;data                      Allocated with name '_spi_byte_data_65536_55'
 ;------------------------------------------------------------
-;	spi.c:49: uint8_t spi_byte(uint8_t data)
+;	spi.c:62: uint8_t spi_byte(uint8_t data)
 ;	-----------------------------------------
 ;	 function spi_byte
 ;	-----------------------------------------
 _spi_byte:
-	mov	r7,dpl
-;	spi.c:51: LDAC = 0;
+	mov	a,dpl
+	mov	dptr,#_spi_byte_data_65536_55
+	movx	@dptr,a
+;	spi.c:64: LDAC = 0;
 ;	assignBit
 	clr	_P3_5
-;	spi.c:52: SPDAT = data;
-	mov	_SPDAT,r7
-;	spi.c:54: while((SPSTA & 0x80) == 0);
+;	spi.c:65: SPDAT = data;
+	mov	dptr,#_spi_byte_data_65536_55
+	movx	a,@dptr
+	mov	_SPDAT,a
+;	spi.c:67: while((SPSTA & 0x80) == 0);
 00101$:
 	mov	a,_SPSTA
 	jnb	acc.7,00101$
-;	spi.c:55: return SPDAT;
+;	spi.c:68: return SPDAT;
 	mov	dpl,_SPDAT
-;	spi.c:56: }
+;	spi.c:69: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

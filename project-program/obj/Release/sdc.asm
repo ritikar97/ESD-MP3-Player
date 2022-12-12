@@ -221,6 +221,8 @@
 	.globl _RCAP2H
 	.globl _RCAP2L
 	.globl _T2CON
+	.globl _sd_write_sector_PARM_2
+	.globl _sd_read_sector_PARM_2
 	.globl _card_type
 	.globl _get_card_type
 	.globl _sd_init
@@ -455,6 +457,8 @@ _TF1	=	0x008f
 ; internal ram data
 ;--------------------------------------------------------
 	.area DSEG    (DATA)
+_sd_command_sloc0_1_0:
+	.ds 4
 ;--------------------------------------------------------
 ; overlayable items in internal ram
 ;--------------------------------------------------------
@@ -481,6 +485,22 @@ _TF1	=	0x008f
 	.area XSEG    (XDATA)
 _card_type::
 	.ds 2
+_sd_read_sector_PARM_2:
+	.ds 3
+_sd_read_sector_sector_number_65536_59:
+	.ds 2
+_sd_write_sector_PARM_2:
+	.ds 3
+_sd_write_sector_sector_number_65536_65:
+	.ds 2
+_sd_get_R1_ret_65536_73:
+	.ds 1
+_sd_command_PARM_2:
+	.ds 4
+_sd_command_cmd_65536_79:
+	.ds 1
+_delay_count_65536_83:
+	.ds 1
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -518,7 +538,7 @@ _card_type::
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'get_card_type'
 ;------------------------------------------------------------
-;	sdc.c:83: int get_card_type(void)
+;	sdc.c:100: int get_card_type(void)
 ;	-----------------------------------------
 ;	 function get_card_type
 ;	-----------------------------------------
@@ -531,41 +551,41 @@ _get_card_type:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-;	sdc.c:85: return card_type;
+;	sdc.c:102: return card_type;
 	mov	dptr,#_card_type
 	movx	a,@dptr
 	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-;	sdc.c:86: }
+;	sdc.c:103: }
 	mov	dpl,r6
 	mov	dph,a
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_init'
 ;------------------------------------------------------------
-;card_status               Allocated to registers 
-;i                         Allocated to registers r6 r7 
+;card_status               Allocated with name '_sd_init_card_status_65536_50'
+;i                         Allocated with name '_sd_init_i_65536_50'
 ;------------------------------------------------------------
-;	sdc.c:99: int sd_init(void)
+;	sdc.c:116: int sd_init(void)
 ;	-----------------------------------------
 ;	 function sd_init
 ;	-----------------------------------------
 _sd_init:
-;	sdc.c:106: spi_disable_cs();
+;	sdc.c:123: spi_disable_cs();
 	lcall	_spi_disable_cs
-;	sdc.c:109: for(i=0;i<10;i++)
+;	sdc.c:126: for(i=0;i<10;i++)
 	mov	r6,#0x00
 	mov	r7,#0x00
 00124$:
-;	sdc.c:110: spi_byte( 0xFF );
+;	sdc.c:127: spi_byte( 0xFF );
 	mov	dpl,#0xff
 	push	ar7
 	push	ar6
 	lcall	_spi_byte
 	pop	ar6
 	pop	ar7
-;	sdc.c:109: for(i=0;i<10;i++)
+;	sdc.c:126: for(i=0;i<10;i++)
 	inc	r6
 	cjne	r6,#0x00,00179$
 	inc	r7
@@ -577,35 +597,36 @@ _sd_init:
 	xrl	a,#0x80
 	subb	a,#0x80
 	jc	00124$
-;	sdc.c:112: spi_enable_cs();
+;	sdc.c:129: spi_enable_cs();
 	lcall	_spi_enable_cs
-;	sdc.c:118: card_type = 0;
+;	sdc.c:135: card_type = 0;
 	mov	dptr,#_card_type
 	clr	a
 	movx	@dptr,a
 	inc	dptr
 	movx	@dptr,a
-;	sdc.c:121: do
+;	sdc.c:138: do
 	mov	r6,#0xe8
 	mov	r7,#0x03
 00103$:
-;	sdc.c:123: delay(1);
+;	sdc.c:140: delay(1);
 	mov	dpl,#0x01
 	push	ar7
 	push	ar6
 	lcall	_delay
-;	sdc.c:124: sd_command(CMD_GO_IDLE_STATE, 0);
+;	sdc.c:141: sd_command(CMD_GO_IDLE_STATE, 0);
+	mov	dptr,#_sd_command_PARM_2
 	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x00
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:125: } while((sd_get_R1() != IDLE_STATE) && (--i));
+;	sdc.c:142: } while((sd_get_R1() != IDLE_STATE) && (--i));
 	lcall	_sd_get_R1
 	mov	r5,dpl
 	pop	ar6
@@ -621,42 +642,44 @@ _sd_init:
 	orl	a,r7
 	jnz	00103$
 00105$:
-;	sdc.c:128: if( !i )
+;	sdc.c:145: if( !i )
 	mov	a,r6
 	orl	a,r7
 	jnz	00107$
-;	sdc.c:129: return( SD_TIME_OUT );
+;	sdc.c:146: return( SD_TIME_OUT );
 	mov	dptr,#0x0002
 	ret
 00107$:
-;	sdc.c:138: sd_command(CMD_APP_CMD, 0);
+;	sdc.c:155: sd_command(CMD_APP_CMD, 0);
+	mov	dptr,#_sd_command_PARM_2
 	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x37
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:140: sd_command( ACMD_SEND_OP_COND, 0 );
+;	sdc.c:157: sd_command( ACMD_SEND_OP_COND, 0 );
+	mov	dptr,#_sd_command_PARM_2
 	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x29
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:142: if( sd_get_R1() <= 1 )
+;	sdc.c:159: if( sd_get_R1() <= 1 )
 	lcall	_sd_get_R1
 	mov	a,dpl
 	add	a,#0xff - 0x01
 	jc	00109$
-;	sdc.c:144: card_type = 2;
+;	sdc.c:161: card_type = 2;
 	mov	dptr,#_card_type
 	mov	a,#0x02
 	movx	@dptr,a
@@ -665,26 +688,26 @@ _sd_init:
 	movx	@dptr,a
 	sjmp	00136$
 00109$:
-;	sdc.c:148: card_type = 1;
+;	sdc.c:165: card_type = 1;
 	mov	dptr,#_card_type
 	mov	a,#0x01
 	movx	@dptr,a
 	clr	a
 	inc	dptr
 	movx	@dptr,a
-;	sdc.c:152: do
+;	sdc.c:169: do
 00136$:
 	mov	r6,#0xd0
 	mov	r7,#0x07
 00115$:
-;	sdc.c:154: delay(1);
+;	sdc.c:171: delay(1);
 	mov	dpl,#0x01
 	push	ar7
 	push	ar6
 	lcall	_delay
 	pop	ar6
 	pop	ar7
-;	sdc.c:157: if( card_type == 2 )
+;	sdc.c:174: if( card_type == 2 )
 	mov	dptr,#_card_type
 	movx	a,@dptr
 	mov	r4,a
@@ -693,51 +716,54 @@ _sd_init:
 	mov	r5,a
 	cjne	r4,#0x02,00112$
 	cjne	r5,#0x00,00112$
-;	sdc.c:159: sd_command( CMD_APP_CMD, 0 );
+;	sdc.c:176: sd_command( CMD_APP_CMD, 0 );
+	mov	dptr,#_sd_command_PARM_2
+	clr	a
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,#0x37
 	push	ar7
 	push	ar6
-	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
-	mov	dpl,#0x37
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:160: sd_command( ACMD_SEND_OP_COND, 0 );
+;	sdc.c:177: sd_command( ACMD_SEND_OP_COND, 0 );
+	mov	dptr,#_sd_command_PARM_2
 	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x29
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
 	pop	ar6
 	pop	ar7
 	sjmp	00116$
 00112$:
-;	sdc.c:165: sd_command( CMD_SEND_OP_COND, 0 );
+;	sdc.c:182: sd_command( CMD_SEND_OP_COND, 0 );
+	mov	dptr,#_sd_command_PARM_2
+	clr	a
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,#0x01
 	push	ar7
 	push	ar6
-	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
-	mov	dpl,#0x01
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
 	pop	ar6
 	pop	ar7
 00116$:
-;	sdc.c:167: } while(sd_get_R1() && --i); //only when the response is 0x00 means the initialization succeed
+;	sdc.c:184: } while(sd_get_R1() && --i); //only when the response is 0x00 means the initialization succeed
 	push	ar7
 	push	ar6
 	lcall	_sd_get_R1
@@ -751,117 +777,126 @@ _sd_init:
 00189$:
 	mov	a,r6
 	orl	a,r7
-	jz	00190$
-	ljmp	00115$
-00190$:
+	jnz	00115$
 00117$:
-;	sdc.c:169: if( !i )
+;	sdc.c:186: if( !i )
 	mov	a,r6
 	orl	a,r7
 	jnz	00119$
-;	sdc.c:170: return( SD_TIME_OUT );
+;	sdc.c:187: return( SD_TIME_OUT );
 	mov	dptr,#0x0002
 	ret
 00119$:
-;	sdc.c:175: sd_command( CMD_SEND_STATUS, 0 );
+;	sdc.c:192: sd_command( CMD_SEND_STATUS, 0 );
+	mov	dptr,#_sd_command_PARM_2
 	clr	a
-	push	acc
-	push	acc
-	push	acc
-	push	acc
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x0d
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:176: card_status = sd_get_R2();
+;	sdc.c:193: card_status = sd_get_R2();
 	lcall	_sd_get_R2
 	mov	a,dpl
 	mov	b,dph
-;	sdc.c:177: if( card_status )
+;	sdc.c:194: if( card_status )
 	orl	a,b
 	jz	00121$
-;	sdc.c:178: return( SD_ERROR );
+;	sdc.c:195: return( SD_ERROR );
 	mov	dptr,#0x0001
 	ret
 00121$:
-;	sdc.c:183: sd_command( CMD_SET_BLOCKLEN, 512 );
+;	sdc.c:200: sd_command( CMD_SET_BLOCKLEN, 512 );
+	mov	dptr,#_sd_command_PARM_2
 	clr	a
-	push	acc
+	movx	@dptr,a
 	mov	a,#0x02
-	push	acc
+	inc	dptr
+	movx	@dptr,a
 	clr	a
-	push	acc
-	push	acc
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x10
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:184: if( sd_get_R1() )
+;	sdc.c:201: if( sd_get_R1() )
 	lcall	_sd_get_R1
 	mov	a,dpl
 	jz	00123$
-;	sdc.c:186: card_type = 0;
+;	sdc.c:203: card_type = 0;
 	mov	dptr,#_card_type
 	clr	a
 	movx	@dptr,a
 	inc	dptr
 	movx	@dptr,a
-;	sdc.c:187: return( SD_ERROR );
+;	sdc.c:204: return( SD_ERROR );
 	mov	dptr,#0x0001
 	ret
 00123$:
-;	sdc.c:192: max_spi_clock_freq();
+;	sdc.c:209: max_spi_clock_freq();
 	lcall	_max_spi_clock_freq
-;	sdc.c:194: spi_disable_cs();
+;	sdc.c:211: spi_disable_cs();
 	lcall	_spi_disable_cs
-;	sdc.c:196: return SD_SUCCESS;
+;	sdc.c:213: return SD_SUCCESS;
 	mov	dptr,#0x0000
-;	sdc.c:197: }
+;	sdc.c:214: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_read_sector'
 ;------------------------------------------------------------
-;buffer                    Allocated to stack - _bp -5
-;sector_number             Allocated to registers r6 r7 
-;count                     Allocated to stack - _bp +1
+;buffer                    Allocated with name '_sd_read_sector_PARM_2'
+;sector_number             Allocated with name '_sd_read_sector_sector_number_65536_59'
+;count                     Allocated with name '_sd_read_sector_count_65536_60'
 ;------------------------------------------------------------
-;	sdc.c:205: int sd_read_sector( uint16_t sector_number, uint8_t *buffer )
+;	sdc.c:222: int sd_read_sector( uint16_t sector_number, uint8_t *buffer )
 ;	-----------------------------------------
 ;	 function sd_read_sector
 ;	-----------------------------------------
 _sd_read_sector:
-	push	_bp
-	mov	_bp,sp
-	inc	sp
-	inc	sp
-	mov	r6,dpl
 	mov	r7,dph
-;	sdc.c:210: sd_command( CMD_READ_SINGLE_BLOCK, sector_number << 9 );
+	mov	a,dpl
+	mov	dptr,#_sd_read_sector_sector_number_65536_59
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+;	sdc.c:227: sd_command( CMD_READ_SINGLE_BLOCK, sector_number << 9 );
+	mov	dptr,#_sd_read_sector_sector_number_65536_59
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 	mov	a,r6
 	add	a,r6
 	xch	a,r7
 	mov	r6,#0x00
-	mov	r5,#0x00
-	mov	r4,#0x00
-	push	ar6
-	push	ar7
-	push	ar5
-	push	ar4
+	mov	dptr,#_sd_command_PARM_2
+	mov	a,r6
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x11
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:212: if(sd_get_R1() != 0){
+;	sdc.c:229: if(sd_get_R1() != 0){
 	lcall	_sd_get_R1
 	mov	a,dpl
 	jz	00116$
-;	sdc.c:213: return SD_ERROR;
+;	sdc.c:230: return SD_ERROR;
 	mov	dptr,#0x0001
-	ljmp	00112$
-;	sdc.c:218: while( (sd_get_R1() == 0xff) && --count);
+	ret
+;	sdc.c:235: while( (sd_get_R1() == 0xff) && --count);
 00116$:
 	mov	r6,#0xff
 	mov	r7,#0xff
@@ -881,37 +916,38 @@ _sd_read_sector:
 	orl	a,r7
 	jnz	00104$
 00106$:
-;	sdc.c:221: if(count == 0){
+;	sdc.c:238: if(count == 0){
 	mov	a,r6
 	orl	a,r7
 	jnz	00118$
-;	sdc.c:222: return SD_ERROR;
+;	sdc.c:239: return SD_ERROR;
 	mov	dptr,#0x0001
-;	sdc.c:226: for( count=0; count<SD_DATA_SIZE; count++){
-	sjmp	00112$
+;	sdc.c:243: for( count=0; count<SD_DATA_SIZE; count++){
+	ret
 00118$:
-	mov	a,_bp
-	add	a,#0xfb
-	mov	r0,a
-	mov	ar5,@r0
-	inc	r0
-	mov	ar6,@r0
-	inc	r0
-	mov	ar7,@r0
-	mov	r0,_bp
-	inc	r0
-	clr	a
-	mov	@r0,a
-	inc	r0
-	mov	@r0,a
+	mov	dptr,#_sd_read_sector_PARM_2
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+	mov	r3,#0x00
+	mov	r4,#0x00
 00110$:
-;	sdc.c:227: *buffer++ = spi_byte(0xFF);
+;	sdc.c:244: *buffer++ = spi_byte(0xFF);
 	mov	dpl,#0xff
 	push	ar7
 	push	ar6
 	push	ar5
+	push	ar4
+	push	ar3
 	lcall	_spi_byte
 	mov	r2,dpl
+	pop	ar3
+	pop	ar4
 	pop	ar5
 	pop	ar6
 	pop	ar7
@@ -923,91 +959,94 @@ _sd_read_sector:
 	inc	dptr
 	mov	r5,dpl
 	mov	r6,dph
-;	sdc.c:226: for( count=0; count<SD_DATA_SIZE; count++){
-	mov	r0,_bp
-	inc	r0
-	inc	@r0
-	cjne	@r0,#0x00,00146$
-	inc	r0
-	inc	@r0
+;	sdc.c:243: for( count=0; count<SD_DATA_SIZE; count++){
+	inc	r3
+	cjne	r3,#0x00,00146$
+	inc	r4
 00146$:
-	mov	r0,_bp
-	inc	r0
-	inc	r0
-	mov	ar4,@r0
+	mov	ar2,r4
 	mov	a,#0x100 - 0x01
-	add	a,r4
+	add	a,r2
 	jnc	00110$
-;	sdc.c:231: spi_byte(0xFF);
+;	sdc.c:248: spi_byte(0xFF);
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:232: spi_byte(0xFF);
+;	sdc.c:249: spi_byte(0xFF);
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:235: spi_disable_cs();
+;	sdc.c:252: spi_disable_cs();
 	lcall	_spi_disable_cs
-;	sdc.c:237: spi_byte(0xFF);
+;	sdc.c:254: spi_byte(0xFF);
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:239: return SD_SUCCESS;
+;	sdc.c:256: return SD_SUCCESS;
 	mov	dptr,#0x0000
-00112$:
-;	sdc.c:240: }
-	mov	sp,_bp
-	pop	_bp
+;	sdc.c:257: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_write_sector'
 ;------------------------------------------------------------
-;buffer                    Allocated to stack - _bp -5
-;sector_number             Allocated to registers r6 r7 
-;i                         Allocated to registers r3 r4 
+;buffer                    Allocated with name '_sd_write_sector_PARM_2'
+;sector_number             Allocated with name '_sd_write_sector_sector_number_65536_65'
+;i                         Allocated with name '_sd_write_sector_i_131072_68'
 ;------------------------------------------------------------
-;	sdc.c:248: int sd_write_sector( uint16_t sector_number, const uint8_t *buffer )
+;	sdc.c:265: int sd_write_sector( uint16_t sector_number, const uint8_t *buffer )
 ;	-----------------------------------------
 ;	 function sd_write_sector
 ;	-----------------------------------------
 _sd_write_sector:
-	push	_bp
-	mov	_bp,sp
-	mov	r6,dpl
 	mov	r7,dph
-;	sdc.c:251: sd_command( CMD_WRITE_SINGLE_BLOCK, sector_number << 9 );
+	mov	a,dpl
+	mov	dptr,#_sd_write_sector_sector_number_65536_65
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+;	sdc.c:268: sd_command( CMD_WRITE_SINGLE_BLOCK, sector_number << 9 );
+	mov	dptr,#_sd_write_sector_sector_number_65536_65
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 	mov	a,r6
 	add	a,r6
 	xch	a,r7
 	mov	r6,#0x00
-	mov	r5,#0x00
-	mov	r4,#0x00
-	push	ar6
-	push	ar7
-	push	ar5
-	push	ar4
+	mov	dptr,#_sd_command_PARM_2
+	mov	a,r6
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	inc	dptr
+	movx	@dptr,a
 	mov	dpl,#0x18
 	lcall	_sd_command
-	mov	a,sp
-	add	a,#0xfc
-	mov	sp,a
-;	sdc.c:253: if(sd_get_R1() != 0){
+;	sdc.c:270: if(sd_get_R1() != 0){
 	lcall	_sd_get_R1
 	mov	a,dpl
 	jz	00102$
-;	sdc.c:254: return SD_ERROR;
+;	sdc.c:271: return SD_ERROR;
 	mov	dptr,#0x0001
-	ljmp	00110$
+	ret
 00102$:
-;	sdc.c:258: spi_byte( 0xFE );
+;	sdc.c:275: spi_byte( 0xFE );
 	mov	dpl,#0xfe
 	lcall	_spi_byte
-;	sdc.c:260: for(int i= 0; i< 512; i++ )
-	mov	a,_bp
-	add	a,#0xfb
-	mov	r0,a
-	mov	ar5,@r0
-	inc	r0
-	mov	ar6,@r0
-	inc	r0
-	mov	ar7,@r0
+;	sdc.c:277: for(int i= 0; i< 512; i++ )
+	mov	dptr,#_sd_write_sector_PARM_2
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 	mov	r3,#0x00
 	mov	r4,#0x00
 00108$:
@@ -1016,7 +1055,7 @@ _sd_write_sector:
 	xrl	a,#0x80
 	subb	a,#0x82
 	jnc	00103$
-;	sdc.c:262: spi_byte(*buffer++);
+;	sdc.c:279: spi_byte(*buffer++);
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
@@ -1037,70 +1076,68 @@ _sd_write_sector:
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	sdc.c:260: for(int i= 0; i< 512; i++ )
+;	sdc.c:277: for(int i= 0; i< 512; i++ )
 	inc	r3
 	cjne	r3,#0x00,00108$
 	inc	r4
 	sjmp	00108$
 00103$:
-;	sdc.c:266: spi_byte(0xFF);
+;	sdc.c:283: spi_byte(0xFF);
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:267: spi_byte(0xFF);
+;	sdc.c:284: spi_byte(0xFF);
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:270: while( spi_byte( 0xFF ) != 0xFF);
+;	sdc.c:287: while( spi_byte( 0xFF ) != 0xFF);
 00104$:
 	mov	dpl,#0xff
 	lcall	_spi_byte
 	mov	r7,dpl
 	cjne	r7,#0xff,00104$
-;	sdc.c:274: spi_byte( 0xFF );
+;	sdc.c:291: spi_byte( 0xFF );
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:277: spi_disable_cs();
+;	sdc.c:294: spi_disable_cs();
 	lcall	_spi_disable_cs
-;	sdc.c:278: spi_byte( 0xFF );
+;	sdc.c:295: spi_byte( 0xFF );
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:280: return SD_SUCCESS;
+;	sdc.c:297: return SD_SUCCESS;
 	mov	dptr,#0x0000
-00110$:
-;	sdc.c:281: }
-	pop	_bp
+;	sdc.c:298: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_wait_for_ready'
 ;------------------------------------------------------------
-;i                         Allocated to registers r5 
-;j                         Allocated to registers r6 r7 
+;i                         Allocated with name '_sd_wait_for_ready_i_65536_70'
+;j                         Allocated with name '_sd_wait_for_ready_j_65536_70'
 ;------------------------------------------------------------
-;	sdc.c:287: uint8_t sd_wait_for_ready()
+;	sdc.c:304: uint8_t sd_wait_for_ready()
 ;	-----------------------------------------
 ;	 function sd_wait_for_ready
 ;	-----------------------------------------
 _sd_wait_for_ready:
-;	sdc.c:291: spi_byte( 0xFF );
+;	sdc.c:308: spi_byte( 0xFF );
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:294: do
+;	sdc.c:311: do
 	mov	r6,#0xf4
 	mov	r7,#0x01
 00102$:
-;	sdc.c:296: i = spi_byte( 0xFF );
+;	sdc.c:313: i = spi_byte( 0xFF );
 	mov	dpl,#0xff
 	push	ar7
 	push	ar6
 	lcall	_spi_byte
 	mov	r5,dpl
-;	sdc.c:297: delay( 1 );
+;	sdc.c:314: delay( 1 );
 	mov	dpl,#0x01
 	push	ar5
 	lcall	_delay
 	pop	ar5
 	pop	ar6
 	pop	ar7
-;	sdc.c:298: } while ((i != 0xFF) && --j);
+;	sdc.c:315: } while ((i != 0xFF) && --j);
 	cjne	r5,#0xff,00116$
 	sjmp	00104$
 00116$:
@@ -1112,76 +1149,82 @@ _sd_wait_for_ready:
 	orl	a,r7
 	jnz	00102$
 00104$:
-;	sdc.c:300: return i;
+;	sdc.c:317: return i;
 	mov	dpl,r5
-;	sdc.c:301: }
+;	sdc.c:318: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_get_R1'
 ;------------------------------------------------------------
-;ret                       Allocated to registers r7 
-;i                         Allocated to registers r5 r6 
+;ret                       Allocated with name '_sd_get_R1_ret_65536_73'
+;i                         Allocated with name '_sd_get_R1_i_131072_74'
 ;------------------------------------------------------------
-;	sdc.c:309: static uint8_t sd_get_R1(void)
+;	sdc.c:326: static uint8_t sd_get_R1(void)
 ;	-----------------------------------------
 ;	 function sd_get_R1
 ;	-----------------------------------------
 _sd_get_R1:
-;	sdc.c:311: uint8_t ret = 0;
-	mov	r7,#0x00
-;	sdc.c:313: for(int i=0; i<8; i++ ) {
-	mov	r5,#0x00
+;	sdc.c:328: uint8_t ret = 0;
+	mov	dptr,#_sd_get_R1_ret_65536_73
+	clr	a
+	movx	@dptr,a
+;	sdc.c:330: for(int i=0; i<8; i++ ) {
 	mov	r6,#0x00
+	mov	r7,#0x00
 00105$:
 	clr	c
-	mov	a,r5
-	subb	a,#0x08
 	mov	a,r6
+	subb	a,#0x08
+	mov	a,r7
 	xrl	a,#0x80
 	subb	a,#0x80
 	jnc	00103$
-;	sdc.c:315: ret = spi_byte( 0xff );
+;	sdc.c:332: ret = spi_byte( 0xff );
 	mov	dpl,#0xff
+	push	ar7
 	push	ar6
-	push	ar5
 	lcall	_spi_byte
-	mov	r4,dpl
-	pop	ar5
+	mov	r5,dpl
 	pop	ar6
-	mov	ar7,r4
-;	sdc.c:316: if(ret != 0xff) {
-	cjne	r7,#0xff,00122$
+	pop	ar7
+	mov	dptr,#_sd_get_R1_ret_65536_73
+	mov	a,r5
+	movx	@dptr,a
+;	sdc.c:333: if(ret != 0xff) {
+	cjne	r5,#0xff,00122$
 	sjmp	00106$
 00122$:
-;	sdc.c:318: return ret;
-	mov	dpl,r7
+;	sdc.c:335: return ret;
+	mov	dpl,r5
 	ret
 00106$:
-;	sdc.c:313: for(int i=0; i<8; i++ ) {
-	inc	r5
-	cjne	r5,#0x00,00105$
+;	sdc.c:330: for(int i=0; i<8; i++ ) {
 	inc	r6
+	cjne	r6,#0x00,00105$
+	inc	r7
 	sjmp	00105$
 00103$:
-;	sdc.c:321: return ret;
-	mov	dpl,r7
-;	sdc.c:322: }
+;	sdc.c:338: return ret;
+	mov	dptr,#_sd_get_R1_ret_65536_73
+	movx	a,@dptr
+;	sdc.c:339: }
+	mov	dpl,a
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_get_R2'
 ;------------------------------------------------------------
-;r2                        Allocated to registers r5 r4 
+;r2                        Allocated with name '_sd_get_R2_r2_65536_78'
 ;------------------------------------------------------------
-;	sdc.c:327: static uint16_t sd_get_R2(void)
+;	sdc.c:344: static uint16_t sd_get_R2(void)
 ;	-----------------------------------------
 ;	 function sd_get_R2
 ;	-----------------------------------------
 _sd_get_R2:
-;	sdc.c:331: r2 = ((sd_get_R1())<< 8) & 0xff00;
+;	sdc.c:348: r2 = ((sd_get_R1())<< 8) & 0xff00;
 	lcall	_sd_get_R1
 	mov	r6,dpl
 	mov	r7,#0x00
-;	sdc.c:332: r2 |= spi_byte( 0xff );
+;	sdc.c:349: r2 |= spi_byte( 0xff );
 	mov	dpl,#0xff
 	push	ar7
 	push	ar6
@@ -1190,106 +1233,114 @@ _sd_get_R2:
 	pop	ar6
 	pop	ar7
 	mov	r4,#0x00
-	mov	a,r7
-	orl	ar5,a
-	mov	a,r6
-	orl	ar4,a
-;	sdc.c:333: return( r2 );
-	mov	dpl,r5
-	mov	dph,r4
-;	sdc.c:334: }
+	mov	a,r5
+	orl	ar7,a
+	mov	a,r4
+	orl	ar6,a
+;	sdc.c:350: return( r2 );
+	mov	dpl,r7
+	mov	dph,r6
+;	sdc.c:351: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'sd_command'
 ;------------------------------------------------------------
-;arg                       Allocated to stack - _bp -6
-;cmd                       Allocated to registers r7 
-;temp                      Allocated to registers r2 
-;i                         Allocated to registers r5 r6 
+;sloc0                     Allocated with name '_sd_command_sloc0_1_0'
+;arg                       Allocated with name '_sd_command_PARM_2'
+;cmd                       Allocated with name '_sd_command_cmd_65536_79'
+;temp                      Allocated with name '_sd_command_temp_65536_80'
+;i                         Allocated with name '_sd_command_i_131072_81'
 ;------------------------------------------------------------
-;	sdc.c:342: static int sd_command(uint8_t cmd, uint32_t arg)
+;	sdc.c:359: static int sd_command(uint8_t cmd, uint32_t arg)
 ;	-----------------------------------------
 ;	 function sd_command
 ;	-----------------------------------------
 _sd_command:
-	push	_bp
-	mov	_bp,sp
-	mov	r7,dpl
-;	sdc.c:347: spi_enable_cs();
-	push	ar7
+	mov	a,dpl
+	mov	dptr,#_sd_command_cmd_65536_79
+	movx	@dptr,a
+;	sdc.c:364: spi_enable_cs();
 	lcall	_spi_enable_cs
-;	sdc.c:349: spi_byte( 0xFF );
+;	sdc.c:366: spi_byte( 0xFF );
 	mov	dpl,#0xff
 	lcall	_spi_byte
-	pop	ar7
-;	sdc.c:351: spi_byte(0x40 | cmd);
+;	sdc.c:368: spi_byte(0x40 | cmd);
+	mov	dptr,#_sd_command_cmd_65536_79
+	movx	a,@dptr
+	mov	r7,a
 	mov	a,#0x40
 	orl	a,r7
 	mov	dpl,a
 	push	ar7
 	lcall	_spi_byte
 	pop	ar7
-;	sdc.c:353: for(int i=3;i>=0;i--){
-	mov	r5,#0x03
-	mov	r6,#0x00
+;	sdc.c:370: for(int i=3;i>=0;i--){
+	mov	dptr,#_sd_command_PARM_2
+	movx	a,@dptr
+	mov	_sd_command_sloc0_1_0,a
+	inc	dptr
+	movx	a,@dptr
+	mov	(_sd_command_sloc0_1_0 + 1),a
+	inc	dptr
+	movx	a,@dptr
+	mov	(_sd_command_sloc0_1_0 + 2),a
+	inc	dptr
+	movx	a,@dptr
+	mov	(_sd_command_sloc0_1_0 + 3),a
+	mov	r1,#0x03
+	mov	r2,#0x00
 00103$:
-	mov	a,r6
+	mov	a,r2
 	jb	acc.7,00101$
-;	sdc.c:354: temp = (arg >> (i * 8)) & 0xFF;
+;	sdc.c:371: temp = (arg >> (i * 8)) & 0xFF;
 	push	ar7
-	mov	ar4,r5
-	mov	a,r4
+	mov	ar0,r1
+	mov	a,r0
 	swap	a
 	rr	a
 	anl	a,#0xf8
-	mov	r4,a
-	mov	b,r4
-	inc	b
-	mov	a,_bp
-	add	a,#0xfa
 	mov	r0,a
-	mov	ar2,@r0
-	inc	r0
-	mov	ar3,@r0
-	inc	r0
-	mov	ar4,@r0
-	inc	r0
-	mov	ar7,@r0
+	mov	b,r0
+	inc	b
+	mov	r0,_sd_command_sloc0_1_0
+	mov	r5,(_sd_command_sloc0_1_0 + 1)
+	mov	r6,(_sd_command_sloc0_1_0 + 2)
+	mov	r7,(_sd_command_sloc0_1_0 + 3)
 	sjmp	00124$
 00123$:
 	clr	c
 	mov	a,r7
 	rrc	a
 	mov	r7,a
-	mov	a,r4
+	mov	a,r6
 	rrc	a
-	mov	r4,a
-	mov	a,r3
+	mov	r6,a
+	mov	a,r5
 	rrc	a
-	mov	r3,a
-	mov	a,r2
+	mov	r5,a
+	mov	a,r0
 	rrc	a
-	mov	r2,a
+	mov	r0,a
 00124$:
 	djnz	b,00123$
-;	sdc.c:355: spi_byte(temp);
-	mov	dpl,r2
+;	sdc.c:372: spi_byte(temp);
+	mov	dpl,r0
 	push	ar7
-	push	ar6
-	push	ar5
+	push	ar2
+	push	ar1
 	lcall	_spi_byte
-	pop	ar5
-	pop	ar6
+	pop	ar1
+	pop	ar2
 	pop	ar7
-;	sdc.c:353: for(int i=3;i>=0;i--){
-	dec	r5
-	cjne	r5,#0xff,00125$
-	dec	r6
+;	sdc.c:370: for(int i=3;i>=0;i--){
+	dec	r1
+	cjne	r1,#0xff,00125$
+	dec	r2
 00125$:
 	pop	ar7
 	sjmp	00103$
 00101$:
-;	sdc.c:359: spi_byte((cmd == CMD_GO_IDLE_STATE)? 0x95:0xFF);
+;	sdc.c:376: spi_byte((cmd == CMD_GO_IDLE_STATE)? 0x95:0xFF);
 	mov	a,r7
 	jnz	00107$
 	mov	r6,#0x95
@@ -1301,43 +1352,46 @@ _sd_command:
 00108$:
 	mov	dpl,r6
 	lcall	_spi_byte
-;	sdc.c:361: spi_byte( 0xFF );
+;	sdc.c:378: spi_byte( 0xFF );
 	mov	dpl,#0xff
 	lcall	_spi_byte
-;	sdc.c:363: return 0;
+;	sdc.c:380: return 0;
 	mov	dptr,#0x0000
-;	sdc.c:364: }
-	pop	_bp
+;	sdc.c:381: }
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'delay'
 ;------------------------------------------------------------
-;count                     Allocated to registers r7 
-;i                         Allocated to registers r5 r6 
+;count                     Allocated with name '_delay_count_65536_83'
+;i                         Allocated with name '_delay_i_131072_85'
 ;------------------------------------------------------------
-;	sdc.c:370: static void delay(uint8_t count)
+;	sdc.c:387: static void delay(uint8_t count)
 ;	-----------------------------------------
 ;	 function delay
 ;	-----------------------------------------
 _delay:
-	mov	r7,dpl
-;	sdc.c:372: for(int i=0;i<count * 1000;i++){
+	mov	a,dpl
+	mov	dptr,#_delay_count_65536_83
+	movx	@dptr,a
+;	sdc.c:389: for(int i=0;i<count * 1000;i++){
+	movx	a,@dptr
+	mov	r7,a
 	mov	r5,#0x00
 	mov	r6,#0x00
 00103$:
-	mov	ar3,r7
-	mov	r4,#0x00
+	mov	dptr,#__mulint_PARM_2
+	mov	a,r7
+	movx	@dptr,a
+	clr	a
+	inc	dptr
+	movx	@dptr,a
+	mov	dptr,#0x03e8
 	push	ar7
 	push	ar6
 	push	ar5
-	push	ar3
-	push	ar4
-	mov	dptr,#0x03e8
 	lcall	__mulint
 	mov	r3,dpl
 	mov	r4,dph
-	dec	sp
-	dec	sp
 	pop	ar5
 	pop	ar6
 	pop	ar7
@@ -1355,7 +1409,7 @@ _delay:
 	inc	r6
 	sjmp	00103$
 00105$:
-;	sdc.c:375: }
+;	sdc.c:392: }
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

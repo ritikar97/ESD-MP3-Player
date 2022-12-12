@@ -1,17 +1,17 @@
-
 /**
  * @file lcd.c
  * @author Shuran Xu (shxu6388@colorado.edu)
- * @brief This file implements the public APIs for the LCD access from the 8051 processor.
- * @reference The implementation is developed taking the 8051 C interfacing LCD tutorial as reference:
+ * @brief The source file implements the public routines for controlling & accessing the LCD display.
+ * @reference:
+ * 1.The HD44780U datasheet:
+ * https://www.alldatasheet.com/datasheet-pdf/pdf/63673/HITACHI/HD44780.html
+ * 2.The implementation is developed taking the 8051 C interfacing LCD tutorial as reference:
  * https://embetronicx.com/tutorials/microcontrollers/8051/lcd-interfacing-with-8051-microcontroller/
  * @version 0.1
- * @date 2022-11-02
- *
+ * @date 2022-12-12
  * @copyright Copyright (c) 2022
  *
  */
-
 
 
 #include "lcd.h"

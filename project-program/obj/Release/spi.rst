@@ -474,144 +474,150 @@
                                     474 ; external ram data
                                     475 ;--------------------------------------------------------
                                     476 	.area XSEG    (XDATA)
-                                    477 ;--------------------------------------------------------
-                                    478 ; absolute external ram data
+      0000E0                        477 _spi_byte_data_65536_55:
+      0000E0                        478 	.ds 1
                                     479 ;--------------------------------------------------------
-                                    480 	.area XABS    (ABS,XDATA)
+                                    480 ; absolute external ram data
                                     481 ;--------------------------------------------------------
-                                    482 ; external initialized ram data
+                                    482 	.area XABS    (ABS,XDATA)
                                     483 ;--------------------------------------------------------
-                                    484 	.area XISEG   (XDATA)
-                                    485 	.area HOME    (CODE)
-                                    486 	.area GSINIT0 (CODE)
-                                    487 	.area GSINIT1 (CODE)
-                                    488 	.area GSINIT2 (CODE)
-                                    489 	.area GSINIT3 (CODE)
-                                    490 	.area GSINIT4 (CODE)
-                                    491 	.area GSINIT5 (CODE)
-                                    492 	.area GSINIT  (CODE)
-                                    493 	.area GSFINAL (CODE)
-                                    494 	.area CSEG    (CODE)
-                                    495 ;--------------------------------------------------------
-                                    496 ; global & static initialisations
+                                    484 ; external initialized ram data
+                                    485 ;--------------------------------------------------------
+                                    486 	.area XISEG   (XDATA)
+                                    487 	.area HOME    (CODE)
+                                    488 	.area GSINIT0 (CODE)
+                                    489 	.area GSINIT1 (CODE)
+                                    490 	.area GSINIT2 (CODE)
+                                    491 	.area GSINIT3 (CODE)
+                                    492 	.area GSINIT4 (CODE)
+                                    493 	.area GSINIT5 (CODE)
+                                    494 	.area GSINIT  (CODE)
+                                    495 	.area GSFINAL (CODE)
+                                    496 	.area CSEG    (CODE)
                                     497 ;--------------------------------------------------------
-                                    498 	.area HOME    (CODE)
-                                    499 	.area GSINIT  (CODE)
-                                    500 	.area GSFINAL (CODE)
+                                    498 ; global & static initialisations
+                                    499 ;--------------------------------------------------------
+                                    500 	.area HOME    (CODE)
                                     501 	.area GSINIT  (CODE)
-                                    502 ;--------------------------------------------------------
-                                    503 ; Home
+                                    502 	.area GSFINAL (CODE)
+                                    503 	.area GSINIT  (CODE)
                                     504 ;--------------------------------------------------------
-                                    505 	.area HOME    (CODE)
-                                    506 	.area HOME    (CODE)
-                                    507 ;--------------------------------------------------------
-                                    508 ; code
+                                    505 ; Home
+                                    506 ;--------------------------------------------------------
+                                    507 	.area HOME    (CODE)
+                                    508 	.area HOME    (CODE)
                                     509 ;--------------------------------------------------------
-                                    510 	.area CSEG    (CODE)
-                                    511 ;------------------------------------------------------------
-                                    512 ;Allocation info for local variables in function 'spi_enable_cs'
+                                    510 ; code
+                                    511 ;--------------------------------------------------------
+                                    512 	.area CSEG    (CODE)
                                     513 ;------------------------------------------------------------
-                                    514 ;	spi.c:8: void spi_enable_cs(void)
-                                    515 ;	-----------------------------------------
-                                    516 ;	 function spi_enable_cs
+                                    514 ;Allocation info for local variables in function 'spi_enable_cs'
+                                    515 ;------------------------------------------------------------
+                                    516 ;	spi.c:21: void spi_enable_cs(void)
                                     517 ;	-----------------------------------------
-      003346                        518 _spi_enable_cs:
-                           000007   519 	ar7 = 0x07
-                           000006   520 	ar6 = 0x06
-                           000005   521 	ar5 = 0x05
-                           000004   522 	ar4 = 0x04
-                           000003   523 	ar3 = 0x03
-                           000002   524 	ar2 = 0x02
-                           000001   525 	ar1 = 0x01
-                           000000   526 	ar0 = 0x00
-                                    527 ;	spi.c:10: CS = 0;
-                                    528 ;	assignBit
-      003346 C2 B4            [12]  529 	clr	_P3_4
-                                    530 ;	spi.c:11: }
-      003348 22               [24]  531 	ret
-                                    532 ;------------------------------------------------------------
-                                    533 ;Allocation info for local variables in function 'spi_disable_cs'
+                                    518 ;	 function spi_enable_cs
+                                    519 ;	-----------------------------------------
+      0030AE                        520 _spi_enable_cs:
+                           000007   521 	ar7 = 0x07
+                           000006   522 	ar6 = 0x06
+                           000005   523 	ar5 = 0x05
+                           000004   524 	ar4 = 0x04
+                           000003   525 	ar3 = 0x03
+                           000002   526 	ar2 = 0x02
+                           000001   527 	ar1 = 0x01
+                           000000   528 	ar0 = 0x00
+                                    529 ;	spi.c:23: CS = 0;
+                                    530 ;	assignBit
+      0030AE C2 B4            [12]  531 	clr	_P3_4
+                                    532 ;	spi.c:24: }
+      0030B0 22               [24]  533 	ret
                                     534 ;------------------------------------------------------------
-                                    535 ;	spi.c:13: void spi_disable_cs(void)
-                                    536 ;	-----------------------------------------
-                                    537 ;	 function spi_disable_cs
+                                    535 ;Allocation info for local variables in function 'spi_disable_cs'
+                                    536 ;------------------------------------------------------------
+                                    537 ;	spi.c:26: void spi_disable_cs(void)
                                     538 ;	-----------------------------------------
-      003349                        539 _spi_disable_cs:
-                                    540 ;	spi.c:15: CS = 1;
-                                    541 ;	assignBit
-      003349 D2 B4            [12]  542 	setb	_P3_4
-                                    543 ;	spi.c:16: }
-      00334B 22               [24]  544 	ret
-                                    545 ;------------------------------------------------------------
-                                    546 ;Allocation info for local variables in function 'max_spi_clock_freq'
+                                    539 ;	 function spi_disable_cs
+                                    540 ;	-----------------------------------------
+      0030B1                        541 _spi_disable_cs:
+                                    542 ;	spi.c:28: CS = 1;
+                                    543 ;	assignBit
+      0030B1 D2 B4            [12]  544 	setb	_P3_4
+                                    545 ;	spi.c:29: }
+      0030B3 22               [24]  546 	ret
                                     547 ;------------------------------------------------------------
-                                    548 ;	spi.c:18: void max_spi_clock_freq(void)
-                                    549 ;	-----------------------------------------
-                                    550 ;	 function max_spi_clock_freq
+                                    548 ;Allocation info for local variables in function 'max_spi_clock_freq'
+                                    549 ;------------------------------------------------------------
+                                    550 ;	spi.c:31: void max_spi_clock_freq(void)
                                     551 ;	-----------------------------------------
-      00334C                        552 _max_spi_clock_freq:
-                                    553 ;	spi.c:20: SPCON &= ~SPR2;
-      00334C 53 C3 7F         [24]  554 	anl	_SPCON,#0x7f
-                                    555 ;	spi.c:21: }
-      00334F 22               [24]  556 	ret
-                                    557 ;------------------------------------------------------------
-                                    558 ;Allocation info for local variables in function 'spi_init'
+                                    552 ;	 function max_spi_clock_freq
+                                    553 ;	-----------------------------------------
+      0030B4                        554 _max_spi_clock_freq:
+                                    555 ;	spi.c:33: SPCON &= ~SPR2;
+      0030B4 53 C3 7F         [24]  556 	anl	_SPCON,#0x7f
+                                    557 ;	spi.c:34: }
+      0030B7 22               [24]  558 	ret
                                     559 ;------------------------------------------------------------
-                                    560 ;	spi.c:23: void spi_init(void)
-                                    561 ;	-----------------------------------------
-                                    562 ;	 function spi_init
+                                    560 ;Allocation info for local variables in function 'spi_init'
+                                    561 ;------------------------------------------------------------
+                                    562 ;	spi.c:36: void spi_init(void)
                                     563 ;	-----------------------------------------
-      003350                        564 _spi_init:
-                                    565 ;	spi.c:25: SPCON = 0;
-      003350 75 C3 00         [24]  566 	mov	_SPCON,#0x00
-                                    567 ;	spi.c:26: spi_disable_cs();
-      003353 12 33 49         [24]  568 	lcall	_spi_disable_cs
-                                    569 ;	spi.c:27: LDAC = 0;
-                                    570 ;	assignBit
-      003356 C2 B5            [12]  571 	clr	_P3_5
-                                    572 ;	spi.c:29: SPCON |= SPR2;
-      003358 43 C3 80         [24]  573 	orl	_SPCON,#0x80
-                                    574 ;	spi.c:30: SPCON &= ~SPR1;
-      00335B 53 C3 FD         [24]  575 	anl	_SPCON,#0xfd
-                                    576 ;	spi.c:31: SPCON &= ~SPR0;
-      00335E 53 C3 FE         [24]  577 	anl	_SPCON,#0xfe
-                                    578 ;	spi.c:33: SPCON |= SSDIS;
-      003361 43 C3 20         [24]  579 	orl	_SPCON,#0x20
-                                    580 ;	spi.c:35: SPCON |= MSTR;
-      003364 43 C3 10         [24]  581 	orl	_SPCON,#0x10
-                                    582 ;	spi.c:37: SPCON &= ~CPOL;
-      003367 53 C3 F7         [24]  583 	anl	_SPCON,#0xf7
-                                    584 ;	spi.c:39: SPCON &= ~CPHA;
-      00336A 53 C3 FB         [24]  585 	anl	_SPCON,#0xfb
-                                    586 ;	spi.c:41: SPCON |= SPEN;
-      00336D 43 C3 40         [24]  587 	orl	_SPCON,#0x40
-                                    588 ;	spi.c:42: }
-      003370 22               [24]  589 	ret
-                                    590 ;------------------------------------------------------------
-                                    591 ;Allocation info for local variables in function 'spi_byte'
+                                    564 ;	 function spi_init
+                                    565 ;	-----------------------------------------
+      0030B8                        566 _spi_init:
+                                    567 ;	spi.c:38: SPCON = 0;
+      0030B8 75 C3 00         [24]  568 	mov	_SPCON,#0x00
+                                    569 ;	spi.c:39: spi_disable_cs();
+      0030BB 12 30 B1         [24]  570 	lcall	_spi_disable_cs
+                                    571 ;	spi.c:40: LDAC = 0;
+                                    572 ;	assignBit
+      0030BE C2 B5            [12]  573 	clr	_P3_5
+                                    574 ;	spi.c:42: SPCON |= SPR2;
+      0030C0 43 C3 80         [24]  575 	orl	_SPCON,#0x80
+                                    576 ;	spi.c:43: SPCON &= ~SPR1;
+      0030C3 53 C3 FD         [24]  577 	anl	_SPCON,#0xfd
+                                    578 ;	spi.c:44: SPCON &= ~SPR0;
+      0030C6 53 C3 FE         [24]  579 	anl	_SPCON,#0xfe
+                                    580 ;	spi.c:46: SPCON |= SSDIS;
+      0030C9 43 C3 20         [24]  581 	orl	_SPCON,#0x20
+                                    582 ;	spi.c:48: SPCON |= MSTR;
+      0030CC 43 C3 10         [24]  583 	orl	_SPCON,#0x10
+                                    584 ;	spi.c:50: SPCON &= ~CPOL;
+      0030CF 53 C3 F7         [24]  585 	anl	_SPCON,#0xf7
+                                    586 ;	spi.c:52: SPCON &= ~CPHA;
+      0030D2 53 C3 FB         [24]  587 	anl	_SPCON,#0xfb
+                                    588 ;	spi.c:54: SPCON |= SPEN;
+      0030D5 43 C3 40         [24]  589 	orl	_SPCON,#0x40
+                                    590 ;	spi.c:55: }
+      0030D8 22               [24]  591 	ret
                                     592 ;------------------------------------------------------------
-                                    593 ;data                      Allocated to registers r7 
+                                    593 ;Allocation info for local variables in function 'spi_byte'
                                     594 ;------------------------------------------------------------
-                                    595 ;	spi.c:49: uint8_t spi_byte(uint8_t data)
-                                    596 ;	-----------------------------------------
-                                    597 ;	 function spi_byte
+                                    595 ;data                      Allocated with name '_spi_byte_data_65536_55'
+                                    596 ;------------------------------------------------------------
+                                    597 ;	spi.c:62: uint8_t spi_byte(uint8_t data)
                                     598 ;	-----------------------------------------
-      003371                        599 _spi_byte:
-      003371 AF 82            [24]  600 	mov	r7,dpl
-                                    601 ;	spi.c:51: LDAC = 0;
-                                    602 ;	assignBit
-      003373 C2 B5            [12]  603 	clr	_P3_5
-                                    604 ;	spi.c:52: SPDAT = data;
-      003375 8F C5            [24]  605 	mov	_SPDAT,r7
-                                    606 ;	spi.c:54: while((SPSTA & 0x80) == 0);
-      003377                        607 00101$:
-      003377 E5 C4            [12]  608 	mov	a,_SPSTA
-      003379 30 E7 FB         [24]  609 	jnb	acc.7,00101$
-                                    610 ;	spi.c:55: return SPDAT;
-      00337C 85 C5 82         [24]  611 	mov	dpl,_SPDAT
-                                    612 ;	spi.c:56: }
-      00337F 22               [24]  613 	ret
-                                    614 	.area CSEG    (CODE)
-                                    615 	.area CONST   (CODE)
-                                    616 	.area XINIT   (CODE)
-                                    617 	.area CABS    (ABS,CODE)
+                                    599 ;	 function spi_byte
+                                    600 ;	-----------------------------------------
+      0030D9                        601 _spi_byte:
+      0030D9 E5 82            [12]  602 	mov	a,dpl
+      0030DB 90 00 E0         [24]  603 	mov	dptr,#_spi_byte_data_65536_55
+      0030DE F0               [24]  604 	movx	@dptr,a
+                                    605 ;	spi.c:64: LDAC = 0;
+                                    606 ;	assignBit
+      0030DF C2 B5            [12]  607 	clr	_P3_5
+                                    608 ;	spi.c:65: SPDAT = data;
+      0030E1 90 00 E0         [24]  609 	mov	dptr,#_spi_byte_data_65536_55
+      0030E4 E0               [24]  610 	movx	a,@dptr
+      0030E5 F5 C5            [12]  611 	mov	_SPDAT,a
+                                    612 ;	spi.c:67: while((SPSTA & 0x80) == 0);
+      0030E7                        613 00101$:
+      0030E7 E5 C4            [12]  614 	mov	a,_SPSTA
+      0030E9 30 E7 FB         [24]  615 	jnb	acc.7,00101$
+                                    616 ;	spi.c:68: return SPDAT;
+      0030EC 85 C5 82         [24]  617 	mov	dpl,_SPDAT
+                                    618 ;	spi.c:69: }
+      0030EF 22               [24]  619 	ret
+                                    620 	.area CSEG    (CODE)
+                                    621 	.area CONST   (CODE)
+                                    622 	.area XINIT   (CODE)
+                                    623 	.area CABS    (ABS,CODE)

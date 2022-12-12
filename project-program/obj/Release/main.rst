@@ -495,765 +495,659 @@
                                     495 ; external ram data
                                     496 ;--------------------------------------------------------
                                     497 	.area XSEG    (XDATA)
-      000001                        498 _SDCard::
-      000001                        499 	.ds 42
-                                    500 ;--------------------------------------------------------
-                                    501 ; absolute external ram data
-                                    502 ;--------------------------------------------------------
-                                    503 	.area XABS    (ABS,XDATA)
-                                    504 ;--------------------------------------------------------
-                                    505 ; external initialized ram data
-                                    506 ;--------------------------------------------------------
-                                    507 	.area XISEG   (XDATA)
-                                    508 	.area HOME    (CODE)
-                                    509 	.area GSINIT0 (CODE)
-                                    510 	.area GSINIT1 (CODE)
-                                    511 	.area GSINIT2 (CODE)
-                                    512 	.area GSINIT3 (CODE)
-                                    513 	.area GSINIT4 (CODE)
-                                    514 	.area GSINIT5 (CODE)
-                                    515 	.area GSINIT  (CODE)
-                                    516 	.area GSFINAL (CODE)
-                                    517 	.area CSEG    (CODE)
-                                    518 ;--------------------------------------------------------
-                                    519 ; interrupt vector
-                                    520 ;--------------------------------------------------------
-                                    521 	.area HOME    (CODE)
-      000000                        522 __interrupt_vect:
-      000000 02 00 11         [24]  523 	ljmp	__sdcc_gsinit_startup
-      000003 32               [24]  524 	reti
-      000004                        525 	.ds	7
-      00000B 02 36 C4         [24]  526 	ljmp	_Timer0_IRQHandler
-                                    527 ;--------------------------------------------------------
-                                    528 ; global & static initialisations
-                                    529 ;--------------------------------------------------------
-                                    530 	.area HOME    (CODE)
-                                    531 	.area GSINIT  (CODE)
-                                    532 	.area GSFINAL (CODE)
-                                    533 	.area GSINIT  (CODE)
-                                    534 	.globl __sdcc_gsinit_startup
-                                    535 	.globl __sdcc_program_startup
-                                    536 	.globl __start__stack
-                                    537 	.globl __mcs51_genXINIT
-                                    538 	.globl __mcs51_genXRAMCLEAR
-                                    539 	.globl __mcs51_genRAMCLEAR
-                                    540 	.area GSFINAL (CODE)
-      00006A 02 00 0E         [24]  541 	ljmp	__sdcc_program_startup
-                                    542 ;--------------------------------------------------------
-                                    543 ; Home
-                                    544 ;--------------------------------------------------------
-                                    545 	.area HOME    (CODE)
-                                    546 	.area HOME    (CODE)
-      00000E                        547 __sdcc_program_startup:
-      00000E 02 07 A1         [24]  548 	ljmp	_main
-                                    549 ;	return from main will return to caller
-                                    550 ;--------------------------------------------------------
-                                    551 ; code
+      000022                        498 _SDCard::
+      000022                        499 	.ds 42
+      00004C                        500 _print_buffer_buff_65536_85:
+      00004C                        501 	.ds 3
+      00004F                        502 _read_mp3_files_fno_65536_91:
+      00004F                        503 	.ds 22
+      000065                        504 _read_mp3_files_dir_65536_91:
+      000065                        505 	.ds 17
+      000076                        506 _read_mp3_files_buff_65536_91:
+      000076                        507 	.ds 64
+      0000B6                        508 _read_mp3_files_br_65536_91:
+      0000B6                        509 	.ds 2
+                                    510 ;--------------------------------------------------------
+                                    511 ; absolute external ram data
+                                    512 ;--------------------------------------------------------
+                                    513 	.area XABS    (ABS,XDATA)
+                                    514 ;--------------------------------------------------------
+                                    515 ; external initialized ram data
+                                    516 ;--------------------------------------------------------
+                                    517 	.area XISEG   (XDATA)
+                                    518 	.area HOME    (CODE)
+                                    519 	.area GSINIT0 (CODE)
+                                    520 	.area GSINIT1 (CODE)
+                                    521 	.area GSINIT2 (CODE)
+                                    522 	.area GSINIT3 (CODE)
+                                    523 	.area GSINIT4 (CODE)
+                                    524 	.area GSINIT5 (CODE)
+                                    525 	.area GSINIT  (CODE)
+                                    526 	.area GSFINAL (CODE)
+                                    527 	.area CSEG    (CODE)
+                                    528 ;--------------------------------------------------------
+                                    529 ; interrupt vector
+                                    530 ;--------------------------------------------------------
+                                    531 	.area HOME    (CODE)
+      000000                        532 __interrupt_vect:
+      000000 02 00 11         [24]  533 	ljmp	__sdcc_gsinit_startup
+      000003 32               [24]  534 	reti
+      000004                        535 	.ds	7
+      00000B 02 33 E1         [24]  536 	ljmp	_Timer0_IRQHandler
+                                    537 ;--------------------------------------------------------
+                                    538 ; global & static initialisations
+                                    539 ;--------------------------------------------------------
+                                    540 	.area HOME    (CODE)
+                                    541 	.area GSINIT  (CODE)
+                                    542 	.area GSFINAL (CODE)
+                                    543 	.area GSINIT  (CODE)
+                                    544 	.globl __sdcc_gsinit_startup
+                                    545 	.globl __sdcc_program_startup
+                                    546 	.globl __start__stack
+                                    547 	.globl __mcs51_genXINIT
+                                    548 	.globl __mcs51_genXRAMCLEAR
+                                    549 	.globl __mcs51_genRAMCLEAR
+                                    550 	.area GSFINAL (CODE)
+      00006A 02 00 0E         [24]  551 	ljmp	__sdcc_program_startup
                                     552 ;--------------------------------------------------------
-                                    553 	.area CSEG    (CODE)
-                                    554 ;------------------------------------------------------------
-                                    555 ;Allocation info for local variables in function '_sdcc_external_startup'
-                                    556 ;------------------------------------------------------------
-                                    557 ;	main.c:30: _sdcc_external_startup()
-                                    558 ;	-----------------------------------------
-                                    559 ;	 function _sdcc_external_startup
-                                    560 ;	-----------------------------------------
-      00051C                        561 __sdcc_external_startup:
-                           000007   562 	ar7 = 0x07
-                           000006   563 	ar6 = 0x06
-                           000005   564 	ar5 = 0x05
-                           000004   565 	ar4 = 0x04
-                           000003   566 	ar3 = 0x03
-                           000002   567 	ar2 = 0x02
-                           000001   568 	ar1 = 0x01
-                           000000   569 	ar0 = 0x00
-                                    570 ;	main.c:33: AUXR |= (XRS1 | XRS0);
-      00051C 43 8E 0C         [24]  571 	orl	_AUXR,#0x0c
-                                    572 ;	main.c:34: AUXR &= ~(XRS2);
-      00051F 53 8E EF         [24]  573 	anl	_AUXR,#0xef
-                                    574 ;	main.c:36: init_serial();
-      000522 12 31 A9         [24]  575 	lcall	_init_serial
-                                    576 ;	main.c:37: return 0;
-      000525 90 00 00         [24]  577 	mov	dptr,#0x0000
-                                    578 ;	main.c:38: }
-      000528 22               [24]  579 	ret
-                                    580 ;------------------------------------------------------------
-                                    581 ;Allocation info for local variables in function 'print_buffer'
-                                    582 ;------------------------------------------------------------
-                                    583 ;buff                      Allocated to registers r5 r6 r7 
-                                    584 ;i                         Allocated to registers r3 r4 
-                                    585 ;------------------------------------------------------------
-                                    586 ;	main.c:40: void print_buffer(const BYTE *buff)
-                                    587 ;	-----------------------------------------
-                                    588 ;	 function print_buffer
-                                    589 ;	-----------------------------------------
-      000529                        590 _print_buffer:
-      000529 AD 82            [24]  591 	mov	r5,dpl
-      00052B AE 83            [24]  592 	mov	r6,dph
-      00052D AF F0            [24]  593 	mov	r7,b
-                                    594 ;	main.c:42: for(int i=0;i<RD_BLOCK_SIZE;i++){
-      00052F 7B 00            [12]  595 	mov	r3,#0x00
-      000531 7C 00            [12]  596 	mov	r4,#0x00
-      000533                        597 00105$:
-      000533 C3               [12]  598 	clr	c
-      000534 EB               [12]  599 	mov	a,r3
-      000535 94 40            [12]  600 	subb	a,#0x40
-      000537 EC               [12]  601 	mov	a,r4
-      000538 64 80            [12]  602 	xrl	a,#0x80
-      00053A 94 80            [12]  603 	subb	a,#0x80
-      00053C 40 01            [24]  604 	jc	00122$
-      00053E 22               [24]  605 	ret
-      00053F                        606 00122$:
-                                    607 ;	main.c:43: if(((i + 1) >> 4) == 0){
-      00053F 74 01            [12]  608 	mov	a,#0x01
-      000541 2B               [12]  609 	add	a,r3
-      000542 F9               [12]  610 	mov	r1,a
-      000543 E4               [12]  611 	clr	a
-      000544 3C               [12]  612 	addc	a,r4
-      000545 C4               [12]  613 	swap	a
-      000546 C9               [12]  614 	xch	a,r1
-      000547 C4               [12]  615 	swap	a
-      000548 54 0F            [12]  616 	anl	a,#0x0f
-      00054A 69               [12]  617 	xrl	a,r1
-      00054B C9               [12]  618 	xch	a,r1
-      00054C 54 0F            [12]  619 	anl	a,#0x0f
-      00054E C9               [12]  620 	xch	a,r1
-      00054F 69               [12]  621 	xrl	a,r1
-      000550 C9               [12]  622 	xch	a,r1
-      000551 30 E3 02         [24]  623 	jnb	acc.3,00123$
-      000554 44 F0            [12]  624 	orl	a,#0xf0
-      000556                        625 00123$:
-      000556 49               [12]  626 	orl	a,r1
-      000557 70 23            [24]  627 	jnz	00102$
-                                    628 ;	main.c:44: printf_tiny("\r\n");
-      000559 C0 07            [24]  629 	push	ar7
-      00055B C0 06            [24]  630 	push	ar6
-      00055D C0 05            [24]  631 	push	ar5
-      00055F C0 04            [24]  632 	push	ar4
-      000561 C0 03            [24]  633 	push	ar3
-      000563 74 45            [12]  634 	mov	a,#___str_0
-      000565 C0 E0            [24]  635 	push	acc
-      000567 74 3E            [12]  636 	mov	a,#(___str_0 >> 8)
-      000569 C0 E0            [24]  637 	push	acc
-      00056B 12 38 74         [24]  638 	lcall	_printf_tiny
-      00056E 15 81            [12]  639 	dec	sp
-      000570 15 81            [12]  640 	dec	sp
-      000572 D0 03            [24]  641 	pop	ar3
-      000574 D0 04            [24]  642 	pop	ar4
-      000576 D0 05            [24]  643 	pop	ar5
-      000578 D0 06            [24]  644 	pop	ar6
-      00057A D0 07            [24]  645 	pop	ar7
-      00057C                        646 00102$:
-                                    647 ;	main.c:46: printf_tiny("%x ", buff[i]);
-      00057C EB               [12]  648 	mov	a,r3
-      00057D 2D               [12]  649 	add	a,r5
-      00057E F8               [12]  650 	mov	r0,a
-      00057F EC               [12]  651 	mov	a,r4
-      000580 3E               [12]  652 	addc	a,r6
-      000581 F9               [12]  653 	mov	r1,a
-      000582 8F 02            [24]  654 	mov	ar2,r7
-      000584 88 82            [24]  655 	mov	dpl,r0
-      000586 89 83            [24]  656 	mov	dph,r1
-      000588 8A F0            [24]  657 	mov	b,r2
-      00058A 12 3A A5         [24]  658 	lcall	__gptrget
-      00058D F8               [12]  659 	mov	r0,a
-      00058E 7A 00            [12]  660 	mov	r2,#0x00
-      000590 C0 07            [24]  661 	push	ar7
-      000592 C0 06            [24]  662 	push	ar6
-      000594 C0 05            [24]  663 	push	ar5
-      000596 C0 04            [24]  664 	push	ar4
-      000598 C0 03            [24]  665 	push	ar3
-      00059A C0 00            [24]  666 	push	ar0
-      00059C C0 02            [24]  667 	push	ar2
-      00059E 74 48            [12]  668 	mov	a,#___str_1
-      0005A0 C0 E0            [24]  669 	push	acc
-      0005A2 74 3E            [12]  670 	mov	a,#(___str_1 >> 8)
-      0005A4 C0 E0            [24]  671 	push	acc
-      0005A6 12 38 74         [24]  672 	lcall	_printf_tiny
-      0005A9 E5 81            [12]  673 	mov	a,sp
-      0005AB 24 FC            [12]  674 	add	a,#0xfc
-      0005AD F5 81            [12]  675 	mov	sp,a
-      0005AF D0 03            [24]  676 	pop	ar3
-      0005B1 D0 04            [24]  677 	pop	ar4
-      0005B3 D0 05            [24]  678 	pop	ar5
-      0005B5 D0 06            [24]  679 	pop	ar6
-      0005B7 D0 07            [24]  680 	pop	ar7
-                                    681 ;	main.c:42: for(int i=0;i<RD_BLOCK_SIZE;i++){
-      0005B9 0B               [12]  682 	inc	r3
-      0005BA BB 00 01         [24]  683 	cjne	r3,#0x00,00125$
-      0005BD 0C               [12]  684 	inc	r4
-      0005BE                        685 00125$:
-                                    686 ;	main.c:48: }
-      0005BE 02 05 33         [24]  687 	ljmp	00105$
-                                    688 ;------------------------------------------------------------
-                                    689 ;Allocation info for local variables in function 'read_mp3_files'
-                                    690 ;------------------------------------------------------------
-                                    691 ;res                       Allocated to registers 
-                                    692 ;fno                       Allocated to stack - _bp +5
-                                    693 ;dir                       Allocated to stack - _bp +29
-                                    694 ;buff                      Allocated to stack - _bp +46
-                                    695 ;br                        Allocated to stack - _bp +27
-                                    696 ;sloc0                     Allocated to stack - _bp +1
-                                    697 ;sloc1                     Allocated to stack - _bp +2
-                                    698 ;------------------------------------------------------------
-                                    699 ;	main.c:50: void read_mp3_files(void)
-                                    700 ;	-----------------------------------------
-                                    701 ;	 function read_mp3_files
-                                    702 ;	-----------------------------------------
-      0005C1                        703 _read_mp3_files:
-      0005C1 C0 08            [24]  704 	push	_bp
-      0005C3 E5 81            [12]  705 	mov	a,sp
-      0005C5 F5 08            [12]  706 	mov	_bp,a
-      0005C7 24 6D            [12]  707 	add	a,#0x6d
-      0005C9 F5 81            [12]  708 	mov	sp,a
-                                    709 ;	main.c:58: res = pf_opendir(&dir, "/");
-      0005CB E5 08            [12]  710 	mov	a,_bp
-      0005CD 24 1D            [12]  711 	add	a,#0x1d
-      0005CF FF               [12]  712 	mov	r7,a
-      0005D0 FC               [12]  713 	mov	r4,a
-      0005D1 7D 00            [12]  714 	mov	r5,#0x00
-      0005D3 7E 40            [12]  715 	mov	r6,#0x40
-      0005D5 C0 07            [24]  716 	push	ar7
-      0005D7 74 4C            [12]  717 	mov	a,#___str_2
-      0005D9 C0 E0            [24]  718 	push	acc
-      0005DB 74 3E            [12]  719 	mov	a,#(___str_2 >> 8)
-      0005DD C0 E0            [24]  720 	push	acc
-      0005DF 74 80            [12]  721 	mov	a,#0x80
-      0005E1 C0 E0            [24]  722 	push	acc
-      0005E3 8C 82            [24]  723 	mov	dpl,r4
-      0005E5 8D 83            [24]  724 	mov	dph,r5
-      0005E7 8E F0            [24]  725 	mov	b,r6
-      0005E9 12 2B 2C         [24]  726 	lcall	_pf_opendir
-      0005EC AE 82            [24]  727 	mov	r6,dpl
-      0005EE 15 81            [12]  728 	dec	sp
-      0005F0 15 81            [12]  729 	dec	sp
-      0005F2 15 81            [12]  730 	dec	sp
-      0005F4 D0 07            [24]  731 	pop	ar7
-                                    732 ;	main.c:59: if (res == FR_OK) {
-      0005F6 EE               [12]  733 	mov	a,r6
-      0005F7 60 03            [24]  734 	jz	00152$
-      0005F9 02 07 9B         [24]  735 	ljmp	00113$
-      0005FC                        736 00152$:
-      0005FC E5 08            [12]  737 	mov	a,_bp
-      0005FE 24 2E            [12]  738 	add	a,#0x2e
-      000600 FE               [12]  739 	mov	r6,a
-      000601 E5 08            [12]  740 	mov	a,_bp
-      000603 24 05            [12]  741 	add	a,#0x05
-      000605 FD               [12]  742 	mov	r5,a
-      000606 A8 08            [24]  743 	mov	r0,_bp
-      000608 08               [12]  744 	inc	r0
-      000609 A6 07            [24]  745 	mov	@r0,ar7
-      00060B 8E 04            [24]  746 	mov	ar4,r6
-      00060D                        747 00114$:
-                                    748 ;	main.c:62: res = pf_readdir(&dir, &fno);
-      00060D C0 04            [24]  749 	push	ar4
-      00060F A8 08            [24]  750 	mov	r0,_bp
-      000611 08               [12]  751 	inc	r0
-      000612 08               [12]  752 	inc	r0
-      000613 A6 05            [24]  753 	mov	@r0,ar5
-      000615 08               [12]  754 	inc	r0
-      000616 76 00            [12]  755 	mov	@r0,#0x00
-      000618 08               [12]  756 	inc	r0
-      000619 76 40            [12]  757 	mov	@r0,#0x40
-      00061B A8 08            [24]  758 	mov	r0,_bp
-      00061D 08               [12]  759 	inc	r0
-      00061E 86 03            [24]  760 	mov	ar3,@r0
-      000620 7C 00            [12]  761 	mov	r4,#0x00
-      000622 7F 40            [12]  762 	mov	r7,#0x40
-      000624 C0 06            [24]  763 	push	ar6
-      000626 C0 05            [24]  764 	push	ar5
-      000628 C0 04            [24]  765 	push	ar4
-      00062A A8 08            [24]  766 	mov	r0,_bp
-      00062C 08               [12]  767 	inc	r0
-      00062D 08               [12]  768 	inc	r0
-      00062E E6               [12]  769 	mov	a,@r0
-      00062F C0 E0            [24]  770 	push	acc
-      000631 08               [12]  771 	inc	r0
-      000632 E6               [12]  772 	mov	a,@r0
-      000633 C0 E0            [24]  773 	push	acc
-      000635 08               [12]  774 	inc	r0
-      000636 E6               [12]  775 	mov	a,@r0
-      000637 C0 E0            [24]  776 	push	acc
-      000639 8B 82            [24]  777 	mov	dpl,r3
-      00063B 8C 83            [24]  778 	mov	dph,r4
-      00063D 8F F0            [24]  779 	mov	b,r7
-      00063F 12 2C 3D         [24]  780 	lcall	_pf_readdir
-      000642 AF 82            [24]  781 	mov	r7,dpl
-      000644 15 81            [12]  782 	dec	sp
-      000646 15 81            [12]  783 	dec	sp
-      000648 15 81            [12]  784 	dec	sp
-      00064A D0 04            [24]  785 	pop	ar4
-      00064C D0 05            [24]  786 	pop	ar5
-      00064E D0 06            [24]  787 	pop	ar6
-                                    788 ;	main.c:63: if (res != FR_OK || fno.fname[0] == 0){
-      000650 D0 04            [24]  789 	pop	ar4
-      000652 EF               [12]  790 	mov	a,r7
-      000653 70 07            [24]  791 	jnz	00101$
-      000655 74 09            [12]  792 	mov	a,#0x09
-      000657 2D               [12]  793 	add	a,r5
-      000658 F9               [12]  794 	mov	r1,a
-      000659 E7               [12]  795 	mov	a,@r1
-      00065A 70 12            [24]  796 	jnz	00102$
-      00065C                        797 00101$:
-                                    798 ;	main.c:64: printf_tiny("No more files found\r\n");
-      00065C 74 4E            [12]  799 	mov	a,#___str_3
-      00065E C0 E0            [24]  800 	push	acc
-      000660 74 3E            [12]  801 	mov	a,#(___str_3 >> 8)
-      000662 C0 E0            [24]  802 	push	acc
-      000664 12 38 74         [24]  803 	lcall	_printf_tiny
-      000667 15 81            [12]  804 	dec	sp
-      000669 15 81            [12]  805 	dec	sp
-                                    806 ;	main.c:65: break;
-      00066B 02 07 9B         [24]  807 	ljmp	00113$
-      00066E                        808 00102$:
-                                    809 ;	main.c:67: printf_tiny("reading file /%s ...\r\n",fno.fname);
-      00066E C0 04            [24]  810 	push	ar4
-      000670 74 09            [12]  811 	mov	a,#0x09
-      000672 2D               [12]  812 	add	a,r5
-      000673 FF               [12]  813 	mov	r7,a
-      000674 FA               [12]  814 	mov	r2,a
-      000675 7B 00            [12]  815 	mov	r3,#0x00
-      000677 7C 40            [12]  816 	mov	r4,#0x40
-      000679 C0 07            [24]  817 	push	ar7
-      00067B C0 06            [24]  818 	push	ar6
-      00067D C0 05            [24]  819 	push	ar5
-      00067F C0 04            [24]  820 	push	ar4
-      000681 C0 02            [24]  821 	push	ar2
-      000683 C0 03            [24]  822 	push	ar3
-      000685 C0 04            [24]  823 	push	ar4
-      000687 74 64            [12]  824 	mov	a,#___str_4
-      000689 C0 E0            [24]  825 	push	acc
-      00068B 74 3E            [12]  826 	mov	a,#(___str_4 >> 8)
-      00068D C0 E0            [24]  827 	push	acc
-      00068F 12 38 74         [24]  828 	lcall	_printf_tiny
-      000692 E5 81            [12]  829 	mov	a,sp
-      000694 24 FB            [12]  830 	add	a,#0xfb
-      000696 F5 81            [12]  831 	mov	sp,a
-      000698 D0 04            [24]  832 	pop	ar4
-      00069A D0 05            [24]  833 	pop	ar5
-      00069C D0 06            [24]  834 	pop	ar6
-      00069E D0 07            [24]  835 	pop	ar7
-                                    836 ;	main.c:70: res = pf_open(fno.fname);
-      0006A0 8F 04            [24]  837 	mov	ar4,r7
-      0006A2 7B 00            [12]  838 	mov	r3,#0x00
-      0006A4 7A 40            [12]  839 	mov	r2,#0x40
-      0006A6 8C 82            [24]  840 	mov	dpl,r4
-      0006A8 8B 83            [24]  841 	mov	dph,r3
-      0006AA 8A F0            [24]  842 	mov	b,r2
-      0006AC C0 07            [24]  843 	push	ar7
-      0006AE C0 06            [24]  844 	push	ar6
-      0006B0 C0 05            [24]  845 	push	ar5
-      0006B2 12 24 48         [24]  846 	lcall	_pf_open
-      0006B5 AC 82            [24]  847 	mov	r4,dpl
-      0006B7 D0 05            [24]  848 	pop	ar5
-      0006B9 D0 06            [24]  849 	pop	ar6
-      0006BB D0 07            [24]  850 	pop	ar7
-      0006BD EC               [12]  851 	mov	a,r4
-                                    852 ;	main.c:71: if (res != FR_OK){
-      0006BE D0 04            [24]  853 	pop	ar4
-      0006C0 60 20            [24]  854 	jz	00108$
-                                    855 ;	main.c:72: printf_tiny("Error: failed to open %s\r\n", fno.fname);
-      0006C2 8F 03            [24]  856 	mov	ar3,r7
-      0006C4 7F 00            [12]  857 	mov	r7,#0x00
-      0006C6 7E 40            [12]  858 	mov	r6,#0x40
-      0006C8 C0 03            [24]  859 	push	ar3
-      0006CA C0 07            [24]  860 	push	ar7
-      0006CC C0 06            [24]  861 	push	ar6
-      0006CE 74 7B            [12]  862 	mov	a,#___str_5
-      0006D0 C0 E0            [24]  863 	push	acc
-      0006D2 74 3E            [12]  864 	mov	a,#(___str_5 >> 8)
-      0006D4 C0 E0            [24]  865 	push	acc
-      0006D6 12 38 74         [24]  866 	lcall	_printf_tiny
-      0006D9 E5 81            [12]  867 	mov	a,sp
-      0006DB 24 FB            [12]  868 	add	a,#0xfb
-      0006DD F5 81            [12]  869 	mov	sp,a
-                                    870 ;	main.c:73: break;
-      0006DF 02 07 9B         [24]  871 	ljmp	00113$
-                                    872 ;	main.c:77: do{
-      0006E2                        873 00108$:
-                                    874 ;	main.c:79: res = pf_read(buff, RD_BLOCK_SIZE, &br);
-      0006E2 C0 04            [24]  875 	push	ar4
-      0006E4 E5 08            [12]  876 	mov	a,_bp
-      0006E6 24 1B            [12]  877 	add	a,#0x1b
-      0006E8 FB               [12]  878 	mov	r3,a
-      0006E9 A8 08            [24]  879 	mov	r0,_bp
-      0006EB 08               [12]  880 	inc	r0
-      0006EC 08               [12]  881 	inc	r0
-      0006ED A6 03            [24]  882 	mov	@r0,ar3
-      0006EF 08               [12]  883 	inc	r0
-      0006F0 76 00            [12]  884 	mov	@r0,#0x00
-      0006F2 08               [12]  885 	inc	r0
-      0006F3 76 40            [12]  886 	mov	@r0,#0x40
-      0006F5 8E 02            [24]  887 	mov	ar2,r6
-      0006F7 7B 00            [12]  888 	mov	r3,#0x00
-      0006F9 7C 40            [12]  889 	mov	r4,#0x40
-      0006FB C0 07            [24]  890 	push	ar7
-      0006FD C0 06            [24]  891 	push	ar6
-      0006FF C0 05            [24]  892 	push	ar5
-      000701 A8 08            [24]  893 	mov	r0,_bp
-      000703 08               [12]  894 	inc	r0
-      000704 08               [12]  895 	inc	r0
-      000705 E6               [12]  896 	mov	a,@r0
-      000706 C0 E0            [24]  897 	push	acc
-      000708 08               [12]  898 	inc	r0
-      000709 E6               [12]  899 	mov	a,@r0
-      00070A C0 E0            [24]  900 	push	acc
-      00070C 08               [12]  901 	inc	r0
-      00070D E6               [12]  902 	mov	a,@r0
-      00070E C0 E0            [24]  903 	push	acc
-      000710 EC               [12]  904 	mov	a,r4
-      000711 C0 E0            [24]  905 	push	acc
-      000713 E4               [12]  906 	clr	a
-      000714 C0 E0            [24]  907 	push	acc
-      000716 8A 82            [24]  908 	mov	dpl,r2
-      000718 8B 83            [24]  909 	mov	dph,r3
-      00071A 8C F0            [24]  910 	mov	b,r4
-      00071C 12 25 F4         [24]  911 	lcall	_pf_read
-      00071F AC 82            [24]  912 	mov	r4,dpl
-      000721 E5 81            [12]  913 	mov	a,sp
-      000723 24 FB            [12]  914 	add	a,#0xfb
-      000725 F5 81            [12]  915 	mov	sp,a
-      000727 D0 05            [24]  916 	pop	ar5
-      000729 D0 06            [24]  917 	pop	ar6
-      00072B D0 07            [24]  918 	pop	ar7
-                                    919 ;	main.c:81: if(res != FR_OK){
-      00072D EC               [12]  920 	mov	a,r4
-      00072E D0 04            [24]  921 	pop	ar4
-      000730 60 32            [24]  922 	jz	00107$
-                                    923 ;	main.c:82: printf_tiny("Error: failed to read %s\r\n", fno.fname);
-      000732 C0 04            [24]  924 	push	ar4
-      000734 8F 03            [24]  925 	mov	ar3,r7
-      000736 8B 02            [24]  926 	mov	ar2,r3
-      000738 7B 00            [12]  927 	mov	r3,#0x00
-      00073A 7C 40            [12]  928 	mov	r4,#0x40
-      00073C C0 06            [24]  929 	push	ar6
-      00073E C0 05            [24]  930 	push	ar5
-      000740 C0 04            [24]  931 	push	ar4
-      000742 C0 02            [24]  932 	push	ar2
-      000744 C0 03            [24]  933 	push	ar3
-      000746 C0 04            [24]  934 	push	ar4
-      000748 74 96            [12]  935 	mov	a,#___str_6
-      00074A C0 E0            [24]  936 	push	acc
-      00074C 74 3E            [12]  937 	mov	a,#(___str_6 >> 8)
-      00074E C0 E0            [24]  938 	push	acc
-      000750 12 38 74         [24]  939 	lcall	_printf_tiny
-      000753 E5 81            [12]  940 	mov	a,sp
-      000755 24 FB            [12]  941 	add	a,#0xfb
-      000757 F5 81            [12]  942 	mov	sp,a
-      000759 D0 04            [24]  943 	pop	ar4
-      00075B D0 05            [24]  944 	pop	ar5
-      00075D D0 06            [24]  945 	pop	ar6
-                                    946 ;	main.c:83: break;
-      00075F D0 04            [24]  947 	pop	ar4
-      000761 02 06 0D         [24]  948 	ljmp	00114$
-      000764                        949 00107$:
-                                    950 ;	main.c:86: print_buffer((const BYTE *)buff);
-      000764 C0 06            [24]  951 	push	ar6
-      000766 8C 02            [24]  952 	mov	ar2,r4
-      000768 7B 00            [12]  953 	mov	r3,#0x00
-      00076A 7E 40            [12]  954 	mov	r6,#0x40
-      00076C 8A 82            [24]  955 	mov	dpl,r2
-      00076E 8B 83            [24]  956 	mov	dph,r3
-      000770 8E F0            [24]  957 	mov	b,r6
-      000772 C0 07            [24]  958 	push	ar7
-      000774 C0 06            [24]  959 	push	ar6
-      000776 C0 05            [24]  960 	push	ar5
-      000778 C0 04            [24]  961 	push	ar4
-      00077A 12 05 29         [24]  962 	lcall	_print_buffer
-      00077D D0 04            [24]  963 	pop	ar4
-      00077F D0 05            [24]  964 	pop	ar5
-      000781 D0 06            [24]  965 	pop	ar6
-      000783 D0 07            [24]  966 	pop	ar7
-                                    967 ;	main.c:88: }while(br == RD_BLOCK_SIZE); //exit when reached EOF
-      000785 E5 08            [12]  968 	mov	a,_bp
-      000787 24 1B            [12]  969 	add	a,#0x1b
-      000789 F8               [12]  970 	mov	r0,a
-      00078A B6 40 09         [24]  971 	cjne	@r0,#0x40,00157$
-      00078D 08               [12]  972 	inc	r0
-      00078E B6 00 05         [24]  973 	cjne	@r0,#0x00,00157$
-      000791 D0 06            [24]  974 	pop	ar6
-      000793 02 06 E2         [24]  975 	ljmp	00108$
-      000796                        976 00157$:
-      000796 D0 06            [24]  977 	pop	ar6
-      000798 02 06 0D         [24]  978 	ljmp	00114$
-      00079B                        979 00113$:
-                                    980 ;	main.c:92: return;
-                                    981 ;	main.c:93: }
-      00079B 85 08 81         [24]  982 	mov	sp,_bp
-      00079E D0 08            [24]  983 	pop	_bp
-      0007A0 22               [24]  984 	ret
-                                    985 ;------------------------------------------------------------
-                                    986 ;Allocation info for local variables in function 'main'
-                                    987 ;------------------------------------------------------------
-                                    988 ;	main.c:96: void main(void)
-                                    989 ;	-----------------------------------------
-                                    990 ;	 function main
-                                    991 ;	-----------------------------------------
-      0007A1                        992 _main:
-                                    993 ;	main.c:99: init_timer0();
-      0007A1 12 33 92         [24]  994 	lcall	_init_timer0
-                                    995 ;	main.c:100: lcdinit();
-      0007A4 12 02 00         [24]  996 	lcall	_lcdinit
-                                    997 ;	main.c:101: spi_init();
-      0007A7 12 33 50         [24]  998 	lcall	_spi_init
-                                    999 ;	main.c:102: reset_DAC();
-      0007AA 12 08 6E         [24] 1000 	lcall	_reset_DAC
-                                   1001 ;	main.c:104: write_to_DAC_and_EEPROM(0);
-      0007AD 90 00 00         [24] 1002 	mov	dptr,#0x0000
-      0007B0 12 08 AB         [24] 1003 	lcall	_write_to_DAC_and_EEPROM
-                                   1004 ;	main.c:107: if( pf_mount(&SDCard))
-      0007B3 90 00 01         [24] 1005 	mov	dptr,#_SDCard
-      0007B6 75 F0 00         [24] 1006 	mov	b,#0x00
-      0007B9 12 1E 94         [24] 1007 	lcall	_pf_mount
-      0007BC E5 82            [12] 1008 	mov	a,dpl
-      0007BE 60 11            [24] 1009 	jz	00105$
-                                   1010 ;	main.c:109: printf_tiny("Couldn't mount drive...\r\n");
-      0007C0 74 B1            [12] 1011 	mov	a,#___str_7
-      0007C2 C0 E0            [24] 1012 	push	acc
-      0007C4 74 3E            [12] 1013 	mov	a,#(___str_7 >> 8)
-      0007C6 C0 E0            [24] 1014 	push	acc
-      0007C8 12 38 74         [24] 1015 	lcall	_printf_tiny
-      0007CB 15 81            [12] 1016 	dec	sp
-      0007CD 15 81            [12] 1017 	dec	sp
-                                   1018 ;	main.c:110: while( 1 );
-      0007CF                       1019 00102$:
-      0007CF 80 FE            [24] 1020 	sjmp	00102$
-      0007D1                       1021 00105$:
-                                   1022 ;	main.c:113: printf_tiny("SD card mounted\r\n");
-      0007D1 74 CB            [12] 1023 	mov	a,#___str_8
-      0007D3 C0 E0            [24] 1024 	push	acc
-      0007D5 74 3E            [12] 1025 	mov	a,#(___str_8 >> 8)
-      0007D7 C0 E0            [24] 1026 	push	acc
-      0007D9 12 38 74         [24] 1027 	lcall	_printf_tiny
-      0007DC 15 81            [12] 1028 	dec	sp
-      0007DE 15 81            [12] 1029 	dec	sp
-                                   1030 ;	main.c:116: if( disk_initialize( ) & STA_NOINIT )
-      0007E0 12 09 7C         [24] 1031 	lcall	_disk_initialize
-      0007E3 E5 82            [12] 1032 	mov	a,dpl
-      0007E5 30 E0 63         [24] 1033 	jnb	acc.0,00115$
-                                   1034 ;	main.c:118: switch( get_card_type() )
-      0007E8 12 2D 29         [24] 1035 	lcall	_get_card_type
-      0007EB AE 82            [24] 1036 	mov	r6,dpl
-      0007ED AF 83            [24] 1037 	mov	r7,dph
-      0007EF BE 00 05         [24] 1038 	cjne	r6,#0x00,00155$
-      0007F2 BF 00 02         [24] 1039 	cjne	r7,#0x00,00155$
-      0007F5 80 10            [24] 1040 	sjmp	00106$
-      0007F7                       1041 00155$:
-      0007F7 BE 01 05         [24] 1042 	cjne	r6,#0x01,00156$
-      0007FA BF 00 02         [24] 1043 	cjne	r7,#0x00,00156$
-      0007FD 80 19            [24] 1044 	sjmp	00107$
-      0007FF                       1045 00156$:
-                                   1046 ;	main.c:120: case 0 :
-      0007FF BE 02 38         [24] 1047 	cjne	r6,#0x02,00109$
-      000802 BF 00 35         [24] 1048 	cjne	r7,#0x00,00109$
-      000805 80 22            [24] 1049 	sjmp	00108$
-      000807                       1050 00106$:
-                                   1051 ;	main.c:121: printf_tiny("Couldn't find SD card\r\n");
-      000807 74 DD            [12] 1052 	mov	a,#___str_9
-      000809 C0 E0            [24] 1053 	push	acc
-      00080B 74 3E            [12] 1054 	mov	a,#(___str_9 >> 8)
-      00080D C0 E0            [24] 1055 	push	acc
-      00080F 12 38 74         [24] 1056 	lcall	_printf_tiny
-      000812 15 81            [12] 1057 	dec	sp
-      000814 15 81            [12] 1058 	dec	sp
-                                   1059 ;	main.c:122: break;
-                                   1060 ;	main.c:123: case 1 :
-      000816 80 31            [24] 1061 	sjmp	00112$
-      000818                       1062 00107$:
-                                   1063 ;	main.c:124: printf_tiny("Card type is MMC - Can't use this type\r\n");
-      000818 74 F5            [12] 1064 	mov	a,#___str_10
-      00081A C0 E0            [24] 1065 	push	acc
-      00081C 74 3E            [12] 1066 	mov	a,#(___str_10 >> 8)
-      00081E C0 E0            [24] 1067 	push	acc
-      000820 12 38 74         [24] 1068 	lcall	_printf_tiny
-      000823 15 81            [12] 1069 	dec	sp
-      000825 15 81            [12] 1070 	dec	sp
-                                   1071 ;	main.c:125: break;
-                                   1072 ;	main.c:126: case 2 :
-      000827 80 20            [24] 1073 	sjmp	00112$
-      000829                       1074 00108$:
-                                   1075 ;	main.c:127: printf_tiny("Couldn't initialize SD Card drive...\r\n");
-      000829 74 1E            [12] 1076 	mov	a,#___str_11
-      00082B C0 E0            [24] 1077 	push	acc
-      00082D 74 3F            [12] 1078 	mov	a,#(___str_11 >> 8)
-      00082F C0 E0            [24] 1079 	push	acc
-      000831 12 38 74         [24] 1080 	lcall	_printf_tiny
-      000834 15 81            [12] 1081 	dec	sp
-      000836 15 81            [12] 1082 	dec	sp
-                                   1083 ;	main.c:128: break;
-                                   1084 ;	main.c:129: default :
-      000838 80 0F            [24] 1085 	sjmp	00112$
-      00083A                       1086 00109$:
-                                   1087 ;	main.c:130: printf_tiny("Unknown Card Type error...\r\n");
-      00083A 74 45            [12] 1088 	mov	a,#___str_12
-      00083C C0 E0            [24] 1089 	push	acc
-      00083E 74 3F            [12] 1090 	mov	a,#(___str_12 >> 8)
-      000840 C0 E0            [24] 1091 	push	acc
-      000842 12 38 74         [24] 1092 	lcall	_printf_tiny
-      000845 15 81            [12] 1093 	dec	sp
-      000847 15 81            [12] 1094 	dec	sp
-                                   1095 ;	main.c:133: while( 1 );
-      000849                       1096 00112$:
-      000849 80 FE            [24] 1097 	sjmp	00112$
-      00084B                       1098 00115$:
-                                   1099 ;	main.c:136: printf_tiny("SD card initialized\r\n");
-      00084B 74 62            [12] 1100 	mov	a,#___str_13
-      00084D C0 E0            [24] 1101 	push	acc
-      00084F 74 3F            [12] 1102 	mov	a,#(___str_13 >> 8)
-      000851 C0 E0            [24] 1103 	push	acc
-      000853 12 38 74         [24] 1104 	lcall	_printf_tiny
-      000856 15 81            [12] 1105 	dec	sp
-      000858 15 81            [12] 1106 	dec	sp
-                                   1107 ;	main.c:139: printf_tiny("Finished reading files\r\n");
-      00085A 74 78            [12] 1108 	mov	a,#___str_14
-      00085C C0 E0            [24] 1109 	push	acc
-      00085E 74 3F            [12] 1110 	mov	a,#(___str_14 >> 8)
-      000860 C0 E0            [24] 1111 	push	acc
-      000862 12 38 74         [24] 1112 	lcall	_printf_tiny
-      000865 15 81            [12] 1113 	dec	sp
-      000867 15 81            [12] 1114 	dec	sp
-                                   1115 ;	main.c:140: read_mp3_files();
-      000869 12 05 C1         [24] 1116 	lcall	_read_mp3_files
-                                   1117 ;	main.c:141: while( 1 );
-      00086C                       1118 00117$:
-                                   1119 ;	main.c:142: }
-      00086C 80 FE            [24] 1120 	sjmp	00117$
-                                   1121 	.area CSEG    (CODE)
-                                   1122 	.area CONST   (CODE)
-                                   1123 	.area CONST   (CODE)
-      003E45                       1124 ___str_0:
-      003E45 0D                    1125 	.db 0x0d
-      003E46 0A                    1126 	.db 0x0a
-      003E47 00                    1127 	.db 0x00
-                                   1128 	.area CSEG    (CODE)
-                                   1129 	.area CONST   (CODE)
-      003E48                       1130 ___str_1:
-      003E48 25 78 20              1131 	.ascii "%x "
-      003E4B 00                    1132 	.db 0x00
-                                   1133 	.area CSEG    (CODE)
-                                   1134 	.area CONST   (CODE)
-      003E4C                       1135 ___str_2:
-      003E4C 2F                    1136 	.ascii "/"
-      003E4D 00                    1137 	.db 0x00
-                                   1138 	.area CSEG    (CODE)
-                                   1139 	.area CONST   (CODE)
-      003E4E                       1140 ___str_3:
-      003E4E 4E 6F 20 6D 6F 72 65  1141 	.ascii "No more files found"
+                                    553 ; Home
+                                    554 ;--------------------------------------------------------
+                                    555 	.area HOME    (CODE)
+                                    556 	.area HOME    (CODE)
+      00000E                        557 __sdcc_program_startup:
+      00000E 02 06 23         [24]  558 	ljmp	_main
+                                    559 ;	return from main will return to caller
+                                    560 ;--------------------------------------------------------
+                                    561 ; code
+                                    562 ;--------------------------------------------------------
+                                    563 	.area CSEG    (CODE)
+                                    564 ;------------------------------------------------------------
+                                    565 ;Allocation info for local variables in function '_sdcc_external_startup'
+                                    566 ;------------------------------------------------------------
+                                    567 ;	main.c:32: _sdcc_external_startup()
+                                    568 ;	-----------------------------------------
+                                    569 ;	 function _sdcc_external_startup
+                                    570 ;	-----------------------------------------
+      000478                        571 __sdcc_external_startup:
+                           000007   572 	ar7 = 0x07
+                           000006   573 	ar6 = 0x06
+                           000005   574 	ar5 = 0x05
+                           000004   575 	ar4 = 0x04
+                           000003   576 	ar3 = 0x03
+                           000002   577 	ar2 = 0x02
+                           000001   578 	ar1 = 0x01
+                           000000   579 	ar0 = 0x00
+                                    580 ;	main.c:35: AUXR |= (XRS1 | XRS0);
+      000478 43 8E 0C         [24]  581 	orl	_AUXR,#0x0c
+                                    582 ;	main.c:36: AUXR &= ~(XRS2);
+      00047B 53 8E EF         [24]  583 	anl	_AUXR,#0xef
+                                    584 ;	main.c:38: init_serial();
+      00047E 12 2F 11         [24]  585 	lcall	_init_serial
+                                    586 ;	main.c:39: return 0;
+      000481 90 00 00         [24]  587 	mov	dptr,#0x0000
+                                    588 ;	main.c:40: }
+      000484 22               [24]  589 	ret
+                                    590 ;------------------------------------------------------------
+                                    591 ;Allocation info for local variables in function 'print_buffer'
+                                    592 ;------------------------------------------------------------
+                                    593 ;buff                      Allocated with name '_print_buffer_buff_65536_85'
+                                    594 ;i                         Allocated with name '_print_buffer_i_131072_87'
+                                    595 ;------------------------------------------------------------
+                                    596 ;	main.c:42: void print_buffer(const BYTE *buff)
+                                    597 ;	-----------------------------------------
+                                    598 ;	 function print_buffer
+                                    599 ;	-----------------------------------------
+      000485                        600 _print_buffer:
+      000485 AF F0            [24]  601 	mov	r7,b
+      000487 AE 83            [24]  602 	mov	r6,dph
+      000489 E5 82            [12]  603 	mov	a,dpl
+      00048B 90 00 4C         [24]  604 	mov	dptr,#_print_buffer_buff_65536_85
+      00048E F0               [24]  605 	movx	@dptr,a
+      00048F EE               [12]  606 	mov	a,r6
+      000490 A3               [24]  607 	inc	dptr
+      000491 F0               [24]  608 	movx	@dptr,a
+      000492 EF               [12]  609 	mov	a,r7
+      000493 A3               [24]  610 	inc	dptr
+      000494 F0               [24]  611 	movx	@dptr,a
+                                    612 ;	main.c:44: for(int i=0;i<RD_BLOCK_SIZE;i++){
+      000495 90 00 4C         [24]  613 	mov	dptr,#_print_buffer_buff_65536_85
+      000498 E0               [24]  614 	movx	a,@dptr
+      000499 FD               [12]  615 	mov	r5,a
+      00049A A3               [24]  616 	inc	dptr
+      00049B E0               [24]  617 	movx	a,@dptr
+      00049C FE               [12]  618 	mov	r6,a
+      00049D A3               [24]  619 	inc	dptr
+      00049E E0               [24]  620 	movx	a,@dptr
+      00049F FF               [12]  621 	mov	r7,a
+      0004A0 7B 00            [12]  622 	mov	r3,#0x00
+      0004A2 7C 00            [12]  623 	mov	r4,#0x00
+      0004A4                        624 00105$:
+      0004A4 C3               [12]  625 	clr	c
+      0004A5 EB               [12]  626 	mov	a,r3
+      0004A6 94 40            [12]  627 	subb	a,#0x40
+      0004A8 EC               [12]  628 	mov	a,r4
+      0004A9 64 80            [12]  629 	xrl	a,#0x80
+      0004AB 94 80            [12]  630 	subb	a,#0x80
+      0004AD 40 01            [24]  631 	jc	00122$
+      0004AF 22               [24]  632 	ret
+      0004B0                        633 00122$:
+                                    634 ;	main.c:45: if(((i + 1) >> 4) == 0){
+      0004B0 74 01            [12]  635 	mov	a,#0x01
+      0004B2 2B               [12]  636 	add	a,r3
+      0004B3 F9               [12]  637 	mov	r1,a
+      0004B4 E4               [12]  638 	clr	a
+      0004B5 3C               [12]  639 	addc	a,r4
+      0004B6 C4               [12]  640 	swap	a
+      0004B7 C9               [12]  641 	xch	a,r1
+      0004B8 C4               [12]  642 	swap	a
+      0004B9 54 0F            [12]  643 	anl	a,#0x0f
+      0004BB 69               [12]  644 	xrl	a,r1
+      0004BC C9               [12]  645 	xch	a,r1
+      0004BD 54 0F            [12]  646 	anl	a,#0x0f
+      0004BF C9               [12]  647 	xch	a,r1
+      0004C0 69               [12]  648 	xrl	a,r1
+      0004C1 C9               [12]  649 	xch	a,r1
+      0004C2 30 E3 02         [24]  650 	jnb	acc.3,00123$
+      0004C5 44 F0            [12]  651 	orl	a,#0xf0
+      0004C7                        652 00123$:
+      0004C7 49               [12]  653 	orl	a,r1
+      0004C8 70 23            [24]  654 	jnz	00102$
+                                    655 ;	main.c:46: printf_tiny("\r\n");
+      0004CA C0 07            [24]  656 	push	ar7
+      0004CC C0 06            [24]  657 	push	ar6
+      0004CE C0 05            [24]  658 	push	ar5
+      0004D0 C0 04            [24]  659 	push	ar4
+      0004D2 C0 03            [24]  660 	push	ar3
+      0004D4 74 DF            [12]  661 	mov	a,#___str_0
+      0004D6 C0 E0            [24]  662 	push	acc
+      0004D8 74 39            [12]  663 	mov	a,#(___str_0 >> 8)
+      0004DA C0 E0            [24]  664 	push	acc
+      0004DC 12 35 27         [24]  665 	lcall	_printf_tiny
+      0004DF 15 81            [12]  666 	dec	sp
+      0004E1 15 81            [12]  667 	dec	sp
+      0004E3 D0 03            [24]  668 	pop	ar3
+      0004E5 D0 04            [24]  669 	pop	ar4
+      0004E7 D0 05            [24]  670 	pop	ar5
+      0004E9 D0 06            [24]  671 	pop	ar6
+      0004EB D0 07            [24]  672 	pop	ar7
+      0004ED                        673 00102$:
+                                    674 ;	main.c:48: printf_tiny("%x ", buff[i]);
+      0004ED EB               [12]  675 	mov	a,r3
+      0004EE 2D               [12]  676 	add	a,r5
+      0004EF F8               [12]  677 	mov	r0,a
+      0004F0 EC               [12]  678 	mov	a,r4
+      0004F1 3E               [12]  679 	addc	a,r6
+      0004F2 F9               [12]  680 	mov	r1,a
+      0004F3 8F 02            [24]  681 	mov	ar2,r7
+      0004F5 88 82            [24]  682 	mov	dpl,r0
+      0004F7 89 83            [24]  683 	mov	dph,r1
+      0004F9 8A F0            [24]  684 	mov	b,r2
+      0004FB 12 39 57         [24]  685 	lcall	__gptrget
+      0004FE F8               [12]  686 	mov	r0,a
+      0004FF 7A 00            [12]  687 	mov	r2,#0x00
+      000501 C0 07            [24]  688 	push	ar7
+      000503 C0 06            [24]  689 	push	ar6
+      000505 C0 05            [24]  690 	push	ar5
+      000507 C0 04            [24]  691 	push	ar4
+      000509 C0 03            [24]  692 	push	ar3
+      00050B C0 00            [24]  693 	push	ar0
+      00050D C0 02            [24]  694 	push	ar2
+      00050F 74 E2            [12]  695 	mov	a,#___str_1
+      000511 C0 E0            [24]  696 	push	acc
+      000513 74 39            [12]  697 	mov	a,#(___str_1 >> 8)
+      000515 C0 E0            [24]  698 	push	acc
+      000517 12 35 27         [24]  699 	lcall	_printf_tiny
+      00051A E5 81            [12]  700 	mov	a,sp
+      00051C 24 FC            [12]  701 	add	a,#0xfc
+      00051E F5 81            [12]  702 	mov	sp,a
+      000520 D0 03            [24]  703 	pop	ar3
+      000522 D0 04            [24]  704 	pop	ar4
+      000524 D0 05            [24]  705 	pop	ar5
+      000526 D0 06            [24]  706 	pop	ar6
+      000528 D0 07            [24]  707 	pop	ar7
+                                    708 ;	main.c:44: for(int i=0;i<RD_BLOCK_SIZE;i++){
+      00052A 0B               [12]  709 	inc	r3
+      00052B BB 00 01         [24]  710 	cjne	r3,#0x00,00125$
+      00052E 0C               [12]  711 	inc	r4
+      00052F                        712 00125$:
+                                    713 ;	main.c:50: }
+      00052F 02 04 A4         [24]  714 	ljmp	00105$
+                                    715 ;------------------------------------------------------------
+                                    716 ;Allocation info for local variables in function 'read_mp3_files'
+                                    717 ;------------------------------------------------------------
+                                    718 ;res                       Allocated with name '_read_mp3_files_res_65536_91'
+                                    719 ;fno                       Allocated with name '_read_mp3_files_fno_65536_91'
+                                    720 ;dir                       Allocated with name '_read_mp3_files_dir_65536_91'
+                                    721 ;buff                      Allocated with name '_read_mp3_files_buff_65536_91'
+                                    722 ;br                        Allocated with name '_read_mp3_files_br_65536_91'
+                                    723 ;------------------------------------------------------------
+                                    724 ;	main.c:52: void read_mp3_files(void)
+                                    725 ;	-----------------------------------------
+                                    726 ;	 function read_mp3_files
+                                    727 ;	-----------------------------------------
+      000532                        728 _read_mp3_files:
+                                    729 ;	main.c:60: res = pf_opendir(&dir, "/");
+      000532 90 00 00         [24]  730 	mov	dptr,#_pf_opendir_PARM_2
+      000535 74 E6            [12]  731 	mov	a,#___str_2
+      000537 F0               [24]  732 	movx	@dptr,a
+      000538 74 39            [12]  733 	mov	a,#(___str_2 >> 8)
+      00053A A3               [24]  734 	inc	dptr
+      00053B F0               [24]  735 	movx	@dptr,a
+      00053C 74 80            [12]  736 	mov	a,#0x80
+      00053E A3               [24]  737 	inc	dptr
+      00053F F0               [24]  738 	movx	@dptr,a
+      000540 90 00 65         [24]  739 	mov	dptr,#_read_mp3_files_dir_65536_91
+      000543 75 F0 00         [24]  740 	mov	b,#0x00
+      000546 12 28 B0         [24]  741 	lcall	_pf_opendir
+      000549 E5 82            [12]  742 	mov	a,dpl
+                                    743 ;	main.c:61: if (res == FR_OK) {
+      00054B 60 01            [24]  744 	jz	00145$
+      00054D 22               [24]  745 	ret
+      00054E                        746 00145$:
+      00054E                        747 00114$:
+                                    748 ;	main.c:64: res = pf_readdir(&dir, &fno);
+      00054E 90 00 00         [24]  749 	mov	dptr,#_pf_readdir_PARM_2
+      000551 74 4F            [12]  750 	mov	a,#_read_mp3_files_fno_65536_91
+      000553 F0               [24]  751 	movx	@dptr,a
+      000554 74 00            [12]  752 	mov	a,#(_read_mp3_files_fno_65536_91 >> 8)
+      000556 A3               [24]  753 	inc	dptr
+      000557 F0               [24]  754 	movx	@dptr,a
+      000558 E4               [12]  755 	clr	a
+      000559 A3               [24]  756 	inc	dptr
+      00055A F0               [24]  757 	movx	@dptr,a
+      00055B 90 00 65         [24]  758 	mov	dptr,#_read_mp3_files_dir_65536_91
+      00055E 75 F0 00         [24]  759 	mov	b,#0x00
+      000561 12 29 C1         [24]  760 	lcall	_pf_readdir
+      000564 E5 82            [12]  761 	mov	a,dpl
+                                    762 ;	main.c:65: if (res != FR_OK || fno.fname[0] == 0){
+      000566 70 06            [24]  763 	jnz	00101$
+      000568 90 00 58         [24]  764 	mov	dptr,#(_read_mp3_files_fno_65536_91 + 0x0009)
+      00056B E0               [24]  765 	movx	a,@dptr
+      00056C 70 10            [24]  766 	jnz	00102$
+      00056E                        767 00101$:
+                                    768 ;	main.c:66: printf_tiny("No more files found\r\n");
+      00056E 74 E8            [12]  769 	mov	a,#___str_3
+      000570 C0 E0            [24]  770 	push	acc
+      000572 74 39            [12]  771 	mov	a,#(___str_3 >> 8)
+      000574 C0 E0            [24]  772 	push	acc
+      000576 12 35 27         [24]  773 	lcall	_printf_tiny
+      000579 15 81            [12]  774 	dec	sp
+      00057B 15 81            [12]  775 	dec	sp
+                                    776 ;	main.c:67: break;
+      00057D 22               [24]  777 	ret
+      00057E                        778 00102$:
+                                    779 ;	main.c:69: printf_tiny("reading file /%s ...\r\n",fno.fname);
+      00057E 74 58            [12]  780 	mov	a,#(_read_mp3_files_fno_65536_91 + 0x0009)
+      000580 C0 E0            [24]  781 	push	acc
+      000582 74 00            [12]  782 	mov	a,#((_read_mp3_files_fno_65536_91 + 0x0009) >> 8)
+      000584 C0 E0            [24]  783 	push	acc
+      000586 E4               [12]  784 	clr	a
+      000587 C0 E0            [24]  785 	push	acc
+      000589 74 FE            [12]  786 	mov	a,#___str_4
+      00058B C0 E0            [24]  787 	push	acc
+      00058D 74 39            [12]  788 	mov	a,#(___str_4 >> 8)
+      00058F C0 E0            [24]  789 	push	acc
+      000591 12 35 27         [24]  790 	lcall	_printf_tiny
+      000594 E5 81            [12]  791 	mov	a,sp
+      000596 24 FB            [12]  792 	add	a,#0xfb
+      000598 F5 81            [12]  793 	mov	sp,a
+                                    794 ;	main.c:72: res = pf_open(fno.fname);
+      00059A 90 00 58         [24]  795 	mov	dptr,#(_read_mp3_files_fno_65536_91 + 0x0009)
+      00059D 75 F0 00         [24]  796 	mov	b,#0x00
+      0005A0 12 21 CC         [24]  797 	lcall	_pf_open
+      0005A3 E5 82            [12]  798 	mov	a,dpl
+                                    799 ;	main.c:73: if (res != FR_OK){
+      0005A5 60 1D            [24]  800 	jz	00108$
+                                    801 ;	main.c:74: printf_tiny("Error: failed to open %s\r\n", fno.fname);
+      0005A7 74 58            [12]  802 	mov	a,#(_read_mp3_files_fno_65536_91 + 0x0009)
+      0005A9 C0 E0            [24]  803 	push	acc
+      0005AB 74 00            [12]  804 	mov	a,#((_read_mp3_files_fno_65536_91 + 0x0009) >> 8)
+      0005AD C0 E0            [24]  805 	push	acc
+      0005AF E4               [12]  806 	clr	a
+      0005B0 C0 E0            [24]  807 	push	acc
+      0005B2 74 15            [12]  808 	mov	a,#___str_5
+      0005B4 C0 E0            [24]  809 	push	acc
+      0005B6 74 3A            [12]  810 	mov	a,#(___str_5 >> 8)
+      0005B8 C0 E0            [24]  811 	push	acc
+      0005BA 12 35 27         [24]  812 	lcall	_printf_tiny
+      0005BD E5 81            [12]  813 	mov	a,sp
+      0005BF 24 FB            [12]  814 	add	a,#0xfb
+      0005C1 F5 81            [12]  815 	mov	sp,a
+                                    816 ;	main.c:75: break;
+                                    817 ;	main.c:79: do{
+      0005C3 22               [24]  818 	ret
+      0005C4                        819 00108$:
+                                    820 ;	main.c:81: res = pf_read(buff, RD_BLOCK_SIZE, &br);
+      0005C4 90 00 00         [24]  821 	mov	dptr,#_pf_read_PARM_2
+      0005C7 74 40            [12]  822 	mov	a,#0x40
+      0005C9 F0               [24]  823 	movx	@dptr,a
+      0005CA E4               [12]  824 	clr	a
+      0005CB A3               [24]  825 	inc	dptr
+      0005CC F0               [24]  826 	movx	@dptr,a
+      0005CD 90 00 00         [24]  827 	mov	dptr,#_pf_read_PARM_3
+      0005D0 74 B6            [12]  828 	mov	a,#_read_mp3_files_br_65536_91
+      0005D2 F0               [24]  829 	movx	@dptr,a
+      0005D3 74 00            [12]  830 	mov	a,#(_read_mp3_files_br_65536_91 >> 8)
+      0005D5 A3               [24]  831 	inc	dptr
+      0005D6 F0               [24]  832 	movx	@dptr,a
+      0005D7 E4               [12]  833 	clr	a
+      0005D8 A3               [24]  834 	inc	dptr
+      0005D9 F0               [24]  835 	movx	@dptr,a
+      0005DA 90 00 76         [24]  836 	mov	dptr,#_read_mp3_files_buff_65536_91
+      0005DD 75 F0 00         [24]  837 	mov	b,#0x00
+      0005E0 12 23 78         [24]  838 	lcall	_pf_read
+      0005E3 E5 82            [12]  839 	mov	a,dpl
+                                    840 ;	main.c:83: if(res != FR_OK){
+      0005E5 60 1F            [24]  841 	jz	00107$
+                                    842 ;	main.c:84: printf_tiny("Error: failed to read %s\r\n", fno.fname);
+      0005E7 74 58            [12]  843 	mov	a,#(_read_mp3_files_fno_65536_91 + 0x0009)
+      0005E9 C0 E0            [24]  844 	push	acc
+      0005EB 74 00            [12]  845 	mov	a,#((_read_mp3_files_fno_65536_91 + 0x0009) >> 8)
+      0005ED C0 E0            [24]  846 	push	acc
+      0005EF E4               [12]  847 	clr	a
+      0005F0 C0 E0            [24]  848 	push	acc
+      0005F2 74 30            [12]  849 	mov	a,#___str_6
+      0005F4 C0 E0            [24]  850 	push	acc
+      0005F6 74 3A            [12]  851 	mov	a,#(___str_6 >> 8)
+      0005F8 C0 E0            [24]  852 	push	acc
+      0005FA 12 35 27         [24]  853 	lcall	_printf_tiny
+      0005FD E5 81            [12]  854 	mov	a,sp
+      0005FF 24 FB            [12]  855 	add	a,#0xfb
+      000601 F5 81            [12]  856 	mov	sp,a
+                                    857 ;	main.c:85: break;
+      000603 02 05 4E         [24]  858 	ljmp	00114$
+      000606                        859 00107$:
+                                    860 ;	main.c:88: print_buffer((const BYTE *)buff);
+      000606 90 00 76         [24]  861 	mov	dptr,#_read_mp3_files_buff_65536_91
+      000609 75 F0 00         [24]  862 	mov	b,#0x00
+      00060C 12 04 85         [24]  863 	lcall	_print_buffer
+                                    864 ;	main.c:90: }while(br == RD_BLOCK_SIZE); //exit when reached EOF
+      00060F 90 00 B6         [24]  865 	mov	dptr,#_read_mp3_files_br_65536_91
+      000612 E0               [24]  866 	movx	a,@dptr
+      000613 FE               [12]  867 	mov	r6,a
+      000614 A3               [24]  868 	inc	dptr
+      000615 E0               [24]  869 	movx	a,@dptr
+      000616 FF               [12]  870 	mov	r7,a
+      000617 BE 40 05         [24]  871 	cjne	r6,#0x40,00150$
+      00061A BF 00 02         [24]  872 	cjne	r7,#0x00,00150$
+      00061D 80 A5            [24]  873 	sjmp	00108$
+      00061F                        874 00150$:
+      00061F 02 05 4E         [24]  875 	ljmp	00114$
+                                    876 ;	main.c:94: return;
+                                    877 ;	main.c:95: }
+      000622 22               [24]  878 	ret
+                                    879 ;------------------------------------------------------------
+                                    880 ;Allocation info for local variables in function 'main'
+                                    881 ;------------------------------------------------------------
+                                    882 ;	main.c:98: void main(void)
+                                    883 ;	-----------------------------------------
+                                    884 ;	 function main
+                                    885 ;	-----------------------------------------
+      000623                        886 _main:
+                                    887 ;	main.c:101: init_timer0();
+      000623 12 31 02         [24]  888 	lcall	_init_timer0
+                                    889 ;	main.c:102: lcdinit();
+      000626 12 01 37         [24]  890 	lcall	_lcdinit
+                                    891 ;	main.c:103: spi_init();
+      000629 12 30 B8         [24]  892 	lcall	_spi_init
+                                    893 ;	main.c:104: reset_DAC();
+      00062C 12 00 00         [24]  894 	lcall	_reset_DAC
+                                    895 ;	main.c:106: write_to_DAC_and_EEPROM(0);
+      00062F 90 00 00         [24]  896 	mov	dptr,#0x0000
+      000632 12 00 00         [24]  897 	lcall	_write_to_DAC_and_EEPROM
+                                    898 ;	main.c:109: if( pf_mount(&SDCard))
+      000635 90 00 22         [24]  899 	mov	dptr,#_SDCard
+      000638 75 F0 00         [24]  900 	mov	b,#0x00
+      00063B 12 1C 18         [24]  901 	lcall	_pf_mount
+      00063E E5 82            [12]  902 	mov	a,dpl
+      000640 60 11            [24]  903 	jz	00105$
+                                    904 ;	main.c:111: printf_tiny("Couldn't mount drive...\r\n");
+      000642 74 4B            [12]  905 	mov	a,#___str_7
+      000644 C0 E0            [24]  906 	push	acc
+      000646 74 3A            [12]  907 	mov	a,#(___str_7 >> 8)
+      000648 C0 E0            [24]  908 	push	acc
+      00064A 12 35 27         [24]  909 	lcall	_printf_tiny
+      00064D 15 81            [12]  910 	dec	sp
+      00064F 15 81            [12]  911 	dec	sp
+                                    912 ;	main.c:112: while( 1 );
+      000651                        913 00102$:
+      000651 80 FE            [24]  914 	sjmp	00102$
+      000653                        915 00105$:
+                                    916 ;	main.c:115: printf_tiny("SD card mounted\r\n");
+      000653 74 65            [12]  917 	mov	a,#___str_8
+      000655 C0 E0            [24]  918 	push	acc
+      000657 74 3A            [12]  919 	mov	a,#(___str_8 >> 8)
+      000659 C0 E0            [24]  920 	push	acc
+      00065B 12 35 27         [24]  921 	lcall	_printf_tiny
+      00065E 15 81            [12]  922 	dec	sp
+      000660 15 81            [12]  923 	dec	sp
+                                    924 ;	main.c:118: if( disk_initialize( ) & STA_NOINIT )
+      000662 12 06 F0         [24]  925 	lcall	_disk_initialize
+      000665 E5 82            [12]  926 	mov	a,dpl
+      000667 30 E0 63         [24]  927 	jnb	acc.0,00115$
+                                    928 ;	main.c:120: switch( get_card_type() )
+      00066A 12 2A AD         [24]  929 	lcall	_get_card_type
+      00066D AE 82            [24]  930 	mov	r6,dpl
+      00066F AF 83            [24]  931 	mov	r7,dph
+      000671 BE 00 05         [24]  932 	cjne	r6,#0x00,00155$
+      000674 BF 00 02         [24]  933 	cjne	r7,#0x00,00155$
+      000677 80 10            [24]  934 	sjmp	00106$
+      000679                        935 00155$:
+      000679 BE 01 05         [24]  936 	cjne	r6,#0x01,00156$
+      00067C BF 00 02         [24]  937 	cjne	r7,#0x00,00156$
+      00067F 80 19            [24]  938 	sjmp	00107$
+      000681                        939 00156$:
+                                    940 ;	main.c:122: case 0 :
+      000681 BE 02 38         [24]  941 	cjne	r6,#0x02,00109$
+      000684 BF 00 35         [24]  942 	cjne	r7,#0x00,00109$
+      000687 80 22            [24]  943 	sjmp	00108$
+      000689                        944 00106$:
+                                    945 ;	main.c:123: printf_tiny("Couldn't find SD card\r\n");
+      000689 74 77            [12]  946 	mov	a,#___str_9
+      00068B C0 E0            [24]  947 	push	acc
+      00068D 74 3A            [12]  948 	mov	a,#(___str_9 >> 8)
+      00068F C0 E0            [24]  949 	push	acc
+      000691 12 35 27         [24]  950 	lcall	_printf_tiny
+      000694 15 81            [12]  951 	dec	sp
+      000696 15 81            [12]  952 	dec	sp
+                                    953 ;	main.c:124: break;
+                                    954 ;	main.c:125: case 1 :
+      000698 80 31            [24]  955 	sjmp	00112$
+      00069A                        956 00107$:
+                                    957 ;	main.c:126: printf_tiny("Card type is MMC - Can't use this type\r\n");
+      00069A 74 8F            [12]  958 	mov	a,#___str_10
+      00069C C0 E0            [24]  959 	push	acc
+      00069E 74 3A            [12]  960 	mov	a,#(___str_10 >> 8)
+      0006A0 C0 E0            [24]  961 	push	acc
+      0006A2 12 35 27         [24]  962 	lcall	_printf_tiny
+      0006A5 15 81            [12]  963 	dec	sp
+      0006A7 15 81            [12]  964 	dec	sp
+                                    965 ;	main.c:127: break;
+                                    966 ;	main.c:128: case 2 :
+      0006A9 80 20            [24]  967 	sjmp	00112$
+      0006AB                        968 00108$:
+                                    969 ;	main.c:129: printf_tiny("Couldn't initialize SD Card drive...\r\n");
+      0006AB 74 B8            [12]  970 	mov	a,#___str_11
+      0006AD C0 E0            [24]  971 	push	acc
+      0006AF 74 3A            [12]  972 	mov	a,#(___str_11 >> 8)
+      0006B1 C0 E0            [24]  973 	push	acc
+      0006B3 12 35 27         [24]  974 	lcall	_printf_tiny
+      0006B6 15 81            [12]  975 	dec	sp
+      0006B8 15 81            [12]  976 	dec	sp
+                                    977 ;	main.c:130: break;
+                                    978 ;	main.c:131: default :
+      0006BA 80 0F            [24]  979 	sjmp	00112$
+      0006BC                        980 00109$:
+                                    981 ;	main.c:132: printf_tiny("Unknown Card Type error...\r\n");
+      0006BC 74 DF            [12]  982 	mov	a,#___str_12
+      0006BE C0 E0            [24]  983 	push	acc
+      0006C0 74 3A            [12]  984 	mov	a,#(___str_12 >> 8)
+      0006C2 C0 E0            [24]  985 	push	acc
+      0006C4 12 35 27         [24]  986 	lcall	_printf_tiny
+      0006C7 15 81            [12]  987 	dec	sp
+      0006C9 15 81            [12]  988 	dec	sp
+                                    989 ;	main.c:135: while( 1 );
+      0006CB                        990 00112$:
+      0006CB 80 FE            [24]  991 	sjmp	00112$
+      0006CD                        992 00115$:
+                                    993 ;	main.c:138: printf_tiny("SD card initialized\r\n");
+      0006CD 74 FC            [12]  994 	mov	a,#___str_13
+      0006CF C0 E0            [24]  995 	push	acc
+      0006D1 74 3A            [12]  996 	mov	a,#(___str_13 >> 8)
+      0006D3 C0 E0            [24]  997 	push	acc
+      0006D5 12 35 27         [24]  998 	lcall	_printf_tiny
+      0006D8 15 81            [12]  999 	dec	sp
+      0006DA 15 81            [12] 1000 	dec	sp
+                                   1001 ;	main.c:141: printf_tiny("Finished reading files\r\n");
+      0006DC 74 12            [12] 1002 	mov	a,#___str_14
+      0006DE C0 E0            [24] 1003 	push	acc
+      0006E0 74 3B            [12] 1004 	mov	a,#(___str_14 >> 8)
+      0006E2 C0 E0            [24] 1005 	push	acc
+      0006E4 12 35 27         [24] 1006 	lcall	_printf_tiny
+      0006E7 15 81            [12] 1007 	dec	sp
+      0006E9 15 81            [12] 1008 	dec	sp
+                                   1009 ;	main.c:142: read_mp3_files();
+      0006EB 12 05 32         [24] 1010 	lcall	_read_mp3_files
+                                   1011 ;	main.c:143: while( 1 );
+      0006EE                       1012 00117$:
+                                   1013 ;	main.c:144: }
+      0006EE 80 FE            [24] 1014 	sjmp	00117$
+                                   1015 	.area CSEG    (CODE)
+                                   1016 	.area CONST   (CODE)
+                                   1017 	.area CONST   (CODE)
+      0039DF                       1018 ___str_0:
+      0039DF 0D                    1019 	.db 0x0d
+      0039E0 0A                    1020 	.db 0x0a
+      0039E1 00                    1021 	.db 0x00
+                                   1022 	.area CSEG    (CODE)
+                                   1023 	.area CONST   (CODE)
+      0039E2                       1024 ___str_1:
+      0039E2 25 78 20              1025 	.ascii "%x "
+      0039E5 00                    1026 	.db 0x00
+                                   1027 	.area CSEG    (CODE)
+                                   1028 	.area CONST   (CODE)
+      0039E6                       1029 ___str_2:
+      0039E6 2F                    1030 	.ascii "/"
+      0039E7 00                    1031 	.db 0x00
+                                   1032 	.area CSEG    (CODE)
+                                   1033 	.area CONST   (CODE)
+      0039E8                       1034 ___str_3:
+      0039E8 4E 6F 20 6D 6F 72 65  1035 	.ascii "No more files found"
              20 66 69 6C 65 73 20
              66 6F 75 6E 64
-      003E61 0D                    1142 	.db 0x0d
-      003E62 0A                    1143 	.db 0x0a
-      003E63 00                    1144 	.db 0x00
-                                   1145 	.area CSEG    (CODE)
-                                   1146 	.area CONST   (CODE)
-      003E64                       1147 ___str_4:
-      003E64 72 65 61 64 69 6E 67  1148 	.ascii "reading file /%s ..."
+      0039FB 0D                    1036 	.db 0x0d
+      0039FC 0A                    1037 	.db 0x0a
+      0039FD 00                    1038 	.db 0x00
+                                   1039 	.area CSEG    (CODE)
+                                   1040 	.area CONST   (CODE)
+      0039FE                       1041 ___str_4:
+      0039FE 72 65 61 64 69 6E 67  1042 	.ascii "reading file /%s ..."
              20 66 69 6C 65 20 2F
              25 73 20 2E 2E 2E
-      003E78 0D                    1149 	.db 0x0d
-      003E79 0A                    1150 	.db 0x0a
-      003E7A 00                    1151 	.db 0x00
-                                   1152 	.area CSEG    (CODE)
-                                   1153 	.area CONST   (CODE)
-      003E7B                       1154 ___str_5:
-      003E7B 45 72 72 6F 72 3A 20  1155 	.ascii "Error: failed to open %s"
+      003A12 0D                    1043 	.db 0x0d
+      003A13 0A                    1044 	.db 0x0a
+      003A14 00                    1045 	.db 0x00
+                                   1046 	.area CSEG    (CODE)
+                                   1047 	.area CONST   (CODE)
+      003A15                       1048 ___str_5:
+      003A15 45 72 72 6F 72 3A 20  1049 	.ascii "Error: failed to open %s"
              66 61 69 6C 65 64 20
              74 6F 20 6F 70 65 6E
              20 25 73
-      003E93 0D                    1156 	.db 0x0d
-      003E94 0A                    1157 	.db 0x0a
-      003E95 00                    1158 	.db 0x00
-                                   1159 	.area CSEG    (CODE)
-                                   1160 	.area CONST   (CODE)
-      003E96                       1161 ___str_6:
-      003E96 45 72 72 6F 72 3A 20  1162 	.ascii "Error: failed to read %s"
+      003A2D 0D                    1050 	.db 0x0d
+      003A2E 0A                    1051 	.db 0x0a
+      003A2F 00                    1052 	.db 0x00
+                                   1053 	.area CSEG    (CODE)
+                                   1054 	.area CONST   (CODE)
+      003A30                       1055 ___str_6:
+      003A30 45 72 72 6F 72 3A 20  1056 	.ascii "Error: failed to read %s"
              66 61 69 6C 65 64 20
              74 6F 20 72 65 61 64
              20 25 73
-      003EAE 0D                    1163 	.db 0x0d
-      003EAF 0A                    1164 	.db 0x0a
-      003EB0 00                    1165 	.db 0x00
-                                   1166 	.area CSEG    (CODE)
-                                   1167 	.area CONST   (CODE)
-      003EB1                       1168 ___str_7:
-      003EB1 43 6F 75 6C 64 6E 27  1169 	.ascii "Couldn't mount drive..."
+      003A48 0D                    1057 	.db 0x0d
+      003A49 0A                    1058 	.db 0x0a
+      003A4A 00                    1059 	.db 0x00
+                                   1060 	.area CSEG    (CODE)
+                                   1061 	.area CONST   (CODE)
+      003A4B                       1062 ___str_7:
+      003A4B 43 6F 75 6C 64 6E 27  1063 	.ascii "Couldn't mount drive..."
              74 20 6D 6F 75 6E 74
              20 64 72 69 76 65 2E
              2E 2E
-      003EC8 0D                    1170 	.db 0x0d
-      003EC9 0A                    1171 	.db 0x0a
-      003ECA 00                    1172 	.db 0x00
-                                   1173 	.area CSEG    (CODE)
-                                   1174 	.area CONST   (CODE)
-      003ECB                       1175 ___str_8:
-      003ECB 53 44 20 63 61 72 64  1176 	.ascii "SD card mounted"
+      003A62 0D                    1064 	.db 0x0d
+      003A63 0A                    1065 	.db 0x0a
+      003A64 00                    1066 	.db 0x00
+                                   1067 	.area CSEG    (CODE)
+                                   1068 	.area CONST   (CODE)
+      003A65                       1069 ___str_8:
+      003A65 53 44 20 63 61 72 64  1070 	.ascii "SD card mounted"
              20 6D 6F 75 6E 74 65
              64
-      003EDA 0D                    1177 	.db 0x0d
-      003EDB 0A                    1178 	.db 0x0a
-      003EDC 00                    1179 	.db 0x00
-                                   1180 	.area CSEG    (CODE)
-                                   1181 	.area CONST   (CODE)
-      003EDD                       1182 ___str_9:
-      003EDD 43 6F 75 6C 64 6E 27  1183 	.ascii "Couldn't find SD card"
+      003A74 0D                    1071 	.db 0x0d
+      003A75 0A                    1072 	.db 0x0a
+      003A76 00                    1073 	.db 0x00
+                                   1074 	.area CSEG    (CODE)
+                                   1075 	.area CONST   (CODE)
+      003A77                       1076 ___str_9:
+      003A77 43 6F 75 6C 64 6E 27  1077 	.ascii "Couldn't find SD card"
              74 20 66 69 6E 64 20
              53 44 20 63 61 72 64
-      003EF2 0D                    1184 	.db 0x0d
-      003EF3 0A                    1185 	.db 0x0a
-      003EF4 00                    1186 	.db 0x00
-                                   1187 	.area CSEG    (CODE)
-                                   1188 	.area CONST   (CODE)
-      003EF5                       1189 ___str_10:
-      003EF5 43 61 72 64 20 74 79  1190 	.ascii "Card type is MMC - Can't use this type"
+      003A8C 0D                    1078 	.db 0x0d
+      003A8D 0A                    1079 	.db 0x0a
+      003A8E 00                    1080 	.db 0x00
+                                   1081 	.area CSEG    (CODE)
+                                   1082 	.area CONST   (CODE)
+      003A8F                       1083 ___str_10:
+      003A8F 43 61 72 64 20 74 79  1084 	.ascii "Card type is MMC - Can't use this type"
              70 65 20 69 73 20 4D
              4D 43 20 2D 20 43 61
              6E 27 74 20 75 73 65
              20 74 68 69 73 20 74
              79 70 65
-      003F1B 0D                    1191 	.db 0x0d
-      003F1C 0A                    1192 	.db 0x0a
-      003F1D 00                    1193 	.db 0x00
-                                   1194 	.area CSEG    (CODE)
-                                   1195 	.area CONST   (CODE)
-      003F1E                       1196 ___str_11:
-      003F1E 43 6F 75 6C 64 6E 27  1197 	.ascii "Couldn't initialize SD Card drive..."
+      003AB5 0D                    1085 	.db 0x0d
+      003AB6 0A                    1086 	.db 0x0a
+      003AB7 00                    1087 	.db 0x00
+                                   1088 	.area CSEG    (CODE)
+                                   1089 	.area CONST   (CODE)
+      003AB8                       1090 ___str_11:
+      003AB8 43 6F 75 6C 64 6E 27  1091 	.ascii "Couldn't initialize SD Card drive..."
              74 20 69 6E 69 74 69
              61 6C 69 7A 65 20 53
              44 20 43 61 72 64 20
              64 72 69 76 65 2E 2E
              2E
-      003F42 0D                    1198 	.db 0x0d
-      003F43 0A                    1199 	.db 0x0a
-      003F44 00                    1200 	.db 0x00
-                                   1201 	.area CSEG    (CODE)
-                                   1202 	.area CONST   (CODE)
-      003F45                       1203 ___str_12:
-      003F45 55 6E 6B 6E 6F 77 6E  1204 	.ascii "Unknown Card Type error..."
+      003ADC 0D                    1092 	.db 0x0d
+      003ADD 0A                    1093 	.db 0x0a
+      003ADE 00                    1094 	.db 0x00
+                                   1095 	.area CSEG    (CODE)
+                                   1096 	.area CONST   (CODE)
+      003ADF                       1097 ___str_12:
+      003ADF 55 6E 6B 6E 6F 77 6E  1098 	.ascii "Unknown Card Type error..."
              20 43 61 72 64 20 54
              79 70 65 20 65 72 72
              6F 72 2E 2E 2E
-      003F5F 0D                    1205 	.db 0x0d
-      003F60 0A                    1206 	.db 0x0a
-      003F61 00                    1207 	.db 0x00
-                                   1208 	.area CSEG    (CODE)
-                                   1209 	.area CONST   (CODE)
-      003F62                       1210 ___str_13:
-      003F62 53 44 20 63 61 72 64  1211 	.ascii "SD card initialized"
+      003AF9 0D                    1099 	.db 0x0d
+      003AFA 0A                    1100 	.db 0x0a
+      003AFB 00                    1101 	.db 0x00
+                                   1102 	.area CSEG    (CODE)
+                                   1103 	.area CONST   (CODE)
+      003AFC                       1104 ___str_13:
+      003AFC 53 44 20 63 61 72 64  1105 	.ascii "SD card initialized"
              20 69 6E 69 74 69 61
              6C 69 7A 65 64
-      003F75 0D                    1212 	.db 0x0d
-      003F76 0A                    1213 	.db 0x0a
-      003F77 00                    1214 	.db 0x00
-                                   1215 	.area CSEG    (CODE)
-                                   1216 	.area CONST   (CODE)
-      003F78                       1217 ___str_14:
-      003F78 46 69 6E 69 73 68 65  1218 	.ascii "Finished reading files"
+      003B0F 0D                    1106 	.db 0x0d
+      003B10 0A                    1107 	.db 0x0a
+      003B11 00                    1108 	.db 0x00
+                                   1109 	.area CSEG    (CODE)
+                                   1110 	.area CONST   (CODE)
+      003B12                       1111 ___str_14:
+      003B12 46 69 6E 69 73 68 65  1112 	.ascii "Finished reading files"
              64 20 72 65 61 64 69
              6E 67 20 66 69 6C 65
              73
-      003F8E 0D                    1219 	.db 0x0d
-      003F8F 0A                    1220 	.db 0x0a
-      003F90 00                    1221 	.db 0x00
-                                   1222 	.area CSEG    (CODE)
-                                   1223 	.area XINIT   (CODE)
-                                   1224 	.area CABS    (ABS,CODE)
+      003B28 0D                    1113 	.db 0x0d
+      003B29 0A                    1114 	.db 0x0a
+      003B2A 00                    1115 	.db 0x00
+                                   1116 	.area CSEG    (CODE)
+                                   1117 	.area XINIT   (CODE)
+                                   1118 	.area CABS    (ABS,CODE)

@@ -1,3 +1,20 @@
+/**
+ * @file sdc.c
+ * @author Shuran Xu (shxu6388@colorado.edu)
+ * @brief The source file implements the public routines for controlling & accessing the SD card.
+ * @reference
+ * 1.The MMC/SD Interfacing with FAT16 FS:
+ https://www.8051projects.net/mmc-sd-interface-fat16/MMC-SD-Card-interfacing-and-FAT16-Filesystem.pdf
+ * 2.MMC/SD tutorial:
+ * http://elm-chan.org/docs/mmc/mmc_e.html#spiinit
+ * @note The implementation of the SD functions are based on the MMC/SD interfacing tutorial.
+ * @version 0.1
+ * @date 2022-12-12
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+
 #include "sdc.h"
 #include "timer.h"
 #include "spi.h"

@@ -192,3 +192,48 @@
 	<stdint.h>
 	<stddef.h>
 
+1669421164 source:c:\users\user\desktop\esd-mp3-player\project-program\pff\source\diskio.c
+	"diskio.h"
+	"../../sdc.h"
+	"../../spi.h"
+
+1669420798 c:\users\user\desktop\esd-mp3-player\project-program\pff\source\diskio.h
+	"pff.h"
+
+1669423990 c:\users\user\desktop\esd-mp3-player\project-program\pff\source\pff.h
+	"pffconf.h"
+	<windows.h>
+	<stdint.h>
+
+1669438827 c:\users\user\desktop\esd-mp3-player\project-program\pff\source\pffconf.h
+
+1670833714 c:\users\user\desktop\esd-mp3-player\project-program\sdc.h
+	<stdint.h>
+
+1670833786 c:\users\user\desktop\esd-mp3-player\project-program\spi.h
+	<stdint.h>
+	<stdlib.h>
+	<at89c51ed2.h>
+	<mcs51reg.h>
+
+1669440436 source:c:\users\user\desktop\esd-mp3-player\project-program\pff\source\pff.c
+	"pff.h"
+	"diskio.h"
+
+1669442230 source:c:\users\user\desktop\esd-mp3-player\project-program\serial.c
+	"serial.h"
+	<at89c51ed2.h>
+	<mcs51reg.h>
+
+1667576256 c:\users\user\desktop\esd-mp3-player\project-program\serial.h
+
+1669442245 source:c:\users\user\desktop\esd-mp3-player\project-program\timer.c
+	"time.h"
+	"lcd.h"
+	<stdint.h>
+	<at89c51ed2.h>
+	<mcs51reg.h>
+
+1670833826 c:\users\user\desktop\esd-mp3-player\project-program\lcd.h
+	<stdint.h>
+

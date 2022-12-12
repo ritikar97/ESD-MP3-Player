@@ -1,3 +1,16 @@
+/**
+ * @file spi.c
+ * @author Shuran Xu (shxu6388@colorado.edu)
+ * @brief The source file implements the public routines for using the SPI protocol.
+ * @reference
+ * 1.The AT89C51RB2/RC2 datasheet:
+ * http://ww1.microchip.com/downloads/en/devicedoc/doc4180.pdf
+ * @version 0.1
+ * @date 2022-12-12
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #include "spi.h"
 #include <stdio.h>
 

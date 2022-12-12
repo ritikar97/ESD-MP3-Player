@@ -220,6 +220,10 @@
 	.globl _RCAP2H
 	.globl _RCAP2L
 	.globl _T2CON
+	.globl _disk_writep_PARM_2
+	.globl _disk_readp_PARM_4
+	.globl _disk_readp_PARM_3
+	.globl _disk_readp_PARM_2
 	.globl _disk_initialize
 	.globl _disk_readp
 	.globl _disk_writep
@@ -475,6 +479,18 @@ _TF1	=	0x008f
 ; external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
+_disk_readp_PARM_2:
+	.ds 4
+_disk_readp_PARM_3:
+	.ds 2
+_disk_readp_PARM_4:
+	.ds 2
+_disk_readp_buff_65536_50:
+	.ds 3
+_disk_writep_PARM_2:
+	.ds 4
+_disk_writep_buff_65536_55:
+	.ds 3
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -548,33 +564,41 @@ _disk_initialize:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'disk_readp'
 ;------------------------------------------------------------
-;sector                    Allocated to stack - _bp -6
-;offset                    Allocated to stack - _bp -8
-;count                     Allocated to stack - _bp -10
-;buff                      Allocated to stack - _bp +1
+;sector                    Allocated with name '_disk_readp_PARM_2'
+;offset                    Allocated with name '_disk_readp_PARM_3'
+;count                     Allocated with name '_disk_readp_PARM_4'
+;buff                      Allocated with name '_disk_readp_buff_65536_50'
 ;------------------------------------------------------------
 ;	pff\source\diskio.c:33: DRESULT disk_readp (
 ;	-----------------------------------------
 ;	 function disk_readp
 ;	-----------------------------------------
 _disk_readp:
-	push	_bp
-	mov	_bp,sp
-	push	dpl
-	push	dph
-	push	b
+	mov	r7,b
+	mov	r6,dph
+	mov	a,dpl
+	mov	dptr,#_disk_readp_buff_65536_50
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	pff\source\diskio.c:41: if(count != 512){
-	mov	a,_bp
-	add	a,#0xf6
-	mov	r0,a
-	cjne	@r0,#0x00,00121$
-	inc	r0
-	cjne	@r0,#0x02,00121$
+	mov	dptr,#_disk_readp_PARM_4
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+	cjne	r6,#0x00,00121$
+	cjne	r7,#0x02,00121$
 	sjmp	00102$
 00121$:
 ;	pff\source\diskio.c:42: return RES_PARERR;
 	mov	dpl,#0x03
-	sjmp	00107$
+	ret
 00102$:
 ;	pff\source\diskio.c:46: if( Stat & STA_NOINIT ){
 	mov	dptr,#_Stat
@@ -582,113 +606,137 @@ _disk_readp:
 	jnb	acc.0,00104$
 ;	pff\source\diskio.c:47: return( RES_NOTRDY );
 	mov	dpl,#0x02
-	sjmp	00107$
+	ret
 00104$:
 ;	pff\source\diskio.c:51: if( sd_read_sector( sector + offset, buff ) ){
-	mov	a,_bp
-	add	a,#0xf8
-	mov	r0,a
-	mov	ar3,@r0
-	inc	r0
-	mov	ar4,@r0
-	mov	a,_bp
-	add	a,#0xfa
-	mov	r0,a
-	mov	ar2,@r0
-	inc	r0
-	mov	ar7,@r0
-	mov	a,r3
+	mov	dptr,#_disk_readp_PARM_3
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+	mov	dptr,#_disk_readp_PARM_2
+	movx	a,@dptr
+	mov	r2,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r3,a
+	inc	dptr
+	movx	a,@dptr
+	inc	dptr
+	movx	a,@dptr
+	mov	a,r6
 	add	a,r2
 	mov	r2,a
-	mov	a,r4
-	addc	a,r7
+	mov	a,r7
+	addc	a,r3
+	mov	r3,a
+	mov	dptr,#_disk_readp_buff_65536_50
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
 	mov	r7,a
-	mov	r0,_bp
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	inc	r0
-	mov	a,@r0
-	push	acc
-	mov	dpl,r2
-	mov	dph,r7
-	lcall	_sd_read_sector
-	mov	r6,dpl
-	mov	r7,dph
-	dec	sp
-	dec	sp
-	dec	sp
+	mov	dptr,#_sd_read_sector_PARM_2
+	mov	a,r5
+	movx	@dptr,a
 	mov	a,r6
-	orl	a,r7
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r2
+	mov	dph,r3
+	lcall	_sd_read_sector
+	mov	a,dpl
+	mov	b,dph
+	orl	a,b
 	jz	00106$
 ;	pff\source\diskio.c:52: return( RES_ERROR );
 	mov	dpl,#0x01
-	sjmp	00107$
+	ret
 00106$:
 ;	pff\source\diskio.c:56: return( RES_OK );
 	mov	dpl,#0x00
-00107$:
 ;	pff\source\diskio.c:57: }
-	mov	sp,_bp
-	pop	_bp
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'disk_writep'
 ;------------------------------------------------------------
-;sc                        Allocated to stack - _bp -6
-;buff                      Allocated to registers r5 r6 r7 
+;sc                        Allocated with name '_disk_writep_PARM_2'
+;buff                      Allocated with name '_disk_writep_buff_65536_55'
 ;------------------------------------------------------------
 ;	pff\source\diskio.c:65: DRESULT disk_writep (
 ;	-----------------------------------------
 ;	 function disk_writep
 ;	-----------------------------------------
 _disk_writep:
-	push	_bp
-	mov	_bp,sp
-	mov	r5,dpl
-	mov	r6,dph
 	mov	r7,b
+	mov	r6,dph
+	mov	a,dpl
+	mov	dptr,#_disk_writep_buff_65536_55
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	pff\source\diskio.c:71: if( Stat & STA_NOINIT ){
 	mov	dptr,#_Stat
 	movx	a,@dptr
 	jnb	acc.0,00102$
 ;	pff\source\diskio.c:72: return( RES_NOTRDY );
 	mov	dpl,#0x02
-	sjmp	00105$
+	ret
 00102$:
 ;	pff\source\diskio.c:76: if( sd_write_sector( sc, buff ) ){
-	mov	a,_bp
-	add	a,#0xfa
-	mov	r0,a
-	mov	ar3,@r0
-	inc	r0
-	mov	ar4,@r0
-	push	ar5
-	push	ar6
-	push	ar7
-	mov	dpl,r3
-	mov	dph,r4
-	lcall	_sd_write_sector
-	mov	r6,dpl
-	mov	r7,dph
-	dec	sp
-	dec	sp
-	dec	sp
+	mov	dptr,#_disk_writep_PARM_2
+	movx	a,@dptr
+	mov	r4,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	inc	dptr
+	movx	a,@dptr
+	mov	dptr,#_disk_writep_buff_65536_55
+	movx	a,@dptr
+	mov	r3,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
+	mov	dptr,#_sd_write_sector_PARM_2
+	mov	a,r3
+	movx	@dptr,a
 	mov	a,r6
-	orl	a,r7
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+	mov	dpl,r4
+	mov	dph,r5
+	lcall	_sd_write_sector
+	mov	a,dpl
+	mov	b,dph
+	orl	a,b
 	jz	00104$
 ;	pff\source\diskio.c:77: return( RES_ERROR );
 	mov	dpl,#0x01
-	sjmp	00105$
+	ret
 00104$:
 ;	pff\source\diskio.c:81: return( RES_OK );
 	mov	dpl,#0x00
-00105$:
 ;	pff\source\diskio.c:82: }
-	pop	_bp
 	ret
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

@@ -1,3 +1,19 @@
+/**
+ * @file lcd.h
+ * @author Shuran Xu (shxu6388@colorado.edu)
+ * @brief The header file defines the public routines for controlling & accessing the LCD display.
+ * @reference:
+ * 1.The HD44780U datasheet:
+ * https://www.alldatasheet.com/datasheet-pdf/pdf/63673/HITACHI/HD44780.html
+ * 2.The implementation is developed taking the 8051 C interfacing LCD tutorial as reference:
+ * https://embetronicx.com/tutorials/microcontrollers/8051/lcd-interfacing-with-8051-microcontroller/
+ * @version 0.1
+ * @date 2022-12-12
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+
 #ifndef __LCD_H__
 #define __LCD_H__
 

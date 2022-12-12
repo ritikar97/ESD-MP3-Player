@@ -217,6 +217,9 @@
 	.globl _RCAP2H
 	.globl _RCAP2L
 	.globl _T2CON
+	.globl _display_lcd_char_PARM_2
+	.globl _lcdcreatechar_PARM_2
+	.globl _lcdgotoxy_PARM_2
 	.globl _lcd_set_ram_addr
 	.globl _lcd_read_data_from_ram
 	.globl _lcdinit
@@ -481,6 +484,56 @@ _TF1	=	0x008f
 ; external ram data
 ;--------------------------------------------------------
 	.area XSEG    (XDATA)
+_lcd_set_ram_addr_addr_65536_10:
+	.ds 1
+_read_lcd_data_65536_14:
+	.ds 3
+_write_data_lcd_data_65536_16:
+	.ds 1
+_write_cmd_lcd_data_65536_18:
+	.ds 1
+_lcdinit_data_196608_22:
+	.ds 1
+_lcdinit_data_196608_25:
+	.ds 1
+_lcdinit_data_196608_28:
+	.ds 1
+_lcdinit_data_196608_31:
+	.ds 1
+_lcdinit_data_196608_34:
+	.ds 1
+_lcdgotoaddr_addr_65536_37:
+	.ds 1
+_lcdgotoaddr_data_196608_40:
+	.ds 1
+_lcdgotoxy_PARM_2:
+	.ds 1
+_lcdgotoxy_row_65536_42:
+	.ds 1
+_lcdputch_cc_65536_50:
+	.ds 1
+_lcdputch_data_196608_53:
+	.ds 1
+_lcdputstr_ss_65536_55:
+	.ds 3
+_get_cursor_pos_cursor_pos_65536_65:
+	.ds 1
+_get_cursor_pos_data_196608_67:
+	.ds 3
+_lcdclear_data_196608_71:
+	.ds 1
+_lcdcreatechar_PARM_2:
+	.ds 3
+_lcdcreatechar_ccode_65536_87:
+	.ds 1
+_lcdcreatechar_data_327680_92:
+	.ds 1
+_display_lcd_char_PARM_2:
+	.ds 1
+_display_lcd_char_ccode_65536_94:
+	.ds 1
+_display_lcd_char_data_196608_97:
+	.ds 1
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -520,7 +573,7 @@ _ptr:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcd_set_ram_addr'
 ;------------------------------------------------------------
-;addr                      Allocated to registers r7 
+;addr                      Allocated with name '_lcd_set_ram_addr_addr_65536_10'
 ;------------------------------------------------------------
 ;	lcd.c:32: void lcd_set_ram_addr(uint8_t addr)
 ;	-----------------------------------------
@@ -535,11 +588,11 @@ _lcd_set_ram_addr:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_lcd_set_ram_addr_addr_65536_10
+	movx	@dptr,a
 ;	lcd.c:35: lcdbusywait();
-	push	ar7
 	lcall	_lcdbusywait
-	pop	ar7
 ;	lcd.c:37: RS = 0;
 ;	assignBit
 	clr	_P1_4
@@ -549,14 +602,17 @@ _lcd_set_ram_addr:
 ;	lcd.c:40: *ptr = addr;
 	mov	dptr,#_ptr
 	movx	a,@dptr
-	mov	r5,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r7,a
+	mov	dptr,#_lcd_set_ram_addr_addr_65536_10
+	movx	a,@dptr
+	mov	r5,a
 	mov	r4,#0x00
-	mov	dpl,r5
-	mov	dph,r6
-	mov	a,r7
+	mov	dpl,r6
+	mov	dph,r7
+	mov	a,r5
 	movx	@dptr,a
 	mov	a,r4
 	inc	dptr
@@ -604,16 +660,24 @@ _lcd_read_data_from_ram:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'read_lcd'
 ;------------------------------------------------------------
-;data                      Allocated to registers r5 r6 r7 
+;data                      Allocated with name '_read_lcd_data_65536_14'
 ;------------------------------------------------------------
 ;	lcd.c:60: static inline void read_lcd(unsigned char *data)
 ;	-----------------------------------------
 ;	 function read_lcd
 ;	-----------------------------------------
 _read_lcd:
-	mov	r5,dpl
-	mov	r6,dph
 	mov	r7,b
+	mov	r6,dph
+	mov	a,dpl
+	mov	dptr,#_read_lcd_data_65536_14
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	lcd.c:62: RS = 0;
 ;	assignBit
 	clr	_P1_4
@@ -621,6 +685,15 @@ _read_lcd:
 ;	assignBit
 	setb	_P1_5
 ;	lcd.c:64: *data = *ptr;
+	mov	dptr,#_read_lcd_data_65536_14
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 	mov	dptr,#_ptr
 	movx	a,@dptr
 	mov	r3,a
@@ -644,14 +717,16 @@ _read_lcd:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'write_data_lcd'
 ;------------------------------------------------------------
-;data                      Allocated to registers r7 
+;data                      Allocated with name '_write_data_lcd_data_65536_16'
 ;------------------------------------------------------------
 ;	lcd.c:71: static inline void write_data_lcd(unsigned char data)
 ;	-----------------------------------------
 ;	 function write_data_lcd
 ;	-----------------------------------------
 _write_data_lcd:
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_write_data_lcd_data_65536_16
+	movx	@dptr,a
 ;	lcd.c:73: RS = 1;
 ;	assignBit
 	setb	_P1_4
@@ -661,14 +736,17 @@ _write_data_lcd:
 ;	lcd.c:75: *ptr=data;
 	mov	dptr,#_ptr
 	movx	a,@dptr
-	mov	r5,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r7,a
+	mov	dptr,#_write_data_lcd_data_65536_16
+	movx	a,@dptr
+	mov	r5,a
 	mov	r4,#0x00
-	mov	dpl,r5
-	mov	dph,r6
-	mov	a,r7
+	mov	dpl,r6
+	mov	dph,r7
+	mov	a,r5
 	movx	@dptr,a
 	mov	a,r4
 	inc	dptr
@@ -679,14 +757,16 @@ _write_data_lcd:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'write_cmd_lcd'
 ;------------------------------------------------------------
-;data                      Allocated to registers r7 
+;data                      Allocated with name '_write_cmd_lcd_data_65536_18'
 ;------------------------------------------------------------
 ;	lcd.c:82: static inline void write_cmd_lcd(unsigned char data)
 ;	-----------------------------------------
 ;	 function write_cmd_lcd
 ;	-----------------------------------------
 _write_cmd_lcd:
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_write_cmd_lcd_data_65536_18
+	movx	@dptr,a
 ;	lcd.c:84: RS = 0;
 ;	assignBit
 	clr	_P1_4
@@ -696,14 +776,17 @@ _write_cmd_lcd:
 ;	lcd.c:86: *ptr=data;
 	mov	dptr,#_ptr
 	movx	a,@dptr
-	mov	r5,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r6,a
+	mov	r7,a
+	mov	dptr,#_write_cmd_lcd_data_65536_18
+	movx	a,@dptr
+	mov	r5,a
 	mov	r4,#0x00
-	mov	dpl,r5
-	mov	dph,r6
-	mov	a,r7
+	mov	dpl,r6
+	mov	dph,r7
+	mov	a,r5
 	movx	@dptr,a
 	mov	a,r4
 	inc	dptr
@@ -714,16 +797,16 @@ _write_cmd_lcd:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdinit'
 ;------------------------------------------------------------
-;__1310720001              Allocated to registers 
-;data                      Allocated to registers 
-;__1310720003              Allocated to registers 
-;data                      Allocated to registers 
-;__1310720005              Allocated to registers 
-;data                      Allocated to registers 
-;__1310720007              Allocated to registers 
-;data                      Allocated to registers 
-;__1310720009              Allocated to registers 
-;data                      Allocated to registers 
+;__1310720001              Allocated with name '_lcdinit___1310720001_131072_21'
+;data                      Allocated with name '_lcdinit_data_196608_22'
+;__1310720003              Allocated with name '_lcdinit___1310720003_131072_24'
+;data                      Allocated with name '_lcdinit_data_196608_25'
+;__1310720005              Allocated with name '_lcdinit___1310720005_131072_27'
+;data                      Allocated with name '_lcdinit_data_196608_28'
+;__1310720007              Allocated with name '_lcdinit___1310720007_131072_30'
+;data                      Allocated with name '_lcdinit_data_196608_31'
+;__1310720009              Allocated with name '_lcdinit___1310720009_131072_33'
+;data                      Allocated with name '_lcdinit_data_196608_34'
 ;------------------------------------------------------------
 ;	lcd.c:95: void lcdinit()
 ;	-----------------------------------------
@@ -887,18 +970,22 @@ _lcdbusywait:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdgotoaddr'
 ;------------------------------------------------------------
-;addr                      Allocated to registers r7 
-;__1310720011              Allocated to registers r7 
-;data                      Allocated to registers 
+;addr                      Allocated with name '_lcdgotoaddr_addr_65536_37'
+;__1310720011              Allocated with name '_lcdgotoaddr___1310720011_131072_39'
+;data                      Allocated with name '_lcdgotoaddr_data_196608_40'
 ;------------------------------------------------------------
 ;	lcd.c:132: void lcdgotoaddr(unsigned char addr)
 ;	-----------------------------------------
 ;	 function lcdgotoaddr
 ;	-----------------------------------------
 _lcdgotoaddr:
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_lcdgotoaddr_addr_65536_37
+	movx	@dptr,a
 ;	lcd.c:135: write_cmd_lcd(0x80 | addr);
-	orl	ar7,#0x80
+	movx	a,@dptr
+	orl	a,#0x80
+	mov	r7,a
 ;	lcd.c:84: RS = 0;
 ;	assignBit
 	clr	_P1_4
@@ -927,19 +1014,20 @@ _lcdgotoaddr:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdgotoxy'
 ;------------------------------------------------------------
-;column                    Allocated to stack - _bp -3
-;row                       Allocated to registers r7 
+;column                    Allocated with name '_lcdgotoxy_PARM_2'
+;row                       Allocated with name '_lcdgotoxy_row_65536_42'
 ;------------------------------------------------------------
 ;	lcd.c:144: void lcdgotoxy(unsigned char row, unsigned char column)
 ;	-----------------------------------------
 ;	 function lcdgotoxy
 ;	-----------------------------------------
 _lcdgotoxy:
-	push	_bp
-	mov	_bp,sp
-;	lcd.c:146: switch(row)
 	mov	a,dpl
-	mov	r7,a
+	mov	dptr,#_lcdgotoxy_row_65536_42
+	movx	@dptr,a
+;	lcd.c:146: switch(row)
+	movx	a,@dptr
+	mov  r7,a
 	add	a,#0xff - 0x03
 	jc	00107$
 	mov	a,r7
@@ -954,68 +1042,59 @@ _lcdgotoxy:
 	sjmp	00104$
 00101$:
 ;	lcd.c:150: lcdgotoaddr(column);
-	mov	a,_bp
-	add	a,#0xfd
-	mov	r0,a
-	mov	dpl,@r0
-	lcall	_lcdgotoaddr
+	mov	dptr,#_lcdgotoxy_PARM_2
+	movx	a,@dptr
+	mov	dpl,a
 ;	lcd.c:151: break;
 ;	lcd.c:153: case 1:
-	sjmp	00107$
+	ljmp	_lcdgotoaddr
 00102$:
 ;	lcd.c:155: lcdgotoaddr(0x40 + column);
-	mov	a,_bp
-	add	a,#0xfd
-	mov	r0,a
-	mov	ar7,@r0
-	mov	a,#0x40
-	add	a,r7
+	mov	dptr,#_lcdgotoxy_PARM_2
+	movx	a,@dptr
+	add	a,#0x40
 	mov	dpl,a
-	lcall	_lcdgotoaddr
 ;	lcd.c:156: break;
 ;	lcd.c:158: case 2:
-	sjmp	00107$
+	ljmp	_lcdgotoaddr
 00103$:
 ;	lcd.c:160: lcdgotoaddr(0x10 + column);
-	mov	a,_bp
-	add	a,#0xfd
-	mov	r0,a
-	mov	ar7,@r0
-	mov	a,#0x10
-	add	a,r7
+	mov	dptr,#_lcdgotoxy_PARM_2
+	movx	a,@dptr
+	add	a,#0x10
 	mov	dpl,a
-	lcall	_lcdgotoaddr
 ;	lcd.c:161: break;
 ;	lcd.c:163: case 3:
-	sjmp	00107$
+	ljmp	_lcdgotoaddr
 00104$:
 ;	lcd.c:165: lcdgotoaddr(0x50 + column);
-	mov	a,_bp
-	add	a,#0xfd
-	mov	r0,a
-	mov	ar7,@r0
-	mov	a,#0x50
-	add	a,r7
+	mov	dptr,#_lcdgotoxy_PARM_2
+	movx	a,@dptr
+	add	a,#0x50
 	mov	dpl,a
-	lcall	_lcdgotoaddr
 ;	lcd.c:171: }
-00107$:
 ;	lcd.c:172: }
-	pop	_bp
+	ljmp	_lcdgotoaddr
+00107$:
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdputch'
 ;------------------------------------------------------------
-;cc                        Allocated to registers r7 
-;__1310720013              Allocated to registers 
-;data                      Allocated to registers 
+;cc                        Allocated with name '_lcdputch_cc_65536_50'
+;__1310720013              Allocated with name '_lcdputch___1310720013_131072_52'
+;data                      Allocated with name '_lcdputch_data_196608_53'
 ;------------------------------------------------------------
 ;	lcd.c:177: void lcdputch(char cc)
 ;	-----------------------------------------
 ;	 function lcdputch
 ;	-----------------------------------------
 _lcdputch:
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_lcdputch_cc_65536_50
+	movx	@dptr,a
+;	lcd.c:179: write_data_lcd(cc);
+	movx	a,@dptr
+	mov	r7,a
 ;	lcd.c:73: RS = 1;
 ;	assignBit
 	setb	_P1_4
@@ -1044,25 +1123,42 @@ _lcdputch:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdputstr'
 ;------------------------------------------------------------
-;ss                        Allocated to registers 
-;cursor_pos                Allocated to registers r4 
+;ss                        Allocated with name '_lcdputstr_ss_65536_55'
+;cursor_pos                Allocated with name '_lcdputstr_cursor_pos_131072_57'
 ;------------------------------------------------------------
 ;	lcd.c:187: void lcdputstr(char *ss)
 ;	-----------------------------------------
 ;	 function lcdputstr
 ;	-----------------------------------------
 _lcdputstr:
-	mov	r5,dpl
-	mov	r6,dph
 	mov	r7,b
+	mov	r6,dph
+	mov	a,dpl
+	mov	dptr,#_lcdputstr_ss_65536_55
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 ;	lcd.c:189: while(*ss){
+	mov	dptr,#_lcdputstr_ss_65536_55
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r7,a
 00107$:
 	mov	dpl,r5
 	mov	dph,r6
 	mov	b,r7
 	lcall	__gptrget
 	jnz	00137$
-	ret
+	ljmp	00118$
 00137$:
 ;	lcd.c:192: cursor_pos = get_cursor_pos();
 	push	ar7
@@ -1189,28 +1285,41 @@ _lcdputstr:
 	cjne	r5,#0x00,00142$
 	inc	r6
 00142$:
-;	lcd.c:221: }
+	mov	dptr,#_lcdputstr_ss_65536_55
+	mov	a,r5
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
 	ljmp	00107$
+00118$:
+	mov	dptr,#_lcdputstr_ss_65536_55
+	mov	a,r5
+	movx	@dptr,a
+	mov	a,r6
+	inc	dptr
+	movx	@dptr,a
+	mov	a,r7
+	inc	dptr
+	movx	@dptr,a
+;	lcd.c:221: }
+	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'get_cursor_pos'
 ;------------------------------------------------------------
-;cursor_pos                Allocated to stack - _bp +1
-;__1310720015              Allocated to registers r7 r6 r5 
-;data                      Allocated to registers 
+;cursor_pos                Allocated with name '_get_cursor_pos_cursor_pos_65536_65'
+;__1310720015              Allocated with name '_get_cursor_pos___1310720015_131072_66'
+;data                      Allocated with name '_get_cursor_pos_data_196608_67'
 ;------------------------------------------------------------
 ;	lcd.c:225: unsigned char get_cursor_pos(void)
 ;	-----------------------------------------
 ;	 function get_cursor_pos
 ;	-----------------------------------------
 _get_cursor_pos:
-	push	_bp
-	mov	_bp,sp
-	inc	sp
 ;	lcd.c:228: read_lcd(&cursor_pos);
-	mov	r7,_bp
-	inc	r7
-	mov	r6,#0x00
-	mov	r5,#0x40
 ;	lcd.c:62: RS = 0;
 ;	assignBit
 	clr	_P1_4
@@ -1220,36 +1329,32 @@ _get_cursor_pos:
 ;	lcd.c:64: *data = *ptr;
 	mov	dptr,#_ptr
 	movx	a,@dptr
-	mov	r3,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r4,a
-	mov	dpl,r3
-	mov	dph,r4
+	mov	r7,a
+	mov	dpl,r6
+	mov	dph,r7
 	movx	a,@dptr
-	mov	r3,a
+	mov	r6,a
 	inc	dptr
 	movx	a,@dptr
-	mov	dpl,r7
-	mov	dph,r6
-	mov	b,r5
-	mov	a,r3
-	lcall	__gptrput
+	mov	dptr,#_get_cursor_pos_cursor_pos_65536_65
+	mov	a,r6
+	movx	@dptr,a
 ;	lcd.c:66: lcdbusywait();
 	lcall	_lcdbusywait
 ;	lcd.c:229: return cursor_pos;
-	mov	r0,_bp
-	inc	r0
-	mov	dpl,@r0
+	mov	dptr,#_get_cursor_pos_cursor_pos_65536_65
+	movx	a,@dptr
 ;	lcd.c:230: }
-	dec	sp
-	pop	_bp
+	mov	dpl,a
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdclear'
 ;------------------------------------------------------------
-;__1310720017              Allocated to registers 
-;data                      Allocated to registers 
+;__1310720017              Allocated with name '_lcdclear___1310720017_131072_70'
+;data                      Allocated with name '_lcdclear_data_196608_71'
 ;------------------------------------------------------------
 ;	lcd.c:236: void lcdclear()
 ;	-----------------------------------------
@@ -1285,64 +1390,76 @@ _lcdclear:
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'lcdcreatechar'
 ;------------------------------------------------------------
-;row_vals                  Allocated to stack - _bp -5
-;ccode                     Allocated to registers r7 
-;addr                      Allocated to registers r4 
-;data                      Allocated to registers r3 
-;i                         Allocated to registers r6 
-;__2621440019              Allocated to registers 
-;data                      Allocated to registers 
+;row_vals                  Allocated with name '_lcdcreatechar_PARM_2'
+;ccode                     Allocated with name '_lcdcreatechar_ccode_65536_87'
+;addr                      Allocated with name '_lcdcreatechar_addr_65536_88'
+;data                      Allocated with name '_lcdcreatechar_data_65536_88'
+;i                         Allocated with name '_lcdcreatechar_i_65536_88'
+;__2621440019              Allocated with name '_lcdcreatechar___2621440019_262144_91'
+;data                      Allocated with name '_lcdcreatechar_data_327680_92'
 ;------------------------------------------------------------
 ;	lcd.c:247: void lcdcreatechar(unsigned char ccode, unsigned char row_vals[])
 ;	-----------------------------------------
 ;	 function lcdcreatechar
 ;	-----------------------------------------
 _lcdcreatechar:
-	push	_bp
-	mov	_bp,sp
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_lcdcreatechar_ccode_65536_87
+	movx	@dptr,a
 ;	lcd.c:253: for(i=0;i<8;i++){
-	mov	r6,#0x00
+	movx	a,@dptr
+	mov	r7,a
+	mov	dptr,#_lcdcreatechar_PARM_2
+	movx	a,@dptr
+	mov	r4,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r5,a
+	inc	dptr
+	movx	a,@dptr
+	mov	r6,a
+	mov	r3,#0x00
 00103$:
 ;	lcd.c:255: addr = 0x40 | ((ccode & 0x07) << 3) | (i & 0x07);
-	mov	ar5,r7
-	anl	ar5,#0x07
-	mov	a,r5
+	mov	ar2,r7
+	anl	ar2,#0x07
+	mov	a,r2
 	swap	a
 	rr	a
 	anl	a,#0xf8
-	mov	r5,a
-	orl	ar5,#0x40
+	mov	r2,a
+	orl	ar2,#0x40
 	mov	a,#0x07
-	anl	a,r6
-	mov	r4,a
-	mov	a,r5
-	orl	ar4,a
+	anl	a,r3
+	mov	r1,a
+	mov	a,r2
+	orl	ar1,a
 ;	lcd.c:258: lcd_set_ram_addr(addr);
-	mov	dpl,r4
+	mov	dpl,r1
 	push	ar7
 	push	ar6
+	push	ar5
+	push	ar4
+	push	ar3
 	lcall	_lcd_set_ram_addr
+	pop	ar3
+	pop	ar4
+	pop	ar5
 	pop	ar6
 ;	lcd.c:260: data = row_vals[i] & 0x1F;
-	mov	a,_bp
-	add	a,#0xfb
+	mov	a,r3
+	add	a,r4
 	mov	r0,a
-	mov	a,r6
-	add	a,@r0
-	mov	r3,a
 	clr	a
-	inc	r0
-	addc	a,@r0
-	mov	r4,a
-	inc	r0
-	mov	ar5,@r0
-	mov	dpl,r3
-	mov	dph,r4
-	mov	b,r5
+	addc	a,r5
+	mov	r1,a
+	mov	ar2,r6
+	mov	dpl,r0
+	mov	dph,r1
+	mov	b,r2
 	lcall	__gptrget
-	mov	r3,a
-	anl	ar3,#0x1f
+	mov	r0,a
+	anl	ar0,#0x1f
 ;	lcd.c:73: RS = 1;
 ;	assignBit
 	setb	_P1_4
@@ -1352,58 +1469,65 @@ _lcdcreatechar:
 ;	lcd.c:75: *ptr=data;
 	mov	dptr,#_ptr
 	movx	a,@dptr
-	mov	r4,a
+	mov	r1,a
 	inc	dptr
 	movx	a,@dptr
-	mov	r5,a
-	mov	r2,#0x00
-	mov	dpl,r4
-	mov	dph,r5
-	mov	a,r3
+	mov	r2,a
+	mov	r7,#0x00
+	mov	dpl,r1
+	mov	dph,r2
+	mov	a,r0
 	movx	@dptr,a
-	mov	a,r2
+	mov	a,r7
 	inc	dptr
 	movx	@dptr,a
 ;	lcd.c:77: lcdbusywait();
+	push	ar7
 	push	ar6
+	push	ar5
+	push	ar4
+	push	ar3
 	lcall	_lcdbusywait
+	pop	ar3
+	pop	ar4
+	pop	ar5
 	pop	ar6
 	pop	ar7
 ;	lcd.c:253: for(i=0;i<8;i++){
-	inc	r6
-	cjne	r6,#0x08,00112$
+	inc	r3
+	cjne	r3,#0x08,00112$
 00112$:
+	pop	ar7
 	jc	00103$
 ;	lcd.c:263: }
-	pop	_bp
 	ret
 ;------------------------------------------------------------
 ;Allocation info for local variables in function 'display_lcd_char'
 ;------------------------------------------------------------
-;addr                      Allocated to stack - _bp -3
-;ccode                     Allocated to registers r7 
-;__1310720021              Allocated to registers 
-;data                      Allocated to registers 
+;addr                      Allocated with name '_display_lcd_char_PARM_2'
+;ccode                     Allocated with name '_display_lcd_char_ccode_65536_94'
+;__1310720021              Allocated with name '_display_lcd_char___1310720021_131072_96'
+;data                      Allocated with name '_display_lcd_char_data_196608_97'
 ;------------------------------------------------------------
 ;	lcd.c:270: void display_lcd_char(unsigned char ccode, unsigned char addr)
 ;	-----------------------------------------
 ;	 function display_lcd_char
 ;	-----------------------------------------
 _display_lcd_char:
-	push	_bp
-	mov	_bp,sp
-	mov	r7,dpl
+	mov	a,dpl
+	mov	dptr,#_display_lcd_char_ccode_65536_94
+	movx	@dptr,a
 ;	lcd.c:273: lcd_set_ram_addr((1 << 7) | (addr & 0x7F));
-	mov	a,_bp
-	add	a,#0xfd
-	mov	r0,a
-	mov	ar6,@r0
-	anl	ar6,#0x7f
-	orl	ar6,#0x80
-	mov	dpl,r6
-	push	ar7
+	mov	dptr,#_display_lcd_char_PARM_2
+	movx	a,@dptr
+	anl	a,#0x7f
+	orl	a,#0x80
+	mov	dpl,a
 	lcall	_lcd_set_ram_addr
-	pop	ar7
+;	lcd.c:275: write_data_lcd(ccode);
+	mov	dptr,#_display_lcd_char_ccode_65536_94
+	movx	a,@dptr
+	mov	r7,a
 ;	lcd.c:73: RS = 1;
 ;	assignBit
 	setb	_P1_4
@@ -1426,11 +1550,9 @@ _display_lcd_char:
 	inc	dptr
 	movx	@dptr,a
 ;	lcd.c:77: lcdbusywait();
-	lcall	_lcdbusywait
 ;	lcd.c:275: write_data_lcd(ccode);
 ;	lcd.c:276: }
-	pop	_bp
-	ret
+	ljmp	_lcdbusywait
 	.area CSEG    (CODE)
 	.area CONST   (CODE)
 	.area XINIT   (CODE)

@@ -2,10 +2,12 @@
 /**
  * @file main.c
  * @author Shuran Xu (shxu6388@colorado.edu)
- * @brief This file implements the program entry point for the part3 8051 code question.
+ * @brief main( ) implements a test program for accessing the SD card.
+ * @reference http://elm-chan.org/fsw/ff/pf/readdir.html
+ * @code leverage: The MP3 test function is implemented based on the example code from the readdir( ) info
+ * page of the Petit FAT file system tutorial page.
  * @version 0.1
- * @date 2022-10-22
- *
+ * @date 2022-12-12
  * @copyright Copyright (c) 2022
  *
  */
